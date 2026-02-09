@@ -1,0 +1,108 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { createClient } from '@/lib/supabase/server';
+import { getEstimatedValueRange } from '@/lib/utils';
+import type { QualificationBreakdown } from '@/types';
+
+export async function GET(
+  _request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params;
+    const supabase = await createClient();
+
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const { data: lead, error } = await supabase
+      .from('leads')
+      .select('*')
+      .eq('id', id)
+      .single();
+
+    if (error || !lead) {
+      return NextResponse.json({ error: 'Lead not found' }, { status: 404 });
+    }
+
+    // Check if this attorney has claimed this lead
+    const { data: attorney } = await supabase
+      .from('attorneys')
+      .select('id')
+      .eq('supabase_auth_id', user.id)
+      .single();
+
+    const isClaimed = lead.claimed_by !== null;
+    const isMyLead = attorney && lead.claimed_by === attorney.id;
+
+    if (isClaimed && !isMyLead) {
+      return NextResponse.json({ error: 'This lead has already been claimed' }, { status: 403 });
+    }
+
+    const breakdown = lead.qualification_breakdown as QualificationBreakdown | null;
+    const violations: string[] = [];
+    if (breakdown) {
+      if (breakdown.breach_of_peace > 0) violations.push('Breach of Peace');
+      if (breakdown.belongings > 0) violations.push('Personal Belongings');
+      if (breakdown.military > 0) violations.push('SCRA Violation');
+      if (breakdown.fdcpa > 0) violations.push('FDCPA Violation');
+      if (breakdown.notice > 0) violations.push('Notice Violation');
+    }
+
+    // If claimed by this attorney, return full info
+    if (isMyLead) {
+      return NextResponse.json({ lead, violations, full_access: true });
+    }
+
+    // Otherwise return anonymized version
+    const anonymized = {
+      id: lead.id,
+      qualification_tier: lead.qualification_tier,
+      qualification_score: lead.qualification_score,
+      qualification_breakdown: lead.qualification_breakdown,
+      repo_state: lead.repo_state,
+      repo_date: lead.repo_date,
+      repo_time_of_day: lead.repo_time_of_day,
+      repo_location: lead.repo_location,
+      lender_name: lead.lender_name,
+      vehicle_year: lead.vehicle_year,
+      vehicle_make: lead.vehicle_make,
+      vehicle_model: lead.vehicle_model,
+      lease_or_finance: lead.lease_or_finance,
+      behind_on_payments: lead.behind_on_payments,
+      received_written_notice: lead.received_written_notice,
+      verbally_objected: lead.verbally_objected,
+      continued_after_objection: lead.continued_after_objection,
+      physical_force_or_threats: lead.physical_force_or_threats,
+      excessive_noise: lead.excessive_noise,
+      entered_locked_area: lead.entered_locked_area,
+      property_damage: lead.property_damage,
+      police_present: lead.police_present,
+      police_assisted: lead.police_assisted,
+      repo_at_workplace: lead.repo_at_workplace,
+      public_embarrassment: lead.public_embarrassment,
+      had_belongings: lead.had_belongings,
+      belongings_returned: lead.belongings_returned,
+      military_service: lead.military_service,
+      active_duty_at_repo: lead.active_duty_at_repo,
+      debt_collector_contact: lead.debt_collector_contact,
+      fdcpa_violations: lead.fdcpa_violations,
+      received_notice_of_sale: lead.received_notice_of_sale,
+      has_photos_videos: lead.has_photos_videos,
+      has_documents: lead.has_documents,
+      has_witnesses: lead.has_witnesses,
+      narrative_preview: lead.narrative
+        ? lead.narrative.substring(0, 200).replace(/[A-Z][a-z]+ [A-Z][a-z]+/g, '[Name]') + '...'
+        : null,
+      estimated_value_range: getEstimatedValueRange(lead.qualification_score),
+      created_at: lead.created_at,
+      status: lead.status,
+    };
+
+    return NextResponse.json({ lead: anonymized, violations, full_access: false });
+  } catch (error) {
+    console.error('Lead detail error:', error);
+    return NextResponse.json({ error: 'An unexpected error occurred' }, { status: 500 });
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm build:*)",
+      "Bash(pnpm list:*)",
+      "Bash(npx next build)",
+      "Bash(npx next dev)",
+      "Bash(timeout:*)",
+      "Bash(ping:*)",
+      "Bash(git init:*)",
+      "Bash(git remote add:*)"
+    ]
+  }
+}
