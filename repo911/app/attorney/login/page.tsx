@@ -28,7 +28,7 @@ export default function AttorneyLoginPage() {
       });
 
       if (authError) {
-        setError('Invalid email or password. Please try again.');
+        setError(authError.message);
         return;
       }
 
