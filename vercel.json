@@ -1,0 +1,6 @@
+{
+  "framework": "nextjs",
+  "installCommand": "cd repo911 && pnpm install",
+  "buildCommand": "cd repo911 && pnpm build",
+  "outputDirectory": "repo911/.next"
+}
