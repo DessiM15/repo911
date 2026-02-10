@@ -1,4 +1,4 @@
-import { AttorneyNav } from '@/components/layout/AttorneyNav';
+import { AttorneyLayoutWrapper } from '@/components/layout/AttorneyLayoutWrapper';
 
 export const metadata = {
   title: {
@@ -12,12 +12,5 @@ export default function AttorneyLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <div className="min-h-screen bg-gray-50">
-      <AttorneyNav />
-      <div className="lg:ml-64">
-        <main className="p-4 sm:p-6 lg:p-8">{children}</main>
-      </div>
-    </div>
-  );
+  return <AttorneyLayoutWrapper>{children}</AttorneyLayoutWrapper>;
 }

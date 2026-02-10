@@ -97,6 +97,44 @@ export async function PATCH(request: NextRequest) {
       return NextResponse.json({ error: 'Missing fee_id' }, { status: 400 });
     }
 
+    // Verify fee record exists
+    const { data: existingFee } = await supabase
+      .from('fee_tracking')
+      .select('id')
+      .eq('id', fee_id)
+      .single();
+
+    if (!existingFee) {
+      return NextResponse.json({ error: 'Fee record not found' }, { status: 404 });
+    }
+
+    const VALID_CASE_STATUSES = ['open', 'settled', 'dismissed', 'paid'];
+    const VALID_PAYMENT_STATUSES = ['pending', 'invoiced', 'paid', 'overdue'];
+
+    if (updates.case_status && !VALID_CASE_STATUSES.includes(updates.case_status)) {
+      return NextResponse.json({ error: 'Invalid case_status' }, { status: 400 });
+    }
+    if (updates.payment_status && !VALID_PAYMENT_STATUSES.includes(updates.payment_status)) {
+      return NextResponse.json({ error: 'Invalid payment_status' }, { status: 400 });
+    }
+    if (updates.attorney_total_fee !== undefined) {
+      const fee = Number(updates.attorney_total_fee);
+      if (isNaN(fee) || fee < 0) {
+        return NextResponse.json({ error: 'attorney_total_fee must be a non-negative number' }, { status: 400 });
+      }
+    }
+    if (updates.repo911_share !== undefined) {
+      const share = Number(updates.repo911_share);
+      if (isNaN(share) || share < 0) {
+        return NextResponse.json({ error: 'repo911_share must be a non-negative number' }, { status: 400 });
+      }
+      // Ensure share doesn't exceed total fee
+      const totalFee = updates.attorney_total_fee !== undefined ? Number(updates.attorney_total_fee) : null;
+      if (totalFee !== null && share > totalFee) {
+        return NextResponse.json({ error: 'repo911_share cannot exceed attorney_total_fee' }, { status: 400 });
+      }
+    }
+
     const allowedFields = ['case_status', 'payment_status', 'attorney_total_fee', 'repo911_share', 'payment_due_date', 'payment_received_date', 'notes'];
     const cleanUpdates: Record<string, unknown> = {};
     for (const field of allowedFields) {

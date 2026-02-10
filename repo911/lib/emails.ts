@@ -7,6 +7,15 @@ const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://repo911.com';
 // Shared helpers
 // ============================================================
 
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 function wrap(title: string, body: string): string {
   return `<!DOCTYPE html>
 <html>
@@ -72,7 +81,7 @@ export async function sendLeadSubmissionConfirmation(opts: {
     : 'Based on the information provided, your case <strong>did not meet our qualification criteria</strong> at this time.';
 
   const html = wrap('Thank You for Submitting Your Case', [
-    p(`Hi ${opts.firstName},`),
+    p(`Hi ${escapeHtml(opts.firstName)},`),
     p(`Thank you for submitting your case to ${APP_NAME}. We&apos;re reviewing your information.`),
     p(tierText),
     opts.tier !== 'disqualified'
@@ -104,9 +113,9 @@ export async function sendHotLeadAlert(opts: {
     : 'Multiple potential violations';
 
   const html = wrap('New Hot Lead Available', [
-    p(`Hi ${opts.attorneyName},`),
-    p(`A new <strong style="color:#dc2626;">HOT</strong> lead is available in <strong>${opts.state}</strong>.`),
-    p(`<strong>Violation types:</strong> ${violations}`),
+    p(`Hi ${escapeHtml(opts.attorneyName)},`),
+    p(`A new <strong style="color:#dc2626;">HOT</strong> lead is available in <strong>${escapeHtml(opts.state)}</strong>.`),
+    p(`<strong>Violation types:</strong> ${escapeHtml(violations)}`),
     p('This lead has a high qualification score. Claim it before another attorney does.'),
     btn('View in Marketplace', `${APP_URL}/attorney/marketplace`),
     p(`&mdash; The ${APP_NAME} Team`),
@@ -129,8 +138,8 @@ export async function sendWarmLeadAlert(opts: {
   state: string;
 }) {
   const html = wrap('New Lead Available', [
-    p(`Hi ${opts.attorneyName},`),
-    p(`A new lead is available in <strong>${opts.state}</strong>.`),
+    p(`Hi ${escapeHtml(opts.attorneyName)},`),
+    p(`A new lead is available in <strong>${escapeHtml(opts.state)}</strong>.`),
     p('Check the marketplace for details and claim it if it matches your practice areas.'),
     btn('View in Marketplace', `${APP_URL}/attorney/marketplace`),
     p(`&mdash; The ${APP_NAME} Team`),
@@ -152,7 +161,7 @@ export async function sendLeadClaimedToConsumer(opts: {
   firstName: string;
 }) {
   const html = wrap('Great News — An Attorney Is Reviewing Your Case', [
-    p(`Hi ${opts.firstName},`),
+    p(`Hi ${escapeHtml(opts.firstName)},`),
     p('Great news! A licensed attorney has reviewed your case and will be reaching out to you soon.'),
     p('Here\'s what to expect:'),
     p('&bull; The attorney may call or email you within the next 24&ndash;48 hours.<br/>&bull; Have any relevant documents ready (repo notice, loan agreement, photos/videos).<br/>&bull; The initial consultation is typically free.'),
@@ -182,13 +191,13 @@ export async function sendLeadClaimedToAttorney(opts: {
   amount: number;
 }) {
   const html = wrap('Lead Claimed — Full Details Unlocked', [
-    p(`Hi ${opts.attorneyName},`),
-    p(`You have successfully claimed a <strong>${opts.tier.toUpperCase()}</strong> lead. Here are the full contact details:`),
+    p(`Hi ${escapeHtml(opts.attorneyName)},`),
+    p(`You have successfully claimed a <strong>${escapeHtml(opts.tier.toUpperCase())}</strong> lead. Here are the full contact details:`),
     `<table style="width:100%;border-collapse:collapse;margin:16px 0;">
-      <tr><td style="padding:8px 12px;border:1px solid #e5e7eb;font-weight:600;width:120px;">Name</td><td style="padding:8px 12px;border:1px solid #e5e7eb;">${opts.leadName}</td></tr>
-      <tr><td style="padding:8px 12px;border:1px solid #e5e7eb;font-weight:600;">Email</td><td style="padding:8px 12px;border:1px solid #e5e7eb;">${opts.leadEmail}</td></tr>
-      <tr><td style="padding:8px 12px;border:1px solid #e5e7eb;font-weight:600;">Phone</td><td style="padding:8px 12px;border:1px solid #e5e7eb;">${opts.leadPhone}</td></tr>
-      <tr><td style="padding:8px 12px;border:1px solid #e5e7eb;font-weight:600;">State</td><td style="padding:8px 12px;border:1px solid #e5e7eb;">${opts.leadState}</td></tr>
+      <tr><td style="padding:8px 12px;border:1px solid #e5e7eb;font-weight:600;width:120px;">Name</td><td style="padding:8px 12px;border:1px solid #e5e7eb;">${escapeHtml(opts.leadName)}</td></tr>
+      <tr><td style="padding:8px 12px;border:1px solid #e5e7eb;font-weight:600;">Email</td><td style="padding:8px 12px;border:1px solid #e5e7eb;">${escapeHtml(opts.leadEmail)}</td></tr>
+      <tr><td style="padding:8px 12px;border:1px solid #e5e7eb;font-weight:600;">Phone</td><td style="padding:8px 12px;border:1px solid #e5e7eb;">${escapeHtml(opts.leadPhone)}</td></tr>
+      <tr><td style="padding:8px 12px;border:1px solid #e5e7eb;font-weight:600;">State</td><td style="padding:8px 12px;border:1px solid #e5e7eb;">${escapeHtml(opts.leadState)}</td></tr>
       <tr><td style="padding:8px 12px;border:1px solid #e5e7eb;font-weight:600;">Payment</td><td style="padding:8px 12px;border:1px solid #e5e7eb;">$${(opts.amount / 100).toFixed(2)}</td></tr>
     </table>`,
     p('You can view the full lead details including the case narrative, qualification breakdown, and evidence in your portal.'),
@@ -218,10 +227,10 @@ export async function sendAttorneyRegistrationAlert(opts: {
   const html = wrap('New Attorney Registration', [
     p('A new attorney has registered on the platform:'),
     `<table style="width:100%;border-collapse:collapse;margin:16px 0;">
-      <tr><td style="padding:8px 12px;border:1px solid #e5e7eb;font-weight:600;width:120px;">Name</td><td style="padding:8px 12px;border:1px solid #e5e7eb;">${opts.attorneyName}</td></tr>
-      <tr><td style="padding:8px 12px;border:1px solid #e5e7eb;font-weight:600;">Email</td><td style="padding:8px 12px;border:1px solid #e5e7eb;">${opts.email}</td></tr>
-      <tr><td style="padding:8px 12px;border:1px solid #e5e7eb;font-weight:600;">Bar State</td><td style="padding:8px 12px;border:1px solid #e5e7eb;">${opts.barState}</td></tr>
-      <tr><td style="padding:8px 12px;border:1px solid #e5e7eb;font-weight:600;">Firm</td><td style="padding:8px 12px;border:1px solid #e5e7eb;">${opts.firmName || 'N/A'}</td></tr>
+      <tr><td style="padding:8px 12px;border:1px solid #e5e7eb;font-weight:600;width:120px;">Name</td><td style="padding:8px 12px;border:1px solid #e5e7eb;">${escapeHtml(opts.attorneyName)}</td></tr>
+      <tr><td style="padding:8px 12px;border:1px solid #e5e7eb;font-weight:600;">Email</td><td style="padding:8px 12px;border:1px solid #e5e7eb;">${escapeHtml(opts.email)}</td></tr>
+      <tr><td style="padding:8px 12px;border:1px solid #e5e7eb;font-weight:600;">Bar State</td><td style="padding:8px 12px;border:1px solid #e5e7eb;">${escapeHtml(opts.barState)}</td></tr>
+      <tr><td style="padding:8px 12px;border:1px solid #e5e7eb;font-weight:600;">Firm</td><td style="padding:8px 12px;border:1px solid #e5e7eb;">${escapeHtml(opts.firmName || 'N/A')}</td></tr>
     </table>`,
     p('Review and approve this attorney in the admin portal.'),
     btn('View Attorneys', `${APP_URL}/admin/attorneys`),
@@ -246,9 +255,9 @@ export async function sendFeePaymentReminder(opts: {
   dueDate: string;
 }) {
   const html = wrap('Fee Payment Reminder', [
-    p(`Hi ${opts.attorneyName},`),
-    p(`A fee report is due for lead <strong>#${opts.leadId.slice(0, 8)}</strong>.`),
-    p(`<strong>Due date:</strong> ${opts.dueDate}`),
+    p(`Hi ${escapeHtml(opts.attorneyName)},`),
+    p(`A fee report is due for lead <strong>#${escapeHtml(opts.leadId.slice(0, 8))}</strong>.`),
+    p(`<strong>Due date:</strong> ${escapeHtml(opts.dueDate)}`),
     p('Please update the case status and submit your payment at your earliest convenience.'),
     btn('View Billing', `${APP_URL}/attorney/billing`),
     p(`&mdash; The ${APP_NAME} Team`),

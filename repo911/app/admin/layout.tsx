@@ -1,4 +1,4 @@
-import { AdminSidebar } from '@/components/layout/AdminSidebar';
+import { AdminLayoutWrapper } from '@/components/layout/AdminLayoutWrapper';
 
 export const metadata = {
   title: {
@@ -12,12 +12,5 @@ export default function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <div className="min-h-screen bg-gray-50">
-      <AdminSidebar />
-      <div className="lg:ml-64">
-        <main className="p-4 sm:p-6 lg:p-8">{children}</main>
-      </div>
-    </div>
-  );
+  return <AdminLayoutWrapper>{children}</AdminLayoutWrapper>;
 }

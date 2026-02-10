@@ -93,8 +93,11 @@ export default function FeeTrackingPage() {
         notes: editValues.notes || null,
       };
       if (editValues.attorney_total_fee) {
-        updates.attorney_total_fee = parseFloat(editValues.attorney_total_fee);
-        updates.repo911_share = parseFloat(editValues.attorney_total_fee) * 0.5;
+        const totalFee = parseFloat(editValues.attorney_total_fee);
+        updates.attorney_total_fee = totalFee;
+        // Use configurable fee share percentage (default 50%)
+        const feeSharePct = parseFloat(process.env.NEXT_PUBLIC_FEE_SHARE_PERCENTAGE || '50') / 100;
+        updates.repo911_share = totalFee * feeSharePct;
       }
 
       const res = await fetch('/api/admin/fee-tracking', {

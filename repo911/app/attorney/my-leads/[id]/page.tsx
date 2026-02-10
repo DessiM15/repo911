@@ -21,6 +21,8 @@ export default function MyLeadDetailPage() {
   const [loading, setLoading] = useState(true);
   const [notes, setNotes] = useState('');
   const [caseStatus, setCaseStatus] = useState('open');
+  const [saving, setSaving] = useState(false);
+  const [saveMessage, setSaveMessage] = useState('');
 
   useEffect(() => {
     async function fetchLead() {
@@ -29,6 +31,11 @@ export default function MyLeadDetailPage() {
         const data = await res.json();
         if (res.ok && data.full_access) {
           setLead(data.lead);
+          // Load case management data from fee_tracking if available
+          if (data.fee_tracking) {
+            setCaseStatus(data.fee_tracking.case_status || 'open');
+            setNotes(data.fee_tracking.notes || '');
+          }
         }
       } catch {
         // silent
@@ -38,6 +45,28 @@ export default function MyLeadDetailPage() {
     }
     if (id) fetchLead();
   }, [id]);
+
+  async function handleSaveNotes() {
+    setSaving(true);
+    setSaveMessage('');
+    try {
+      const res = await fetch(`/api/attorney/leads/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ case_status: caseStatus, notes }),
+      });
+      if (res.ok) {
+        setSaveMessage('Saved successfully');
+        setTimeout(() => setSaveMessage(''), 3000);
+      } else {
+        setSaveMessage('Failed to save');
+      }
+    } catch {
+      setSaveMessage('Failed to save');
+    } finally {
+      setSaving(false);
+    }
+  }
 
   if (loading) {
     return (
@@ -200,8 +229,15 @@ export default function MyLeadDetailPage() {
               rows={4}
             />
           </div>
-          <div>
-            <Button variant="attorney" size="sm">Save Notes</Button>
+          <div className="flex items-center gap-3">
+            <Button variant="attorney" size="sm" onClick={handleSaveNotes} loading={saving}>
+              Save Notes
+            </Button>
+            {saveMessage && (
+              <span className={`text-sm ${saveMessage.includes('success') ? 'text-green-600' : 'text-red-600'}`}>
+                {saveMessage}
+              </span>
+            )}
           </div>
         </div>
       </div>

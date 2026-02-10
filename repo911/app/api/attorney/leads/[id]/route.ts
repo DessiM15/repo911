@@ -3,6 +3,8 @@ import { createClient } from '@/lib/supabase/server';
 import { getEstimatedValueRange } from '@/lib/utils';
 import type { QualificationBreakdown } from '@/types';
 
+const VALID_CASE_STATUSES = ['open', 'in_progress', 'settled', 'dismissed', 'closed'];
+
 export async function GET(
   _request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -50,9 +52,16 @@ export async function GET(
       if (breakdown.notice > 0) violations.push('Notice Violation');
     }
 
-    // If claimed by this attorney, return full info
+    // If claimed by this attorney, return full info + fee tracking data
     if (isMyLead) {
-      return NextResponse.json({ lead, violations, full_access: true });
+      const { data: feeTracking } = await supabase
+        .from('fee_tracking')
+        .select('case_status, notes')
+        .eq('lead_id', id)
+        .eq('attorney_id', attorney.id)
+        .single();
+
+      return NextResponse.json({ lead, violations, full_access: true, fee_tracking: feeTracking });
     }
 
     // Otherwise return anonymized version
@@ -103,6 +112,77 @@ export async function GET(
     return NextResponse.json({ lead: anonymized, violations, full_access: false });
   } catch (error) {
     console.error('Lead detail error:', error);
+    return NextResponse.json({ error: 'An unexpected error occurred' }, { status: 500 });
+  }
+}
+
+/**
+ * PATCH — Update case notes and status for a claimed lead.
+ * Stores data in the fee_tracking table.
+ */
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params;
+    const supabase = await createClient();
+
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const { data: attorney } = await supabase
+      .from('attorneys')
+      .select('id')
+      .eq('supabase_auth_id', user.id)
+      .single();
+
+    if (!attorney) {
+      return NextResponse.json({ error: 'Attorney not found' }, { status: 403 });
+    }
+
+    // Verify this attorney owns this lead
+    const { data: lead } = await supabase
+      .from('leads')
+      .select('id, claimed_by')
+      .eq('id', id)
+      .single();
+
+    if (!lead || lead.claimed_by !== attorney.id) {
+      return NextResponse.json({ error: 'Access denied' }, { status: 403 });
+    }
+
+    const body = await request.json();
+    const { case_status, notes } = body;
+
+    if (case_status && !VALID_CASE_STATUSES.includes(case_status)) {
+      return NextResponse.json({ error: 'Invalid case status' }, { status: 400 });
+    }
+
+    const updates: Record<string, unknown> = {};
+    if (case_status) updates.case_status = case_status;
+    if (notes !== undefined) updates.notes = notes;
+
+    if (Object.keys(updates).length === 0) {
+      return NextResponse.json({ error: 'No updates provided' }, { status: 400 });
+    }
+
+    const { error } = await supabase
+      .from('fee_tracking')
+      .update(updates)
+      .eq('lead_id', id)
+      .eq('attorney_id', attorney.id);
+
+    if (error) {
+      console.error('Fee tracking update error:', error);
+      return NextResponse.json({ error: 'Failed to save' }, { status: 500 });
+    }
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error('Lead PATCH error:', error);
     return NextResponse.json({ error: 'An unexpected error occurred' }, { status: 500 });
   }
 }

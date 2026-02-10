@@ -85,6 +85,23 @@ export async function PATCH(
     }
 
     const body = await request.json();
+
+    const VALID_STATUSES = ['pending', 'qualified_hot', 'qualified_warm', 'qualified_cold', 'disqualified', 'claimed', 'closed'];
+    const VALID_TIERS = ['hot', 'warm', 'cold', 'disqualified'];
+
+    if (body.status && !VALID_STATUSES.includes(body.status)) {
+      return NextResponse.json({ error: 'Invalid status value' }, { status: 400 });
+    }
+    if (body.qualification_tier && !VALID_TIERS.includes(body.qualification_tier)) {
+      return NextResponse.json({ error: 'Invalid qualification tier' }, { status: 400 });
+    }
+    if (body.qualification_score !== undefined) {
+      const score = Number(body.qualification_score);
+      if (isNaN(score) || score < 0 || score > 200) {
+        return NextResponse.json({ error: 'Invalid qualification score (0-200)' }, { status: 400 });
+      }
+    }
+
     const allowedFields = ['status', 'qualification_tier', 'qualification_score'];
     const updates: Record<string, unknown> = {};
     for (const field of allowedFields) {

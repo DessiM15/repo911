@@ -37,8 +37,8 @@ export async function POST(request: NextRequest) {
         : tier === 'warm' ? LEAD_PRICES.warm
         : LEAD_PRICES.cold;
 
-      // Update lead status
-      await supabase
+      // Update lead status — atomic check prevents double-claim
+      const { data: updatedLead, error: claimError } = await supabase
         .from('leads')
         .update({
           status: 'claimed',
@@ -48,7 +48,15 @@ export async function POST(request: NextRequest) {
           stripe_payment_id: session.payment_intent as string,
         })
         .eq('id', lead_id)
-        .is('claimed_by', null); // Prevent double-claim
+        .is('claimed_by', null)
+        .select('id')
+        .single();
+
+      if (claimError || !updatedLead) {
+        // Lead was already claimed by another attorney — refund will be needed
+        console.error('Lead already claimed or not found:', lead_id, claimError);
+        break;
+      }
 
       // Create transaction record
       await supabase.from('transactions').insert({
@@ -157,11 +165,22 @@ export async function POST(request: NextRequest) {
           .update({ status: 'refunded' })
           .eq('stripe_payment_intent_id', paymentIntentId);
 
-        // Unclaim the lead
+        // Look up the lead's original qualification tier to restore it
+        const { data: refundLead } = await supabase
+          .from('leads')
+          .select('qualification_tier')
+          .eq('id', transaction.lead_id)
+          .single();
+
+        const restoredStatus = refundLead?.qualification_tier
+          ? `qualified_${refundLead.qualification_tier}`
+          : 'qualified_hot';
+
+        // Unclaim the lead — restore to its original qualified status
         await supabase
           .from('leads')
           .update({
-            status: 'qualified_hot', // Reset to previous qualified status
+            status: restoredStatus,
             claimed_by: null,
             claimed_at: null,
             claim_price: null,
