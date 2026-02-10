@@ -85,7 +85,7 @@ export default function HomePage() {
       <section className="relative bg-gradient-to-br from-[#4A90D9]/5 via-white to-[#F5A623]/5 py-16 sm:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto text-center">
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
+            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
               Was Your Car{' '}
               <span className="text-[#4A90D9]">Wrongfully Repossessed?</span>
             </h1>
@@ -217,7 +217,7 @@ export default function HomePage() {
               <Link
                 key={item.violation}
                 href="/claim"
-                className="block bg-white rounded-xl p-6 border border-gray-200 hover:border-[#4A90D9] hover:shadow-md transition-all group"
+                className="block bg-white rounded-xl p-4 sm:p-6 border border-gray-200 hover:border-[#4A90D9] hover:shadow-md transition-all group"
               >
                 <p className="text-[#4A90D9] font-medium italic mb-3">{item.quote}</p>
                 <h3 className="text-lg font-semibold text-gray-900 mb-1 flex items-center gap-1">
@@ -245,12 +245,12 @@ export default function HomePage() {
               <p className="text-sm font-medium uppercase tracking-wider">Protected by</p>
               <p className="text-lg font-bold text-gray-700 mt-1">UCC Article 9</p>
             </div>
-            <div className="h-8 w-px bg-gray-200" />
+            <div className="hidden sm:block h-8 w-px bg-gray-200" />
             <div className="text-center">
               <p className="text-sm font-medium uppercase tracking-wider">Enforced by</p>
               <p className="text-lg font-bold text-gray-700 mt-1">FDCPA</p>
             </div>
-            <div className="h-8 w-px bg-gray-200" />
+            <div className="hidden sm:block h-8 w-px bg-gray-200" />
             <div className="text-center">
               <p className="text-sm font-medium uppercase tracking-wider">Military Protection</p>
               <p className="text-lg font-bold text-gray-700 mt-1">SCRA</p>

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
     const supabase = await createClient();
 
@@ -20,12 +20,21 @@ export async function GET() {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
-    const { data: leads } = await supabase
-      .from('leads')
-      .select('id, first_name, last_name, status, qualification_tier, qualification_score, repo_state, created_at, claimed_at, claimed_by')
-      .order('created_at', { ascending: false });
+    const { searchParams } = request.nextUrl;
+    const page = Math.max(1, parseInt(searchParams.get('page') || '1', 10));
+    const limit = Math.min(100, Math.max(1, parseInt(searchParams.get('limit') || '50', 10)));
+    const offset = (page - 1) * limit;
 
-    return NextResponse.json({ leads: leads || [] });
+    const { data: leads, count } = await supabase
+      .from('leads')
+      .select('id, first_name, last_name, status, qualification_tier, qualification_score, repo_state, created_at, claimed_at, claimed_by', { count: 'exact' })
+      .order('created_at', { ascending: false })
+      .range(offset, offset + limit - 1);
+
+    return NextResponse.json({
+      leads: leads || [],
+      pagination: { page, limit, total: count || 0, totalPages: Math.ceil((count || 0) / limit) },
+    });
   } catch (error) {
     console.error('Pipeline error:', error);
     return NextResponse.json({ error: 'An unexpected error occurred' }, { status: 500 });

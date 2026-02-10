@@ -160,11 +160,11 @@ export default function FeeTrackingPage() {
       </div>
 
       {/* Filters */}
-      <div className="flex flex-wrap items-center gap-3">
+      <div className="flex flex-col sm:flex-row gap-3">
         <select
           value={caseStatusFilter}
           onChange={(e) => setCaseStatusFilter(e.target.value)}
-          className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1B2A4A]"
+          className="w-full sm:w-auto px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1B2A4A]"
         >
           <option value="">All Case Statuses</option>
           <option value="open">Open</option>
@@ -175,7 +175,7 @@ export default function FeeTrackingPage() {
         <select
           value={paymentStatusFilter}
           onChange={(e) => setPaymentStatusFilter(e.target.value)}
-          className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1B2A4A]"
+          className="w-full sm:w-auto px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1B2A4A]"
         >
           <option value="">All Payment Statuses</option>
           <option value="pending">Pending</option>

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import { Search, Users } from 'lucide-react';
+import { Search, Users, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
@@ -23,11 +23,15 @@ export default function AdminAttorneysPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [total, setTotal] = useState(0);
+  const limit = 25;
 
   const fetchAttorneys = useCallback(async () => {
     setLoading(true);
     try {
-      const params = new URLSearchParams();
+      const params = new URLSearchParams({ page: page.toString(), limit: limit.toString() });
       if (search) params.set('search', search);
       if (statusFilter) params.set('status', statusFilter);
 
@@ -35,13 +39,15 @@ export default function AdminAttorneysPage() {
       if (res.ok) {
         const data = await res.json();
         setAttorneys(data.attorneys);
+        setTotal(data.pagination?.total || data.attorneys.length);
+        setTotalPages(data.pagination?.totalPages || 1);
       }
     } catch {
       // silently fail
     } finally {
       setLoading(false);
     }
-  }, [search, statusFilter]);
+  }, [search, statusFilter, page]);
 
   useEffect(() => {
     fetchAttorneys();
@@ -51,7 +57,7 @@ export default function AdminAttorneysPage() {
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <h1 className="text-2xl font-bold text-gray-900">Attorney Management</h1>
-        <span className="text-sm text-gray-500">{attorneys.length} attorneys</span>
+        <span className="text-sm text-gray-500">{total} attorneys</span>
       </div>
 
       <div className="bg-white rounded-xl border border-gray-200 p-4">
@@ -62,13 +68,13 @@ export default function AdminAttorneysPage() {
               type="text"
               placeholder="Search by name, email, or firm..."
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => { setSearch(e.target.value); setPage(1); }}
               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1B2A4A] focus:border-transparent"
             />
           </div>
           <select
             value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
+            onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
             className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1B2A4A]"
           >
             <option value="">All Statuses</option>
@@ -140,6 +146,30 @@ export default function AdminAttorneysPage() {
               ))}
             </TableBody>
           </Table>
+        )}
+
+        {totalPages > 1 && (
+          <div className="flex items-center justify-between px-4 py-3 border-t border-gray-200">
+            <p className="text-sm text-gray-500">
+              Page {page} of {totalPages}
+            </p>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                disabled={page === 1}
+                className="p-1.5 rounded-lg border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </button>
+              <button
+                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                disabled={page === totalPages}
+                className="p-1.5 rounded-lg border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
         )}
       </div>
     </div>

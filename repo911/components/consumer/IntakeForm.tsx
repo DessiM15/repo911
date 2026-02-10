@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
-import { intakeFormSchema, type IntakeFormData } from '@/lib/validations/intake-form';
+import { intakeFormSchema, type IntakeFormData, type IntakeFormInput } from '@/lib/validations/intake-form';
 import { FormSection } from './FormSection';
 import { ProgressIndicator } from './ProgressIndicator';
 import { Input } from '@/components/ui/input';
@@ -75,7 +75,9 @@ export function IntakeForm() {
     watch,
     setValue,
     formState: { errors },
-  } = useForm<IntakeFormData>({
+  } = useForm<IntakeFormInput>({
+    // zodResolver validates consent fields as literal `true` at submit time;
+    // cast needed because IntakeFormInput uses `boolean` for default values
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     resolver: zodResolver(intakeFormSchema) as any,
     defaultValues: {
@@ -95,10 +97,10 @@ export function IntakeForm() {
       repo_location: [],
       impacts: [],
       fdcpa_violations: [],
-      consent_accurate_info: false as unknown as true,
-      consent_not_legal_advice: false as unknown as true,
-      consent_contact: false as unknown as true,
-      consent_privacy_policy: false as unknown as true,
+      consent_accurate_info: false,
+      consent_not_legal_advice: false,
+      consent_contact: false,
+      consent_privacy_policy: false,
     },
   });
 
@@ -117,9 +119,17 @@ export function IntakeForm() {
 
   function markSectionVisible(index: number) {
     setCurrentSection(index);
+    // Mark all previous sections as completed
+    setCompletedSections((prev) => {
+      const updated = new Set(prev);
+      for (let i = 0; i < index; i++) {
+        updated.add(i);
+      }
+      return Array.from(updated);
+    });
   }
 
-  async function onSubmit(data: IntakeFormData) {
+  async function onSubmit(data: IntakeFormInput) {
     setSubmitting(true);
     setSubmitError(null);
 

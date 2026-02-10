@@ -25,10 +25,13 @@ export async function GET(request: NextRequest) {
     const stage = searchParams.get('stage');
     const search = searchParams.get('search');
     const tag = searchParams.get('tag');
+    const page = Math.max(1, parseInt(searchParams.get('page') || '1', 10));
+    const limit = Math.min(100, Math.max(1, parseInt(searchParams.get('limit') || '25', 10)));
+    const offset = (page - 1) * limit;
 
     let query = supabase
       .from('crm_contacts')
-      .select('*');
+      .select('*', { count: 'exact' });
 
     if (type) query = query.eq('contact_type', type);
     if (stage) query = query.eq('lifecycle_stage', stage);
@@ -39,11 +42,14 @@ export async function GET(request: NextRequest) {
       query = query.contains('tags', [tag]);
     }
 
-    query = query.order('updated_at', { ascending: false });
+    query = query.order('updated_at', { ascending: false }).range(offset, offset + limit - 1);
 
-    const { data: contacts } = await query;
+    const { data: contacts, count } = await query;
 
-    return NextResponse.json({ contacts: contacts || [] });
+    return NextResponse.json({
+      contacts: contacts || [],
+      pagination: { page, limit, total: count || 0, totalPages: Math.ceil((count || 0) / limit) },
+    });
   } catch (error) {
     console.error('CRM contacts error:', error);
     return NextResponse.json({ error: 'An unexpected error occurred' }, { status: 500 });

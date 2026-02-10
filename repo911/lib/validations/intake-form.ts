@@ -5,9 +5,9 @@ export const intakeFormSchema = z.object({
   first_name: z.string().min(1, 'First name is required'),
   last_name: z.string().min(1, 'Last name is required'),
   email: z.string().email('Please enter a valid email address'),
-  phone: z.string().min(10, 'Please enter a valid phone number').regex(
-    /^[\d\s()+-]+$/,
-    'Please enter a valid phone number'
+  phone: z.string().regex(
+    /^\+?1?\s*\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/,
+    'Please enter a valid phone number (e.g., (555) 555-5555)'
   ),
   preferred_contact: z.enum(['phone', 'email', 'text'], {
     message: 'Please select a preferred contact method',
@@ -119,3 +119,11 @@ export const intakeFormSchema = z.object({
 });
 
 export type IntakeFormData = z.infer<typeof intakeFormSchema>;
+
+// Input type for the form (before validation) — consent fields are boolean, not literal true
+export type IntakeFormInput = Omit<IntakeFormData, 'consent_accurate_info' | 'consent_not_legal_advice' | 'consent_contact' | 'consent_privacy_policy'> & {
+  consent_accurate_info: boolean;
+  consent_not_legal_advice: boolean;
+  consent_contact: boolean;
+  consent_privacy_policy: boolean;
+};

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import { Search, Contact } from 'lucide-react';
+import { Search, Contact, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
@@ -41,11 +41,15 @@ export default function CRMPage() {
   const [search, setSearch] = useState('');
   const [typeFilter, setTypeFilter] = useState('');
   const [stageFilter, setStageFilter] = useState('');
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [total, setTotal] = useState(0);
+  const limit = 25;
 
   const fetchContacts = useCallback(async () => {
     setLoading(true);
     try {
-      const params = new URLSearchParams();
+      const params = new URLSearchParams({ page: page.toString(), limit: limit.toString() });
       if (search) params.set('search', search);
       if (typeFilter) params.set('type', typeFilter);
       if (stageFilter) params.set('stage', stageFilter);
@@ -54,13 +58,15 @@ export default function CRMPage() {
       if (res.ok) {
         const data = await res.json();
         setContacts(data.contacts);
+        setTotal(data.pagination?.total || data.contacts.length);
+        setTotalPages(data.pagination?.totalPages || 1);
       }
     } catch {
       // silently fail
     } finally {
       setLoading(false);
     }
-  }, [search, typeFilter, stageFilter]);
+  }, [search, typeFilter, stageFilter, page]);
 
   useEffect(() => {
     fetchContacts();
@@ -71,7 +77,7 @@ export default function CRMPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <h1 className="text-2xl font-bold text-gray-900">CRM Contacts</h1>
         <div className="flex items-center gap-3">
-          <span className="text-sm text-gray-500">{contacts.length} contacts</span>
+          <span className="text-sm text-gray-500">{total} contacts</span>
           <Link href="/admin/crm/pipeline" className="px-3 py-1.5 bg-[#1B2A4A] text-white text-sm rounded-lg hover:bg-[#2A3D66] transition-colors">
             Pipeline View
           </Link>
@@ -86,13 +92,13 @@ export default function CRMPage() {
               type="text"
               placeholder="Search by name or email..."
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => { setSearch(e.target.value); setPage(1); }}
               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1B2A4A] focus:border-transparent"
             />
           </div>
           <select
             value={typeFilter}
-            onChange={(e) => setTypeFilter(e.target.value)}
+            onChange={(e) => { setTypeFilter(e.target.value); setPage(1); }}
             className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1B2A4A]"
           >
             {TYPE_OPTIONS.map((o) => (
@@ -101,7 +107,7 @@ export default function CRMPage() {
           </select>
           <select
             value={stageFilter}
-            onChange={(e) => setStageFilter(e.target.value)}
+            onChange={(e) => { setStageFilter(e.target.value); setPage(1); }}
             className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1B2A4A]"
           >
             {STAGE_OPTIONS.map((o) => (
@@ -181,6 +187,30 @@ export default function CRMPage() {
               ))}
             </TableBody>
           </Table>
+        )}
+
+        {totalPages > 1 && (
+          <div className="flex items-center justify-between px-4 py-3 border-t border-gray-200">
+            <p className="text-sm text-gray-500">
+              Page {page} of {totalPages}
+            </p>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                disabled={page === 1}
+                className="p-1.5 rounded-lg border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </button>
+              <button
+                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                disabled={page === totalPages}
+                className="p-1.5 rounded-lg border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
         )}
       </div>
     </div>
