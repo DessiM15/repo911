@@ -1,6 +1,0 @@
-{
-  "framework": "nextjs",
-  "installCommand": "npm install --prefix repo911",
-  "buildCommand": "npm run build --prefix repo911",
-  "outputDirectory": "repo911/.next"
-}
