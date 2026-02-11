@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Shield, FileSearch, UserCheck, ArrowRight, ChevronRight } from 'lucide-react';
+import { Shield, FileSearch, UserCheck, ArrowRight, ChevronRight, Clock, Lock, Scale } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const jsonLd = {
@@ -121,6 +121,30 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Social Proof Stats */}
+      <section className="bg-[#1B2A4A] py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+            <div>
+              <p className="text-2xl sm:text-3xl font-bold text-white">100%</p>
+              <p className="text-sm text-gray-300 mt-1">Free Case Review</p>
+            </div>
+            <div>
+              <p className="text-2xl sm:text-3xl font-bold text-white">50</p>
+              <p className="text-sm text-gray-300 mt-1">States Covered</p>
+            </div>
+            <div>
+              <p className="text-2xl sm:text-3xl font-bold text-white">5 Min</p>
+              <p className="text-sm text-gray-300 mt-1">Quick Questionnaire</p>
+            </div>
+            <div>
+              <p className="text-2xl sm:text-3xl font-bold text-white">24-48 Hr</p>
+              <p className="text-sm text-gray-300 mt-1">Attorney Response</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* How It Works */}
       <section className="py-16 sm:py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -231,16 +255,65 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Urgency — Statute of Limitations */}
+      <section className="py-12 sm:py-16 bg-[#FEF3C7] border-y border-[#F5A623]/30">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col sm:flex-row items-center gap-6 text-center sm:text-left">
+            <div className="flex-shrink-0">
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[#F5A623]/20">
+                <Clock className="h-8 w-8 text-[#F5A623]" />
+              </div>
+            </div>
+            <div>
+              <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">
+                Time May Be Running Out on Your Claim
+              </h3>
+              <p className="text-gray-700 leading-relaxed">
+                Most states have a <strong>statute of limitations</strong> on wrongful repossession claims — typically 2-4 years from the date of repossession. Once this window closes, you may lose your right to compensation forever. The sooner you act, the stronger your case.
+              </p>
+              <Link href="/claim" className="inline-flex items-center gap-1 mt-3 text-[#4A90D9] font-semibold hover:underline">
+                Check your case now before it&apos;s too late <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Trust Section */}
       <section className="py-16 sm:py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-            Helping Victims Nationwide Fight Back
-          </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-10">
-            Our platform connects you with experienced attorneys who specialize in wrongful repossession, FDCPA violations, and consumer protection law.
-          </p>
-          <div className="flex flex-wrap items-center justify-center gap-8 text-gray-400">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+              Why Consumers Trust Repo911
+            </h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              We connect you with experienced attorneys who specialize in wrongful repossession and consumer protection law.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 mb-12">
+            <div className="text-center p-6">
+              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-[#4A90D9]/10 text-[#4A90D9] mb-4">
+                <Scale className="h-6 w-6" />
+              </div>
+              <h3 className="font-semibold text-gray-900 mb-2">Licensed Attorneys Only</h3>
+              <p className="text-sm text-gray-600">Every attorney in our network is licensed and verified in their state.</p>
+            </div>
+            <div className="text-center p-6">
+              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-[#4A90D9]/10 text-[#4A90D9] mb-4">
+                <Lock className="h-6 w-6" />
+              </div>
+              <h3 className="font-semibold text-gray-900 mb-2">Your Info Is Protected</h3>
+              <p className="text-sm text-gray-600">Your personal information is encrypted and only shared with your matched attorney.</p>
+            </div>
+            <div className="text-center p-6">
+              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-[#4A90D9]/10 text-[#4A90D9] mb-4">
+                <Shield className="h-6 w-6" />
+              </div>
+              <h3 className="font-semibold text-gray-900 mb-2">No Win, No Fee</h3>
+              <p className="text-sm text-gray-600">Attorneys typically work on contingency — you pay nothing unless you win your case.</p>
+            </div>
+          </div>
+          <div className="flex flex-wrap items-center justify-center gap-8 text-gray-400 pt-8 border-t border-gray-100">
             <div className="text-center">
               <p className="text-sm font-medium uppercase tracking-wider">Protected by</p>
               <p className="text-lg font-bold text-gray-700 mt-1">UCC Article 9</p>
