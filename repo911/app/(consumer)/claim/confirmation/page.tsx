@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { CheckCircle, Clock, Phone, ArrowRight, Info } from 'lucide-react';
+import { CheckCircle, Clock, Phone, ArrowRight, Info, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export const metadata: Metadata = {
@@ -75,7 +75,7 @@ export default async function ConfirmationPage({
 }: {
   searchParams: Promise<{ tier?: string; id?: string }>;
 }) {
-  const { tier = null } = await searchParams;
+  const { tier = null, id = null } = await searchParams;
   const content = getTierContent(tier);
   const Icon = content.icon;
 
@@ -114,13 +114,35 @@ export default async function ConfirmationPage({
         </ul>
       </div>
 
+      {id && (
+        <div className="bg-white rounded-xl border border-gray-200 p-6 mb-8 shadow-sm">
+          <h3 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
+            <Search className="h-5 w-5 text-[#4A90D9]" />
+            Track Your Case
+          </h3>
+          <p className="text-sm text-gray-600 mb-3">
+            Save your case ID to check your status anytime, or upload evidence documents.
+          </p>
+          <div className="bg-gray-50 rounded-lg px-4 py-3 mb-4">
+            <p className="text-xs text-gray-500 mb-1">Your Case ID</p>
+            <p className="font-mono text-sm text-gray-900 select-all break-all">{id}</p>
+          </div>
+          <Link href="/track">
+            <Button variant="primary" size="sm" className="w-full sm:w-auto">
+              <Search className="mr-2 h-4 w-4" />
+              Track Your Case
+            </Button>
+          </Link>
+        </div>
+      )}
+
       <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
         <Link href="/">
           <Button variant="outline">Return Home</Button>
         </Link>
-        <Link href="/faq">
+        <Link href="/track">
           <Button variant="primary">
-            Learn More <ArrowRight className="ml-2 h-4 w-4" />
+            Track Your Case <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </Link>
       </div>

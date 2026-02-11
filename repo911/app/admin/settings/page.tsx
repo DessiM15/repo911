@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Settings, DollarSign, Bell, Shield } from 'lucide-react';
+import { Settings, DollarSign, Bell, Shield, Users, Plus, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { formatCurrency } from '@/lib/utils';
@@ -13,6 +13,15 @@ interface PlatformSettings {
   notification_email_from: string;
   platform_name: string;
   fee_share_percentage: number;
+}
+
+interface AdminUser {
+  id: string;
+  first_name: string;
+  last_name: string | null;
+  email: string;
+  role: string;
+  created_at: string;
 }
 
 export default function SettingsPage() {
@@ -28,6 +37,19 @@ export default function SettingsPage() {
   const [priceCold, setPriceCold] = useState('');
   const [emailFrom, setEmailFrom] = useState('');
   const [feeShare, setFeeShare] = useState('');
+
+  // Admin management
+  const [admins, setAdmins] = useState<AdminUser[]>([]);
+  const [adminsLoading, setAdminsLoading] = useState(true);
+  const [showAddAdmin, setShowAddAdmin] = useState(false);
+  const [newAdminEmail, setNewAdminEmail] = useState('');
+  const [newAdminFirstName, setNewAdminFirstName] = useState('');
+  const [newAdminLastName, setNewAdminLastName] = useState('');
+  const [newAdminPassword, setNewAdminPassword] = useState('');
+  const [newAdminRole, setNewAdminRole] = useState('viewer');
+  const [creatingAdmin, setCreatingAdmin] = useState(false);
+  const [adminError, setAdminError] = useState('');
+  const [adminSuccess, setAdminSuccess] = useState('');
 
   useEffect(() => {
     async function fetchSettings() {
@@ -50,6 +72,66 @@ export default function SettingsPage() {
     }
     fetchSettings();
   }, []);
+
+  useEffect(() => {
+    async function fetchAdmins() {
+      try {
+        const res = await fetch('/api/admin/admins');
+        if (res.ok) {
+          const data = await res.json();
+          setAdmins(data.admins || []);
+        }
+      } catch {
+        // Non-critical — admin list may not load on first render
+      } finally {
+        setAdminsLoading(false);
+      }
+    }
+    fetchAdmins();
+  }, []);
+
+  async function handleCreateAdmin(e: React.FormEvent) {
+    e.preventDefault();
+    setCreatingAdmin(true);
+    setAdminError('');
+    setAdminSuccess('');
+    try {
+      const res = await fetch('/api/admin/admins', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: newAdminEmail,
+          firstName: newAdminFirstName,
+          lastName: newAdminLastName,
+          password: newAdminPassword,
+          role: newAdminRole,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setAdminError(data.error || 'Failed to create admin');
+        return;
+      }
+      setAdminSuccess(`Admin "${newAdminEmail}" created successfully.`);
+      setNewAdminEmail('');
+      setNewAdminFirstName('');
+      setNewAdminLastName('');
+      setNewAdminPassword('');
+      setNewAdminRole('viewer');
+      setShowAddAdmin(false);
+      // Refresh admin list
+      const refreshRes = await fetch('/api/admin/admins');
+      if (refreshRes.ok) {
+        const refreshData = await refreshRes.json();
+        setAdmins(refreshData.admins || []);
+      }
+      setTimeout(() => setAdminSuccess(''), 5000);
+    } catch {
+      setAdminError('Failed to create admin');
+    } finally {
+      setCreatingAdmin(false);
+    }
+  }
 
   async function handleSave() {
     setSaving(true);
@@ -247,6 +329,144 @@ export default function SettingsPage() {
         <Button variant="primary" size="lg" onClick={handleSave} loading={saving} className="bg-[#1B2A4A] hover:bg-[#2A3D66]">
           Save Settings
         </Button>
+      </div>
+
+      {/* Admin Users */}
+      <div className="bg-white rounded-xl border border-gray-200 p-6">
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h2 className="font-semibold text-gray-900 flex items-center gap-2">
+              <Users className="h-5 w-5 text-purple-500" /> Admin Users
+            </h2>
+            <p className="text-sm text-gray-500 mt-1">
+              Manage administrator accounts for the platform.
+            </p>
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setShowAddAdmin(!showAddAdmin)}
+          >
+            <Plus className="mr-1 h-4 w-4" />
+            Add Admin
+          </Button>
+        </div>
+
+        {adminError && (
+          <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg p-3 text-sm mb-4">{adminError}</div>
+        )}
+
+        {adminSuccess && (
+          <div className="bg-green-50 border border-green-200 text-green-700 rounded-lg p-3 text-sm mb-4">{adminSuccess}</div>
+        )}
+
+        {/* Add Admin Form */}
+        {showAddAdmin && (
+          <form onSubmit={handleCreateAdmin} className="bg-gray-50 rounded-lg p-4 mb-4 space-y-3">
+            <div className="grid sm:grid-cols-2 gap-3">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">First Name *</label>
+                <input
+                  type="text"
+                  required
+                  value={newAdminFirstName}
+                  onChange={(e) => setNewAdminFirstName(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1B2A4A]"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
+                <input
+                  type="text"
+                  value={newAdminLastName}
+                  onChange={(e) => setNewAdminLastName(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1B2A4A]"
+                />
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Email *</label>
+              <input
+                type="email"
+                required
+                value={newAdminEmail}
+                onChange={(e) => setNewAdminEmail(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1B2A4A]"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Password * (min 8 characters)</label>
+              <input
+                type="password"
+                required
+                minLength={8}
+                value={newAdminPassword}
+                onChange={(e) => setNewAdminPassword(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1B2A4A]"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Role</label>
+              <select
+                value={newAdminRole}
+                onChange={(e) => setNewAdminRole(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1B2A4A] bg-white"
+              >
+                <option value="viewer">Viewer (read-only)</option>
+                <option value="admin">Admin (full access)</option>
+              </select>
+            </div>
+            <div className="flex items-center gap-2 pt-1">
+              <Button type="submit" variant="primary" size="sm" className="bg-[#1B2A4A] hover:bg-[#2A3D66]" disabled={creatingAdmin}>
+                {creatingAdmin ? <><Loader2 className="mr-1 h-4 w-4 animate-spin" /> Creating...</> : 'Create Admin'}
+              </Button>
+              <Button type="button" variant="ghost" size="sm" onClick={() => setShowAddAdmin(false)}>
+                Cancel
+              </Button>
+            </div>
+          </form>
+        )}
+
+        {/* Admin Table */}
+        {adminsLoading ? (
+          <div className="space-y-2">
+            <Skeleton className="h-10 w-full" />
+            <Skeleton className="h-10 w-full" />
+          </div>
+        ) : admins.length === 0 ? (
+          <p className="text-sm text-gray-500">No admin users found.</p>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-gray-200">
+                  <th className="text-left py-2 px-2 font-medium text-gray-500">Name</th>
+                  <th className="text-left py-2 px-2 font-medium text-gray-500">Email</th>
+                  <th className="text-left py-2 px-2 font-medium text-gray-500">Role</th>
+                </tr>
+              </thead>
+              <tbody>
+                {admins.map((admin) => (
+                  <tr key={admin.id} className="border-b border-gray-100">
+                    <td className="py-2 px-2 text-gray-900">
+                      {admin.first_name} {admin.last_name || ''}
+                    </td>
+                    <td className="py-2 px-2 text-gray-600">{admin.email}</td>
+                    <td className="py-2 px-2">
+                      <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
+                        admin.role === 'super_admin' ? 'bg-purple-100 text-purple-700' :
+                        admin.role === 'admin' ? 'bg-blue-100 text-blue-700' :
+                        'bg-gray-100 text-gray-600'
+                      }`}>
+                        {admin.role === 'super_admin' ? 'Super Admin' : admin.role === 'admin' ? 'Admin' : 'Viewer'}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
     </div>
   );
