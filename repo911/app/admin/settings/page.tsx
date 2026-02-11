@@ -239,7 +239,7 @@ export default function SettingsPage() {
               <span className="text-xs text-gray-400">Auto-sent</span>
             </div>
           </div>
-          <p className="text-xs text-gray-400 mt-3">Email templates are configured in Phase 5 (Notifications & Polish).</p>
+          <p className="text-xs text-gray-400 mt-3">Email templates are managed in code. Contact your developer to modify.</p>
         </div>
       </div>
 

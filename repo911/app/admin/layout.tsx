@@ -5,6 +5,10 @@ export const metadata = {
     default: 'Admin Portal',
     template: '%s | Repo911 Admin',
   },
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default function AdminLayout({

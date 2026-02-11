@@ -5,6 +5,10 @@ export const metadata = {
     default: 'Attorney Portal',
     template: '%s | Repo911 Attorney Portal',
   },
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default function AttorneyLayout({

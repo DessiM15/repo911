@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import { Search, Filter, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Search, Filter, ChevronLeft, ChevronRight, Download } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
@@ -86,11 +86,47 @@ export default function AdminLeadsPage() {
 
   const totalPages = Math.ceil(total / limit);
 
+  function exportCSV() {
+    if (leads.length === 0) return;
+    const headers = ['Name', 'Email', 'Phone', 'Status', 'Tier', 'Score', 'State', 'Lender', 'Repo Date', 'Created', 'Claimed'];
+    const rows = leads.map((l) => [
+      `${l.first_name} ${l.last_name}`,
+      l.email,
+      l.phone,
+      l.status,
+      l.qualification_tier || '',
+      l.qualification_score,
+      l.repo_state || '',
+      l.lender_name || '',
+      l.repo_date || '',
+      l.created_at?.split('T')[0] || '',
+      l.claimed_by ? 'Yes' : 'No',
+    ]);
+    const csv = [headers, ...rows].map((r) => r.map((c: string | number) => `"${String(c).replace(/"/g, '""')}"`).join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `leads-export-${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
   return (
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <h1 className="text-2xl font-bold text-gray-900">All Leads</h1>
-        <span className="text-sm text-gray-500">{total} total leads</span>
+        <div className="flex items-center gap-3">
+          <span className="text-sm text-gray-500">{total} total leads</span>
+          <button
+            onClick={exportCSV}
+            disabled={leads.length === 0}
+            className="flex items-center gap-1.5 px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          >
+            <Download className="h-4 w-4" />
+            Export CSV
+          </button>
+        </div>
       </div>
 
       {error && (

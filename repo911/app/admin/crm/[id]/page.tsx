@@ -55,6 +55,10 @@ export default function CRMContactDetailPage() {
   const [addingNote, setAddingNote] = useState(false);
   const [stageEdit, setStageEdit] = useState('');
   const [savingStage, setSavingStage] = useState(false);
+  const [newTag, setNewTag] = useState('');
+  const [savingTags, setSavingTags] = useState(false);
+  const [followUp, setFollowUp] = useState('');
+  const [savingFollowUp, setSavingFollowUp] = useState(false);
 
   useEffect(() => {
     async function fetchContact() {
@@ -70,6 +74,7 @@ export default function CRMContactDetailPage() {
         setLead(data.lead);
         setAttorney(data.attorney);
         setStageEdit(data.contact.lifecycle_stage);
+        setFollowUp(data.contact.next_follow_up || '');
       } catch {
         setError('Failed to load contact details.');
       } finally {
@@ -131,6 +136,65 @@ export default function CRMContactDetailPage() {
       setError('Failed to update stage');
     } finally {
       setSavingStage(false);
+    }
+  }
+
+  async function handleAddTag() {
+    const tag = newTag.trim().toLowerCase().replace(/\s+/g, '_');
+    if (!tag || (contact.tags || []).includes(tag)) { setNewTag(''); return; }
+    setSavingTags(true);
+    try {
+      const updatedTags = [...(contact.tags || []), tag];
+      const res = await fetch(`/api/admin/crm/contacts/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tags: updatedTags }),
+      });
+      if (res.ok) {
+        setContact((prev: typeof contact) => ({ ...prev, tags: updatedTags }));
+        setNewTag('');
+      }
+    } catch {
+      setError('Failed to add tag');
+    } finally {
+      setSavingTags(false);
+    }
+  }
+
+  async function handleRemoveTag(tagToRemove: string) {
+    setSavingTags(true);
+    try {
+      const updatedTags = (contact.tags || []).filter((t: string) => t !== tagToRemove);
+      const res = await fetch(`/api/admin/crm/contacts/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tags: updatedTags }),
+      });
+      if (res.ok) {
+        setContact((prev: typeof contact) => ({ ...prev, tags: updatedTags }));
+      }
+    } catch {
+      setError('Failed to remove tag');
+    } finally {
+      setSavingTags(false);
+    }
+  }
+
+  async function handleFollowUpUpdate() {
+    setSavingFollowUp(true);
+    try {
+      const res = await fetch(`/api/admin/crm/contacts/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ next_follow_up: followUp || null }),
+      });
+      if (res.ok) {
+        setContact((prev: typeof contact) => ({ ...prev, next_follow_up: followUp || null }));
+      }
+    } catch {
+      setError('Failed to update follow-up date');
+    } finally {
+      setSavingFollowUp(false);
     }
   }
 
@@ -215,27 +279,64 @@ export default function CRMContactDetailPage() {
             </Button>
           )}
 
-          {contact.tags?.length > 0 && (
-            <div className="flex items-center gap-1 ml-4">
-              <Tag className="h-3.5 w-3.5 text-gray-400" />
-              {contact.tags.map((tag: string) => (
-                <span key={tag} className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">
-                  {tag}
-                </span>
-              ))}
-            </div>
-          )}
         </div>
 
-        {contact.next_follow_up && (
-          <div className="mt-3 flex items-center gap-2 text-sm">
-            <Calendar className="h-4 w-4 text-gray-400" />
-            <span className="text-gray-500">Next follow-up:</span>
-            <span className={new Date(contact.next_follow_up) < new Date() ? 'text-red-500 font-medium' : 'text-gray-700'}>
-              {formatDate(contact.next_follow_up)}
-            </span>
+        {/* Tags */}
+        <div className="mt-4 pt-4 border-t border-gray-200">
+          <div className="flex flex-wrap items-center gap-2">
+            <Tag className="h-3.5 w-3.5 text-gray-400" />
+            {(contact.tags || []).map((tag: string) => (
+              <span key={tag} className="inline-flex items-center gap-1 text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">
+                {tag}
+                <button
+                  onClick={() => handleRemoveTag(tag)}
+                  disabled={savingTags}
+                  className="text-gray-400 hover:text-red-500 ml-0.5"
+                  aria-label={`Remove tag ${tag}`}
+                >
+                  &times;
+                </button>
+              </span>
+            ))}
+            <div className="flex items-center gap-1">
+              <input
+                type="text"
+                placeholder="Add tag..."
+                value={newTag}
+                onChange={(e) => setNewTag(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleAddTag()}
+                className="w-24 px-2 py-0.5 border border-gray-300 rounded text-xs focus:outline-none focus:ring-1 focus:ring-[#1B2A4A]"
+              />
+              <button
+                onClick={handleAddTag}
+                disabled={!newTag.trim() || savingTags}
+                className="text-xs text-[#4A90D9] hover:underline disabled:opacity-50"
+              >
+                Add
+              </button>
+            </div>
           </div>
-        )}
+        </div>
+
+        {/* Follow-up Date */}
+        <div className="mt-3 flex flex-wrap items-center gap-2 text-sm">
+          <Calendar className="h-4 w-4 text-gray-400" />
+          <span className="text-gray-500">Follow-up:</span>
+          <input
+            type="date"
+            value={followUp ? followUp.split('T')[0] : ''}
+            onChange={(e) => setFollowUp(e.target.value)}
+            className="px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-[#1B2A4A]"
+          />
+          {followUp !== (contact.next_follow_up || '') && (
+            <Button size="sm" variant="primary" onClick={handleFollowUpUpdate} loading={savingFollowUp}>
+              Save
+            </Button>
+          )}
+          {contact.next_follow_up && new Date(contact.next_follow_up) < new Date() && (
+            <span className="text-xs text-red-500 font-medium">Overdue</span>
+          )}
+        </div>
       </div>
 
       <div className="grid lg:grid-cols-3 gap-4">

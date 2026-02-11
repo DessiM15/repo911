@@ -3,10 +3,29 @@ import { intakeFormSchema } from '@/lib/validations/intake-form';
 import { qualifyLead } from '@/lib/qualification-engine';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { sendLeadSubmissionConfirmation, sendHotLeadAlert, sendWarmLeadAlert } from '@/lib/emails';
+import { rateLimit } from '@/lib/rate-limit';
 import type { LeadSubmission } from '@/types';
 
 export async function POST(request: NextRequest) {
   try {
+    // Rate limit: 5 submissions per IP per 15 minutes
+    const ip =
+      request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+      request.headers.get('x-real-ip') ||
+      'unknown';
+    const rateLimitResult = rateLimit(`lead_submit:${ip}`, { limit: 5, windowSeconds: 900 });
+    if (!rateLimitResult.success) {
+      return NextResponse.json(
+        { error: 'Too many submissions. Please try again later.' },
+        {
+          status: 429,
+          headers: {
+            'Retry-After': Math.ceil((rateLimitResult.resetAt - Date.now()) / 1000).toString(),
+          },
+        }
+      );
+    }
+
     const body = await request.json();
 
     // Validate input

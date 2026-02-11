@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import { DollarSign, Receipt, RefreshCw } from 'lucide-react';
+import { DollarSign, Receipt, RefreshCw, Download } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
@@ -45,9 +45,41 @@ export default function TransactionsPage() {
     fetchTransactions();
   }, [fetchTransactions]);
 
+  function exportCSV() {
+    if (transactions.length === 0) return;
+    const headers = ['Date', 'Attorney', 'Lead ID', 'Amount', 'Status', 'Stripe ID', 'Description'];
+    const rows = transactions.map((tx) => [
+      tx.created_at?.split('T')[0] || '',
+      tx.attorney_id ? (attorneys[tx.attorney_id] || 'Unknown') : '',
+      tx.lead_id || '',
+      (tx.amount / 100).toFixed(2),
+      tx.status,
+      tx.stripe_payment_intent_id || '',
+      tx.description || '',
+    ]);
+    const csv = [headers, ...rows].map((r) => r.map((c: string | number) => `"${String(c).replace(/"/g, '""')}"`).join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `transactions-export-${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
   return (
     <div className="space-y-4">
-      <h1 className="text-2xl font-bold text-gray-900">Transactions</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold text-gray-900">Transactions</h1>
+        <button
+          onClick={exportCSV}
+          disabled={transactions.length === 0}
+          className="flex items-center gap-1.5 px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        >
+          <Download className="h-4 w-4" />
+          Export CSV
+        </button>
+      </div>
 
       {error && (
         <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg p-4 mb-6">
