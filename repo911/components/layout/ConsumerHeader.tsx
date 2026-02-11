@@ -11,7 +11,7 @@ export function ConsumerHeader() {
   const navLinks = [
     { href: '/how-it-works', label: 'How It Works' },
     { href: '/faq', label: 'FAQ' },
-    { href: '/claim', label: 'Free Case Review' },
+    { href: '/track', label: 'Track My Case' },
   ];
 
   return (

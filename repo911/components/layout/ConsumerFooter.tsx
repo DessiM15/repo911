@@ -38,6 +38,11 @@ export function ConsumerFooter() {
                   FAQ
                 </Link>
               </li>
+              <li>
+                <Link href="/track" className="text-sm text-gray-500 hover:text-[#4A90D9] transition-colors">
+                  Track My Case
+                </Link>
+              </li>
             </ul>
           </div>
 
