@@ -64,7 +64,7 @@ export const intakeFormSchema = z.object({
   police_assisted: z.enum(['yes', 'no', 'not_sure']).optional(),
   repo_at_workplace: z.boolean(),
   public_embarrassment: z.boolean(),
-  narrative: z.string().min(50, 'Please provide at least 50 characters describing what happened'),
+  narrative: z.string().min(1, 'Please describe what happened'),
 
   // Section 6: Personal Belongings
   had_belongings: z.boolean(),
