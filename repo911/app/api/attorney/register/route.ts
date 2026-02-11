@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/admin';
-import { stripe } from '@/lib/stripe';
+import { stripe, isStripeConfigured } from '@/lib/stripe';
 import { sendAttorneyRegistrationAlert } from '@/lib/emails';
 
 export async function POST(request: NextRequest) {
@@ -34,17 +34,21 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Failed to create account.' }, { status: 500 });
     }
 
-    // 2. Create Stripe Customer
-    const customer = await stripe.customers.create({
-      email,
-      name: `${first_name} ${last_name}`,
-      metadata: {
-        supabase_auth_id: authData.user.id,
-        firm_name: firm_name || '',
-        bar_number,
-        bar_state,
-      },
-    });
+    // 2. Create Stripe Customer (skip if Stripe not configured)
+    let stripeCustomerId: string | null = null;
+    if (isStripeConfigured()) {
+      const customer = await stripe.customers.create({
+        email,
+        name: `${first_name} ${last_name}`,
+        metadata: {
+          supabase_auth_id: authData.user.id,
+          firm_name: firm_name || '',
+          bar_number,
+          bar_state,
+        },
+      });
+      stripeCustomerId = customer.id;
+    }
 
     // 3. Get metadata from request
     const ip_address =
@@ -71,7 +75,7 @@ export async function POST(request: NextRequest) {
         fee_agreement_signed: true,
         fee_agreement_signed_at: new Date().toISOString(),
         fee_agreement_ip: ip_address,
-        stripe_customer_id: customer.id,
+        stripe_customer_id: stripeCustomerId,
         status: 'pending',
         is_verified: false,
         email_notifications: true,

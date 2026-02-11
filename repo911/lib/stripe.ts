@@ -2,6 +2,11 @@ import Stripe from 'stripe';
 
 let _stripe: Stripe | null = null;
 
+export function isStripeConfigured(): boolean {
+  const key = process.env.STRIPE_SECRET_KEY;
+  return !!key && !key.includes('placeholder');
+}
+
 export function getStripe(): Stripe {
   if (!_stripe) {
     const key = process.env.STRIPE_SECRET_KEY;
