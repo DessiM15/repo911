@@ -20,17 +20,18 @@ const SECTIONS = [
 interface ProgressIndicatorProps {
   currentSection: number;
   completedSections: number[];
+  onSectionClick?: (index: number) => void;
 }
 
-export function ProgressIndicator({ currentSection, completedSections }: ProgressIndicatorProps) {
-  const progress = Math.round(((completedSections.length) / SECTIONS.length) * 100);
+export function ProgressIndicator({ currentSection, completedSections, onSectionClick }: ProgressIndicatorProps) {
+  const progress = Math.round(((currentSection) / SECTIONS.length) * 100);
 
   return (
     <div className="mb-8">
       {/* Progress bar */}
       <div className="flex items-center justify-between mb-2">
         <span className="text-sm font-medium text-gray-700">
-          Section {currentSection + 1} of {SECTIONS.length}
+          Step {currentSection + 1} of {SECTIONS.length}: {SECTIONS[currentSection]}
         </span>
         <span className="text-sm font-medium text-[#4A90D9]">{progress}% complete</span>
       </div>
@@ -46,8 +47,18 @@ export function ProgressIndicator({ currentSection, completedSections }: Progres
         {SECTIONS.map((name, index) => {
           const isCompleted = completedSections.includes(index);
           const isCurrent = index === currentSection;
+          const isClickable = isCompleted && onSectionClick;
           return (
-            <div key={name} className="flex flex-col items-center gap-1">
+            <button
+              key={name}
+              type="button"
+              disabled={!isClickable}
+              onClick={() => isClickable && onSectionClick(index)}
+              className={cn(
+                'flex flex-col items-center gap-1',
+                isClickable ? 'cursor-pointer' : 'cursor-default'
+              )}
+            >
               <div
                 className={cn(
                   'w-7 h-7 rounded-full flex items-center justify-center text-xs font-medium transition-colors',
@@ -63,12 +74,12 @@ export function ProgressIndicator({ currentSection, completedSections }: Progres
               <span
                 className={cn(
                   'text-[10px] max-w-[60px] text-center leading-tight',
-                  isCurrent ? 'text-[#4A90D9] font-medium' : 'text-gray-400'
+                  isCurrent ? 'text-[#4A90D9] font-medium' : isCompleted ? 'text-gray-600' : 'text-gray-400'
                 )}
               >
                 {name}
               </span>
-            </div>
+            </button>
           );
         })}
       </div>

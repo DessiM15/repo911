@@ -1,10 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
-import { intakeFormSchema, type IntakeFormData, type IntakeFormInput } from '@/lib/validations/intake-form';
+import { intakeFormSchema, type IntakeFormInput } from '@/lib/validations/intake-form';
 import { FormSection } from './FormSection';
 import { ProgressIndicator } from './ProgressIndicator';
 import { Input } from '@/components/ui/input';
@@ -14,8 +14,10 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { RadioGroup } from '@/components/ui/radio';
 import { Button } from '@/components/ui/button';
 import { US_STATES, COMMON_LENDERS } from '@/lib/utils';
-import { AlertCircle } from 'lucide-react';
+import { AlertCircle, ArrowLeft, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
+
+const TOTAL_STEPS = 11;
 
 const REPO_LOCATIONS = [
   { value: 'driveway', label: 'Driveway' },
@@ -59,12 +61,27 @@ const LENDER_OPTIONS = [
   { value: 'other', label: 'Other' },
 ];
 
+// Fields to validate per step (only required fields)
+const STEP_FIELDS: Record<number, string[]> = {
+  0: ['first_name', 'last_name', 'email', 'phone', 'preferred_contact', 'street_address', 'city', 'state', 'zip_code'],
+  1: ['vehicle_year', 'vehicle_make', 'vehicle_model', 'lease_or_finance'],
+  2: ['lender_name', 'behind_on_payments', 'received_written_notice'],
+  3: ['repo_date', 'repo_time_of_day', 'repo_location', 'repo_state'],
+  4: ['verbally_objected', 'narrative'],
+  5: [],
+  6: ['received_notice_of_sale', 'deficiency_balance_contact'],
+  7: [],
+  8: [],
+  9: [],
+  10: ['electronic_signature', 'consent_accurate_info', 'consent_not_legal_advice', 'consent_contact', 'consent_privacy_policy'],
+};
+
 export function IntakeForm() {
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
-  const [currentSection, setCurrentSection] = useState(0);
-  const [completedSections, setCompletedSections] = useState<number[]>([]);
+  const [step, setStep] = useState(0);
+  const [completedSteps, setCompletedSteps] = useState<number[]>([]);
   const [otherLender, setOtherLender] = useState('');
   const [otherRepoLocation, setOtherRepoLocation] = useState('');
 
@@ -74,10 +91,9 @@ export function IntakeForm() {
     control,
     watch,
     setValue,
+    trigger,
     formState: { errors },
   } = useForm<IntakeFormInput>({
-    // zodResolver validates consent fields as literal `true` at submit time;
-    // cast needed because IntakeFormInput uses `boolean` for default values
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     resolver: zodResolver(intakeFormSchema) as any,
     defaultValues: {
@@ -117,16 +133,42 @@ export function IntakeForm() {
   const watchLender = watch('lender_name');
   const watchRepoLocation = watch('repo_location');
 
-  function markSectionVisible(index: number) {
-    setCurrentSection(index);
-    // Mark all previous sections as completed
-    setCompletedSections((prev) => {
+  const scrollToTop = useCallback(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
+  async function goNext() {
+    const fields = STEP_FIELDS[step];
+    if (fields && fields.length > 0) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const valid = await trigger(fields as any);
+      if (!valid) return;
+    }
+
+    setCompletedSteps((prev) => {
       const updated = new Set(prev);
-      for (let i = 0; i < index; i++) {
-        updated.add(i);
-      }
+      updated.add(step);
       return Array.from(updated);
     });
+
+    if (step < TOTAL_STEPS - 1) {
+      setStep(step + 1);
+      scrollToTop();
+    }
+  }
+
+  function goBack() {
+    if (step > 0) {
+      setStep(step - 1);
+      scrollToTop();
+    }
+  }
+
+  function goToStep(index: number) {
+    if (completedSteps.includes(index)) {
+      setStep(index);
+      scrollToTop();
+    }
   }
 
   async function onSubmit(data: IntakeFormInput) {
@@ -158,7 +200,6 @@ export function IntakeForm() {
         throw new Error(result.error || 'Something went wrong. Please try again.');
       }
 
-      // Redirect to confirmation page with tier info
       const params = new URLSearchParams({
         tier: result.tier,
         id: result.id,
@@ -171,12 +212,18 @@ export function IntakeForm() {
     }
   }
 
+  const isLastStep = step === TOTAL_STEPS - 1;
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-      <ProgressIndicator currentSection={currentSection} completedSections={completedSections} />
+      <ProgressIndicator
+        currentSection={step}
+        completedSections={completedSteps}
+        onSectionClick={goToStep}
+      />
 
-      {/* Section 1: Contact Information */}
-      <div onFocus={() => markSectionVisible(0)}>
+      {/* Step 0: Contact Information */}
+      {step === 0 && (
         <FormSection title="Contact Information" description="How can we reach you?">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Input
@@ -279,7 +326,6 @@ export function IntakeForm() {
                   value={field.value || ''}
                   onChange={(e) => {
                     field.onChange(e.target.value);
-                    // Auto-fill repo_state
                     if (!watch('repo_state')) {
                       setValue('repo_state', e.target.value);
                     }
@@ -298,10 +344,10 @@ export function IntakeForm() {
             />
           </div>
         </FormSection>
-      </div>
+      )}
 
-      {/* Section 2: Vehicle Information */}
-      <div onFocus={() => markSectionVisible(1)}>
+      {/* Step 1: Vehicle Information */}
+      {step === 1 && (
         <FormSection title="Vehicle Information" description="Tell us about the repossessed vehicle.">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <Controller
@@ -372,10 +418,10 @@ export function IntakeForm() {
             )}
           />
         </FormSection>
-      </div>
+      )}
 
-      {/* Section 3: Lender / Creditor Information */}
-      <div onFocus={() => markSectionVisible(2)}>
+      {/* Step 2: Lender / Creditor Information */}
+      {step === 2 && (
         <FormSection title="Lender / Creditor Information" description="Who held the loan or lease on your vehicle?">
           <Controller
             control={control}
@@ -485,10 +531,10 @@ export function IntakeForm() {
             )}
           />
         </FormSection>
-      </div>
+      )}
 
-      {/* Section 4: Repossession Details */}
-      <div onFocus={() => markSectionVisible(3)}>
+      {/* Step 3: Repossession Details */}
+      {step === 3 && (
         <FormSection title="Repossession Details" description="When and where did the repossession happen?">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Input
@@ -580,10 +626,10 @@ export function IntakeForm() {
             )}
           />
         </FormSection>
-      </div>
+      )}
 
-      {/* Section 5: Breach of Peace Screening */}
-      <div onFocus={() => markSectionVisible(4)}>
+      {/* Step 4: Breach of Peace Screening */}
+      {step === 4 && (
         <FormSection
           title="Breach of Peace Screening"
           description="The law protects you from aggressive or unlawful behavior during a repossession. Please answer all questions below."
@@ -789,10 +835,10 @@ export function IntakeForm() {
             {...register('narrative')}
           />
         </FormSection>
-      </div>
+      )}
 
-      {/* Section 6: Personal Belongings */}
-      <div onFocus={() => markSectionVisible(5)}>
+      {/* Step 5: Personal Belongings */}
+      {step === 5 && (
         <FormSection title="Personal Belongings" description="Were your personal items affected?">
           <Controller
             control={control}
@@ -870,10 +916,10 @@ export function IntakeForm() {
             </>
           )}
         </FormSection>
-      </div>
+      )}
 
-      {/* Section 7: Post-Repossession */}
-      <div onFocus={() => markSectionVisible(6)}>
+      {/* Step 6: Post-Repossession */}
+      {step === 6 && (
         <FormSection title="Post-Repossession" description="What happened after the repossession?">
           <Controller
             control={control}
@@ -960,10 +1006,10 @@ export function IntakeForm() {
             )}
           />
         </FormSection>
-      </div>
+      )}
 
-      {/* Section 8: Military Service */}
-      <div onFocus={() => markSectionVisible(7)}>
+      {/* Step 7: Military Service */}
+      {step === 7 && (
         <FormSection title="Military Service (SCRA Protection)" description="Active-duty military members have special federal protections.">
           <Controller
             control={control}
@@ -1045,10 +1091,10 @@ export function IntakeForm() {
             </>
           )}
         </FormSection>
-      </div>
+      )}
 
-      {/* Section 9: FDCPA Violations */}
-      <div onFocus={() => markSectionVisible(8)}>
+      {/* Step 8: FDCPA Violations */}
+      {step === 8 && (
         <FormSection title="Illegal Debt Collection (FDCPA)" description="Federal law protects you from abusive debt collection practices.">
           <Controller
             control={control}
@@ -1099,10 +1145,10 @@ export function IntakeForm() {
             </div>
           )}
         </FormSection>
-      </div>
+      )}
 
-      {/* Section 10: Evidence & Documents */}
-      <div onFocus={() => markSectionVisible(9)}>
+      {/* Step 9: Evidence & Documents */}
+      {step === 9 && (
         <FormSection title="Evidence & Documents" description="Supporting evidence strengthens your case.">
           <Controller
             control={control}
@@ -1164,10 +1210,10 @@ export function IntakeForm() {
             You will be able to upload photos, videos, and documents after submitting this form.
           </p>
         </FormSection>
-      </div>
+      )}
 
-      {/* Section 11: Consent & Submission */}
-      <div onFocus={() => markSectionVisible(10)}>
+      {/* Step 10: Consent & Submission */}
+      {step === 10 && (
         <FormSection title="Consent & Submission" description="Please review and sign below to submit your case for review.">
           <Input
             label="Electronic Signature (Full Legal Name)"
@@ -1262,23 +1308,50 @@ export function IntakeForm() {
               {submitError}
             </div>
           )}
+        </FormSection>
+      )}
 
+      {/* Navigation Buttons */}
+      <div className="flex items-center justify-between gap-4">
+        {step > 0 ? (
+          <Button type="button" variant="outline" size="lg" onClick={goBack}>
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back
+          </Button>
+        ) : (
+          <div />
+        )}
+
+        {isLastStep ? (
           <Button
             type="submit"
             variant="consumer"
             size="lg"
             loading={submitting}
-            className="w-full text-lg py-4"
+            className="flex-1 max-w-sm text-lg py-4"
           >
             Submit My Case for Free Review
           </Button>
-
-          <p className="text-xs text-gray-400 text-center">
-            By submitting, you agree to our Privacy Policy and Terms of Service.
-            This is not legal advice and does not create an attorney-client relationship.
-          </p>
-        </FormSection>
+        ) : (
+          <Button
+            type="button"
+            variant="primary"
+            size="lg"
+            onClick={goNext}
+            className="flex-1 max-w-sm"
+          >
+            Continue
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
+        )}
       </div>
+
+      {isLastStep && (
+        <p className="text-xs text-gray-400 text-center">
+          By submitting, you agree to our Privacy Policy and Terms of Service.
+          This is not legal advice and does not create an attorney-client relationship.
+        </p>
+      )}
     </form>
   );
 }
