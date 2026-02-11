@@ -21,6 +21,7 @@ export default function AdminAttorneysPage() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [attorneys, setAttorneys] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
   const [page, setPage] = useState(1);
@@ -36,14 +37,16 @@ export default function AdminAttorneysPage() {
       if (statusFilter) params.set('status', statusFilter);
 
       const res = await fetch(`/api/admin/attorneys?${params}`);
-      if (res.ok) {
-        const data = await res.json();
-        setAttorneys(data.attorneys);
-        setTotal(data.pagination?.total || data.attorneys.length);
-        setTotalPages(data.pagination?.totalPages || 1);
+      if (!res.ok) {
+        setError('Failed to load data. Please try again.');
+        return;
       }
+      const data = await res.json();
+      setAttorneys(data.attorneys);
+      setTotal(data.pagination?.total || data.attorneys.length);
+      setTotalPages(data.pagination?.totalPages || 1);
     } catch {
-      // silently fail
+      setError('Failed to load data. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -59,6 +62,12 @@ export default function AdminAttorneysPage() {
         <h1 className="text-2xl font-bold text-gray-900">Attorney Management</h1>
         <span className="text-sm text-gray-500">{total} attorneys</span>
       </div>
+
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg p-4 mb-6">
+          {error}
+        </div>
+      )}
 
       <div className="bg-white rounded-xl border border-gray-200 p-4">
         <div className="flex flex-col sm:flex-row gap-3">

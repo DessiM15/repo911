@@ -54,16 +54,19 @@ function StatCard({ label, value, icon: Icon, sub, color }: {
 export default function AdminDashboardPage() {
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     async function fetchDashboard() {
       try {
         const res = await fetch('/api/admin/dashboard');
-        if (res.ok) {
-          setData(await res.json());
+        if (!res.ok) {
+          setError('Failed to load data. Please try again.');
+          return;
         }
+        setData(await res.json());
       } catch {
-        // silently fail
+        setError('Failed to load data. Please try again.');
       } finally {
         setLoading(false);
       }
@@ -91,6 +94,12 @@ export default function AdminDashboardPage() {
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
+
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg p-4 mb-6">
+          {error}
+        </div>
+      )}
 
       {/* KPI Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">

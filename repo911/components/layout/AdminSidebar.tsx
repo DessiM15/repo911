@@ -134,7 +134,7 @@ export function AdminSidebar() {
             <span className="absolute top-1 right-1 h-2 w-2 bg-red-500 rounded-full" />
           </button>
           <button
-            className="p-2 text-white/70 hover:text-white"
+            className="p-2.5 text-white/70 hover:text-white"
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
           >

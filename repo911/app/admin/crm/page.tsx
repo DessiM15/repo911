@@ -38,6 +38,7 @@ export default function CRMPage() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [contacts, setContacts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   const [search, setSearch] = useState('');
   const [typeFilter, setTypeFilter] = useState('');
   const [stageFilter, setStageFilter] = useState('');
@@ -55,14 +56,16 @@ export default function CRMPage() {
       if (stageFilter) params.set('stage', stageFilter);
 
       const res = await fetch(`/api/admin/crm/contacts?${params}`);
-      if (res.ok) {
-        const data = await res.json();
-        setContacts(data.contacts);
-        setTotal(data.pagination?.total || data.contacts.length);
-        setTotalPages(data.pagination?.totalPages || 1);
+      if (!res.ok) {
+        setError('Failed to load data. Please try again.');
+        return;
       }
+      const data = await res.json();
+      setContacts(data.contacts);
+      setTotal(data.pagination?.total || data.contacts.length);
+      setTotalPages(data.pagination?.totalPages || 1);
     } catch {
-      // silently fail
+      setError('Failed to load data. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -83,6 +86,12 @@ export default function CRMPage() {
           </Link>
         </div>
       </div>
+
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg p-4 mb-6">
+          {error}
+        </div>
+      )}
 
       <div className="bg-white rounded-xl border border-gray-200 p-4">
         <div className="flex flex-col sm:flex-row gap-3">

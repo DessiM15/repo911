@@ -15,6 +15,7 @@ export default function TransactionsPage() {
   const [totalRevenue, setTotalRevenue] = useState(0);
   const [totalRefunded, setTotalRefunded] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
 
   const fetchTransactions = useCallback(async () => {
@@ -24,15 +25,17 @@ export default function TransactionsPage() {
       if (statusFilter) params.set('status', statusFilter);
 
       const res = await fetch(`/api/admin/transactions?${params}`);
-      if (res.ok) {
-        const data = await res.json();
-        setTransactions(data.transactions);
-        setAttorneys(data.attorneys);
-        setTotalRevenue(data.total_revenue);
-        setTotalRefunded(data.total_refunded);
+      if (!res.ok) {
+        setError('Failed to load data. Please try again.');
+        return;
       }
+      const data = await res.json();
+      setTransactions(data.transactions);
+      setAttorneys(data.attorneys);
+      setTotalRevenue(data.total_revenue);
+      setTotalRefunded(data.total_refunded);
     } catch {
-      // silently fail
+      setError('Failed to load data. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -45,6 +48,12 @@ export default function TransactionsPage() {
   return (
     <div className="space-y-4">
       <h1 className="text-2xl font-bold text-gray-900">Transactions</h1>
+
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg p-4 mb-6">
+          {error}
+        </div>
+      )}
 
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">

@@ -29,15 +29,20 @@ interface DashboardData {
 export default function AttorneyDashboardPage() {
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     async function fetchDashboard() {
       try {
         const res = await fetch('/api/attorney/dashboard');
+        if (!res.ok) {
+          setError('Failed to load data. Please try again.');
+          return;
+        }
         const result = await res.json();
-        if (res.ok) setData(result);
+        setData(result);
       } catch {
-        // silent
+        setError('Failed to load data. Please try again.');
       } finally {
         setLoading(false);
       }
@@ -65,6 +70,12 @@ export default function AttorneyDashboardPage() {
         <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
         <p className="text-sm text-gray-500 mt-1">Welcome back. Here is your overview.</p>
       </div>
+
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg p-4 mb-6">
+          {error}
+        </div>
+      )}
 
       {/* Stats */}
       <div className="grid sm:grid-cols-3 gap-4 mb-6">

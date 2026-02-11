@@ -50,6 +50,7 @@ export default function AdminLeadsPage() {
   const [leads, setLeads] = useState<any[]>([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
@@ -65,13 +66,15 @@ export default function AdminLeadsPage() {
       if (tierFilter) params.set('tier', tierFilter);
 
       const res = await fetch(`/api/admin/leads?${params}`);
-      if (res.ok) {
-        const data = await res.json();
-        setLeads(data.leads);
-        setTotal(data.total);
+      if (!res.ok) {
+        setError('Failed to load data. Please try again.');
+        return;
       }
+      const data = await res.json();
+      setLeads(data.leads);
+      setTotal(data.total);
     } catch {
-      // silently fail
+      setError('Failed to load data. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -89,6 +92,12 @@ export default function AdminLeadsPage() {
         <h1 className="text-2xl font-bold text-gray-900">All Leads</h1>
         <span className="text-sm text-gray-500">{total} total leads</span>
       </div>
+
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg p-4 mb-6">
+          {error}
+        </div>
+      )}
 
       {/* Filters */}
       <div className="bg-white rounded-xl border border-gray-200 p-4">

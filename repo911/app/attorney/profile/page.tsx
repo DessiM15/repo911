@@ -23,6 +23,7 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
+  const [error, setError] = useState('');
 
   // Editable fields
   const [phone, setPhone] = useState('');
@@ -37,8 +38,12 @@ export default function ProfilePage() {
     async function fetchProfile() {
       try {
         const res = await fetch('/api/attorney/profile');
+        if (!res.ok) {
+          setError('Failed to load data. Please try again.');
+          return;
+        }
         const data = await res.json();
-        if (res.ok && data.attorney) {
+        if (data.attorney) {
           const a = data.attorney as Attorney;
           setAttorney(a);
           setPhone(a.phone);
@@ -50,7 +55,7 @@ export default function ProfilePage() {
           setSmsNotifications(a.sms_notifications);
         }
       } catch {
-        // silent
+        setError('Failed to load data. Please try again.');
       } finally {
         setLoading(false);
       }
@@ -107,6 +112,12 @@ export default function ProfilePage() {
         <h1 className="text-2xl font-bold text-gray-900">Profile &amp; Settings</h1>
         <p className="text-sm text-gray-500 mt-1">Manage your account details and preferences</p>
       </div>
+
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg p-4 mb-6">
+          {error}
+        </div>
+      )}
 
       {message && (
         <div className={`rounded-lg p-4 mb-4 ${message.includes('success') ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-red-50 text-red-700 border border-red-200'}`}>

@@ -250,7 +250,7 @@ export function AttorneyNav() {
             {bellOpen && <NotificationDropdown />}
           </div>
           <button
-            className="p-2 text-white/70 hover:text-white"
+            className="p-2.5 text-white/70 hover:text-white"
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
           >

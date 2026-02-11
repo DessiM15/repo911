@@ -12,15 +12,20 @@ import type { Lead } from '@/types';
 export default function MyLeadsPage() {
   const [leads, setLeads] = useState<Lead[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     async function fetchLeads() {
       try {
         const res = await fetch('/api/attorney/my-leads');
+        if (!res.ok) {
+          setError('Failed to load data. Please try again.');
+          return;
+        }
         const data = await res.json();
-        if (res.ok) setLeads(data.leads || []);
+        setLeads(data.leads || []);
       } catch {
-        // silent fail
+        setError('Failed to load data. Please try again.');
       } finally {
         setLoading(false);
       }
@@ -34,6 +39,12 @@ export default function MyLeadsPage() {
         <h1 className="text-2xl font-bold text-gray-900">My Leads</h1>
         <p className="text-sm text-gray-500 mt-1">All leads you have claimed with full contact information</p>
       </div>
+
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg p-4 mb-6">
+          {error}
+        </div>
+      )}
 
       {loading ? (
         <div className="grid sm:grid-cols-2 gap-4">

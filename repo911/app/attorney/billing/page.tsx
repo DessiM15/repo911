@@ -12,19 +12,22 @@ import type { Transaction } from '@/types';
 export default function BillingPage() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   const [stats, setStats] = useState({ total_spent: 0, total_leads: 0, this_month: 0 });
 
   useEffect(() => {
     async function fetchBilling() {
       try {
         const res = await fetch('/api/attorney/billing');
-        const data = await res.json();
-        if (res.ok) {
-          setTransactions(data.transactions || []);
-          setStats(data.stats || { total_spent: 0, total_leads: 0, this_month: 0 });
+        if (!res.ok) {
+          setError('Failed to load data. Please try again.');
+          return;
         }
+        const data = await res.json();
+        setTransactions(data.transactions || []);
+        setStats(data.stats || { total_spent: 0, total_leads: 0, this_month: 0 });
       } catch {
-        // silent
+        setError('Failed to load data. Please try again.');
       } finally {
         setLoading(false);
       }
@@ -38,6 +41,12 @@ export default function BillingPage() {
         <h1 className="text-2xl font-bold text-gray-900">Billing &amp; Payments</h1>
         <p className="text-sm text-gray-500 mt-1">View your payment history and lead purchase receipts</p>
       </div>
+
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg p-4 mb-6">
+          {error}
+        </div>
+      )}
 
       {/* Stats */}
       <div className="grid sm:grid-cols-3 gap-4 mb-6">
