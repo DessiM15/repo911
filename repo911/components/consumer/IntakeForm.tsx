@@ -97,19 +97,19 @@ export function IntakeForm() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     resolver: zodResolver(intakeFormSchema) as any,
     defaultValues: {
-      physical_force_or_threats: false,
-      excessive_noise: false,
-      entered_locked_area: false,
-      property_damage: false,
-      police_present: false,
-      repo_at_workplace: false,
-      public_embarrassment: false,
-      had_belongings: false,
-      military_service: false,
-      debt_collector_contact: false,
-      has_photos_videos: false,
-      has_documents: false,
-      has_witnesses: false,
+      physical_force_or_threats: undefined,
+      excessive_noise: undefined,
+      entered_locked_area: undefined,
+      property_damage: undefined,
+      police_present: undefined,
+      repo_at_workplace: undefined,
+      public_embarrassment: undefined,
+      had_belongings: undefined,
+      military_service: undefined,
+      debt_collector_contact: undefined,
+      has_photos_videos: undefined,
+      has_documents: undefined,
+      has_witnesses: undefined,
       repo_location: [],
       impacts: [],
       fdcpa_violations: [],
@@ -691,7 +691,7 @@ export function IntakeForm() {
                   { value: 'true', label: 'Yes' },
                   { value: 'false', label: 'No' },
                 ]}
-                value={String(field.value)}
+                value={field.value === undefined ? undefined : String(field.value)}
                 onChange={(v) => field.onChange(v === 'true')}
               />
             )}
@@ -709,7 +709,7 @@ export function IntakeForm() {
                   { value: 'true', label: 'Yes' },
                   { value: 'false', label: 'No' },
                 ]}
-                value={String(field.value)}
+                value={field.value === undefined ? undefined : String(field.value)}
                 onChange={(v) => field.onChange(v === 'true')}
               />
             )}
@@ -727,7 +727,7 @@ export function IntakeForm() {
                   { value: 'true', label: 'Yes' },
                   { value: 'false', label: 'No' },
                 ]}
-                value={String(field.value)}
+                value={field.value === undefined ? undefined : String(field.value)}
                 onChange={(v) => field.onChange(v === 'true')}
               />
             )}
@@ -745,7 +745,7 @@ export function IntakeForm() {
                   { value: 'true', label: 'Yes' },
                   { value: 'false', label: 'No' },
                 ]}
-                value={String(field.value)}
+                value={field.value === undefined ? undefined : String(field.value)}
                 onChange={(v) => field.onChange(v === 'true')}
               />
             )}
@@ -763,7 +763,7 @@ export function IntakeForm() {
                   { value: 'true', label: 'Yes' },
                   { value: 'false', label: 'No' },
                 ]}
-                value={String(field.value)}
+                value={field.value === undefined ? undefined : String(field.value)}
                 onChange={(v) => field.onChange(v === 'true')}
               />
             )}
@@ -801,7 +801,7 @@ export function IntakeForm() {
                   { value: 'true', label: 'Yes' },
                   { value: 'false', label: 'No' },
                 ]}
-                value={String(field.value)}
+                value={field.value === undefined ? undefined : String(field.value)}
                 onChange={(v) => field.onChange(v === 'true')}
               />
             )}
@@ -819,7 +819,7 @@ export function IntakeForm() {
                   { value: 'true', label: 'Yes' },
                   { value: 'false', label: 'No' },
                 ]}
-                value={String(field.value)}
+                value={field.value === undefined ? undefined : String(field.value)}
                 onChange={(v) => field.onChange(v === 'true')}
               />
             )}
@@ -852,7 +852,7 @@ export function IntakeForm() {
                   { value: 'true', label: 'Yes' },
                   { value: 'false', label: 'No' },
                 ]}
-                value={String(field.value)}
+                value={field.value === undefined ? undefined : String(field.value)}
                 onChange={(v) => field.onChange(v === 'true')}
               />
             )}
@@ -1023,7 +1023,7 @@ export function IntakeForm() {
                   { value: 'true', label: 'Yes' },
                   { value: 'false', label: 'No' },
                 ]}
-                value={String(field.value)}
+                value={field.value === undefined ? undefined : String(field.value)}
                 onChange={(v) => field.onChange(v === 'true')}
               />
             )}
@@ -1108,7 +1108,7 @@ export function IntakeForm() {
                   { value: 'true', label: 'Yes' },
                   { value: 'false', label: 'No' },
                 ]}
-                value={String(field.value)}
+                value={field.value === undefined ? undefined : String(field.value)}
                 onChange={(v) => field.onChange(v === 'true')}
               />
             )}
@@ -1161,7 +1161,7 @@ export function IntakeForm() {
                   { value: 'true', label: 'Yes' },
                   { value: 'false', label: 'No' },
                 ]}
-                value={String(field.value)}
+                value={field.value === undefined ? undefined : String(field.value)}
                 onChange={(v) => field.onChange(v === 'true')}
               />
             )}
@@ -1177,7 +1177,7 @@ export function IntakeForm() {
                   { value: 'true', label: 'Yes' },
                   { value: 'false', label: 'No' },
                 ]}
-                value={String(field.value)}
+                value={field.value === undefined ? undefined : String(field.value)}
                 onChange={(v) => field.onChange(v === 'true')}
               />
             )}
@@ -1193,7 +1193,7 @@ export function IntakeForm() {
                   { value: 'true', label: 'Yes' },
                   { value: 'false', label: 'No' },
                 ]}
-                value={String(field.value)}
+                value={field.value === undefined ? undefined : String(field.value)}
                 onChange={(v) => field.onChange(v === 'true')}
               />
             )}
