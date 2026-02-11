@@ -97,19 +97,6 @@ export function IntakeForm() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     resolver: zodResolver(intakeFormSchema) as any,
     defaultValues: {
-      physical_force_or_threats: undefined,
-      excessive_noise: undefined,
-      entered_locked_area: undefined,
-      property_damage: undefined,
-      police_present: undefined,
-      repo_at_workplace: undefined,
-      public_embarrassment: undefined,
-      had_belongings: undefined,
-      military_service: undefined,
-      debt_collector_contact: undefined,
-      has_photos_videos: undefined,
-      has_documents: undefined,
-      has_witnesses: undefined,
       repo_location: [],
       impacts: [],
       fdcpa_violations: [],
@@ -506,8 +493,8 @@ export function IntakeForm() {
                   { value: 'true', label: 'Yes' },
                   { value: 'false', label: 'No' },
                 ]}
-                value={field.value === undefined ? undefined : String(field.value)}
-                onChange={(v) => field.onChange(v === 'true')}
+                value={field.value}
+                onChange={field.onChange}
               />
             )}
           />
@@ -691,8 +678,8 @@ export function IntakeForm() {
                   { value: 'true', label: 'Yes' },
                   { value: 'false', label: 'No' },
                 ]}
-                value={field.value === undefined ? undefined : String(field.value)}
-                onChange={(v) => field.onChange(v === 'true')}
+                value={field.value}
+                onChange={field.onChange}
               />
             )}
           />
@@ -709,8 +696,8 @@ export function IntakeForm() {
                   { value: 'true', label: 'Yes' },
                   { value: 'false', label: 'No' },
                 ]}
-                value={field.value === undefined ? undefined : String(field.value)}
-                onChange={(v) => field.onChange(v === 'true')}
+                value={field.value}
+                onChange={field.onChange}
               />
             )}
           />
@@ -727,8 +714,8 @@ export function IntakeForm() {
                   { value: 'true', label: 'Yes' },
                   { value: 'false', label: 'No' },
                 ]}
-                value={field.value === undefined ? undefined : String(field.value)}
-                onChange={(v) => field.onChange(v === 'true')}
+                value={field.value}
+                onChange={field.onChange}
               />
             )}
           />
@@ -745,8 +732,8 @@ export function IntakeForm() {
                   { value: 'true', label: 'Yes' },
                   { value: 'false', label: 'No' },
                 ]}
-                value={field.value === undefined ? undefined : String(field.value)}
-                onChange={(v) => field.onChange(v === 'true')}
+                value={field.value}
+                onChange={field.onChange}
               />
             )}
           />
@@ -763,13 +750,13 @@ export function IntakeForm() {
                   { value: 'true', label: 'Yes' },
                   { value: 'false', label: 'No' },
                 ]}
-                value={field.value === undefined ? undefined : String(field.value)}
-                onChange={(v) => field.onChange(v === 'true')}
+                value={field.value}
+                onChange={field.onChange}
               />
             )}
           />
 
-          {watchPolicePresent && (
+          {watchPolicePresent === 'true' && (
             <Controller
               control={control}
               name="police_assisted"
@@ -801,8 +788,8 @@ export function IntakeForm() {
                   { value: 'true', label: 'Yes' },
                   { value: 'false', label: 'No' },
                 ]}
-                value={field.value === undefined ? undefined : String(field.value)}
-                onChange={(v) => field.onChange(v === 'true')}
+                value={field.value}
+                onChange={field.onChange}
               />
             )}
           />
@@ -819,8 +806,8 @@ export function IntakeForm() {
                   { value: 'true', label: 'Yes' },
                   { value: 'false', label: 'No' },
                 ]}
-                value={field.value === undefined ? undefined : String(field.value)}
-                onChange={(v) => field.onChange(v === 'true')}
+                value={field.value}
+                onChange={field.onChange}
               />
             )}
           />
@@ -852,13 +839,13 @@ export function IntakeForm() {
                   { value: 'true', label: 'Yes' },
                   { value: 'false', label: 'No' },
                 ]}
-                value={field.value === undefined ? undefined : String(field.value)}
-                onChange={(v) => field.onChange(v === 'true')}
+                value={field.value}
+                onChange={field.onChange}
               />
             )}
           />
 
-          {watchHadBelongings && (
+          {watchHadBelongings === 'true' && (
             <>
               <Controller
                 control={control}
@@ -1023,12 +1010,12 @@ export function IntakeForm() {
                   { value: 'true', label: 'Yes' },
                   { value: 'false', label: 'No' },
                 ]}
-                value={field.value === undefined ? undefined : String(field.value)}
-                onChange={(v) => field.onChange(v === 'true')}
+                value={field.value}
+                onChange={field.onChange}
               />
             )}
           />
-          {watchMilitaryService && (
+          {watchMilitaryService === 'true' && (
             <>
               <Controller
                 control={control}
@@ -1069,7 +1056,7 @@ export function IntakeForm() {
                   />
                 )}
               />
-              {watchActiveDuty && (
+              {watchActiveDuty === 'true' && (
                 <Controller
                   control={control}
                   name="loan_before_active_duty"
@@ -1108,12 +1095,12 @@ export function IntakeForm() {
                   { value: 'true', label: 'Yes' },
                   { value: 'false', label: 'No' },
                 ]}
-                value={field.value === undefined ? undefined : String(field.value)}
-                onChange={(v) => field.onChange(v === 'true')}
+                value={field.value}
+                onChange={field.onChange}
               />
             )}
           />
-          {watchDebtCollector && (
+          {watchDebtCollector === 'true' && (
             <div>
               <p className="block text-sm font-medium text-gray-700 mb-2">
                 Have they done any of the following? (Check all that apply)
@@ -1161,8 +1148,8 @@ export function IntakeForm() {
                   { value: 'true', label: 'Yes' },
                   { value: 'false', label: 'No' },
                 ]}
-                value={field.value === undefined ? undefined : String(field.value)}
-                onChange={(v) => field.onChange(v === 'true')}
+                value={field.value}
+                onChange={field.onChange}
               />
             )}
           />
@@ -1177,8 +1164,8 @@ export function IntakeForm() {
                   { value: 'true', label: 'Yes' },
                   { value: 'false', label: 'No' },
                 ]}
-                value={field.value === undefined ? undefined : String(field.value)}
-                onChange={(v) => field.onChange(v === 'true')}
+                value={field.value}
+                onChange={field.onChange}
               />
             )}
           />
@@ -1193,12 +1180,12 @@ export function IntakeForm() {
                   { value: 'true', label: 'Yes' },
                   { value: 'false', label: 'No' },
                 ]}
-                value={field.value === undefined ? undefined : String(field.value)}
-                onChange={(v) => field.onChange(v === 'true')}
+                value={field.value}
+                onChange={field.onChange}
               />
             )}
           />
-          {watchHasWitnesses && (
+          {watchHasWitnesses === 'true' && (
             <Textarea
               label="Witness name(s) and contact info"
               id="witness_info"

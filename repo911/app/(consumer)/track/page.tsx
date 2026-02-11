@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, Suspense } from 'react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { Search, Clock, CheckCircle, Shield, FileText, Upload, X, AlertTriangle, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { formatDistanceToNow } from 'date-fns';
@@ -44,8 +45,21 @@ const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 const MAX_FILES = 5;
 
 export default function TrackPage() {
+  return (
+    <Suspense fallback={
+      <div className="max-w-xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 text-center">
+        <Loader2 className="h-8 w-8 animate-spin mx-auto text-[#4A90D9]" />
+      </div>
+    }>
+      <TrackPageContent />
+    </Suspense>
+  );
+}
+
+function TrackPageContent() {
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState('');
-  const [leadId, setLeadId] = useState('');
+  const [leadId, setLeadId] = useState(searchParams.get('id') || '');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<TrackResult | null>(null);
   const [error, setError] = useState('');
