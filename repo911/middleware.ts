@@ -38,7 +38,7 @@ export async function middleware(request: NextRequest) {
 
   // ---- Attorney Routes Protection ----
   // Allow register and login without auth
-  if (pathname.startsWith('/attorney/register') || pathname.startsWith('/attorney/login')) {
+  if (pathname.startsWith('/attorney/register') || pathname.startsWith('/attorney/login') || pathname.startsWith('/attorney/forgot-password')) {
     // If user is already logged in, redirect to dashboard
     if (user) {
       const url = request.nextUrl.clone();
@@ -89,7 +89,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // ---- Admin Routes Protection ----
-  if (pathname.startsWith('/admin/login')) {
+  if (pathname.startsWith('/admin/login') || pathname.startsWith('/admin/forgot-password')) {
     if (user) {
       // Check if user is actually an admin
       const { data: admin } = await supabase
@@ -139,5 +139,6 @@ export const config = {
   matcher: [
     '/attorney/:path*',
     '/admin/:path*',
+    '/auth/:path*',
   ],
 };

@@ -81,6 +81,11 @@ export default function AttorneyLoginPage() {
             <Button type="submit" variant="attorney" className="w-full" size="lg" loading={loading}>
               Sign In
             </Button>
+            <p className="text-right">
+              <Link href="/attorney/forgot-password" className="text-sm text-gray-500 hover:text-[#1B2A4A] hover:underline">
+                Forgot password?
+              </Link>
+            </p>
           </form>
         </div>
 

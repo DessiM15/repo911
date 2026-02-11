@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ShieldCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -99,6 +100,11 @@ export default function AdminLoginPage() {
           <Button type="submit" variant="primary" size="lg" loading={loading} className="w-full bg-[#1B2A4A] hover:bg-[#2A3D66] focus:ring-[#1B2A4A]">
             Sign In
           </Button>
+          <p className="text-right">
+            <Link href="/admin/forgot-password" className="text-sm text-gray-500 hover:text-[#1B2A4A] hover:underline">
+              Forgot password?
+            </Link>
+          </p>
         </form>
       </div>
     </div>

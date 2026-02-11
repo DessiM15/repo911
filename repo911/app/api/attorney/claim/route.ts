@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
-import { stripe, LEAD_PRICES } from '@/lib/stripe';
+import { stripe, isStripeConfigured, LEAD_PRICES } from '@/lib/stripe';
 import type { QualificationTier } from '@/types';
 
 export async function POST(request: NextRequest) {
@@ -8,6 +8,13 @@ export async function POST(request: NextRequest) {
     const { lead_id } = await request.json();
     if (!lead_id) {
       return NextResponse.json({ error: 'Lead ID is required' }, { status: 400 });
+    }
+
+    if (!isStripeConfigured()) {
+      return NextResponse.json(
+        { error: 'Payments are not yet available. Please check back soon.' },
+        { status: 503 }
+      );
     }
 
     const supabase = await createClient();

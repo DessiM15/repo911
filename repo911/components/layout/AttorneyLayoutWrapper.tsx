@@ -3,7 +3,7 @@
 import { usePathname } from 'next/navigation';
 import { AttorneyNav } from './AttorneyNav';
 
-const AUTH_ROUTES = ['/attorney/login', '/attorney/register'];
+const AUTH_ROUTES = ['/attorney/login', '/attorney/register', '/attorney/forgot-password'];
 
 export function AttorneyLayoutWrapper({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
