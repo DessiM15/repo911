@@ -14,6 +14,22 @@ export default function MarketplacePage() {
   const [tier, setTier] = useState('');
   const [state, setState] = useState('');
   const [sort, setSort] = useState('newest');
+  const [isSubscribed, setIsSubscribed] = useState(false);
+
+  // Fetch subscription status once on mount
+  useEffect(() => {
+    fetch('/api/attorney/subscription')
+      .then(res => res.ok ? res.json() : null)
+      .then(data => {
+        if (data) {
+          setIsSubscribed(
+            data.subscription_plan === 'monthly_unlimited' &&
+            data.subscription_status === 'active'
+          );
+        }
+      })
+      .catch(() => { /* non-critical */ });
+  }, []);
 
   const fetchLeads = useCallback(async () => {
     setLoading(true);
@@ -87,7 +103,7 @@ export default function MarketplacePage() {
       ) : (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {leads.map((lead) => (
-            <LeadCard key={lead.id} lead={lead} />
+            <LeadCard key={lead.id} lead={lead} isSubscribed={isSubscribed} />
           ))}
         </div>
       )}

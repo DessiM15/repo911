@@ -39,6 +39,10 @@ export type NotificationType = 'new_lead' | 'lead_claimed' | 'payment_received' 
 
 export type RecipientType = 'attorney' | 'admin';
 
+export type SubscriptionPlan = 'per_lead' | 'monthly_unlimited';
+
+export type SubscriptionStatus = 'active' | 'past_due' | 'canceled' | 'incomplete';
+
 export type AdminRole = 'admin' | 'super_admin';
 
 export type PreferredContact = 'phone' | 'email' | 'text';
@@ -232,6 +236,13 @@ export interface Attorney {
   email_notifications: boolean;
   sms_notifications: boolean;
 
+  // Subscription
+  subscription_plan: SubscriptionPlan | null;
+  subscription_status: SubscriptionStatus | null;
+  stripe_subscription_id: string | null;
+  subscription_current_period_end: string | null;
+  subscription_cancel_at_period_end: boolean;
+
   // Status
   status: AttorneyStatus;
   is_verified: boolean;
@@ -259,6 +270,7 @@ export interface Transaction {
   status: TransactionStatus;
   description: string | null;
   receipt_url: string | null;
+  payment_type: 'per_lead' | 'subscription';
 }
 
 export interface FeeTracking {

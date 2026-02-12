@@ -10,6 +10,7 @@ import type { MarketplaceLead, QualificationTier } from '@/types';
 
 interface LeadCardProps {
   lead: MarketplaceLead;
+  isSubscribed?: boolean;
 }
 
 function getTierBadgeVariant(tier: QualificationTier | null): 'hot' | 'warm' | 'cold' | 'default' {
@@ -30,7 +31,7 @@ function getTierPrice(tier: QualificationTier | null): number {
   }
 }
 
-export function LeadCard({ lead }: LeadCardProps) {
+export function LeadCard({ lead, isSubscribed }: LeadCardProps) {
   const price = getTierPrice(lead.qualification_tier);
 
   return (
@@ -41,7 +42,11 @@ export function LeadCard({ lead }: LeadCardProps) {
             {lead.qualification_tier?.toUpperCase()} — Score: {lead.qualification_score}
           </Badge>
         </div>
-        <span className="text-lg font-bold text-[#1B2A4A]">{formatCurrency(price)}</span>
+        {isSubscribed ? (
+          <Badge variant="success" className="text-xs">Included</Badge>
+        ) : (
+          <span className="text-lg font-bold text-[#1B2A4A]">{formatCurrency(price)}</span>
+        )}
       </div>
 
       {/* Violation tags */}

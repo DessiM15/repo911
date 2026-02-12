@@ -42,26 +42,39 @@ export default function LeadDetailPage() {
   const [loading, setLoading] = useState(true);
   const [claiming, setClaiming] = useState(false);
   const [error, setError] = useState('');
+  const [isSubscribed, setIsSubscribed] = useState(false);
 
   useEffect(() => {
-    async function fetchLead() {
+    async function fetchData() {
       try {
-        const res = await fetch(`/api/attorney/leads/${id}`);
-        const data = await res.json();
-        if (!res.ok) {
-          setError(data.error || 'Failed to load lead');
+        const [leadRes, subRes] = await Promise.all([
+          fetch(`/api/attorney/leads/${id}`),
+          fetch('/api/attorney/subscription'),
+        ]);
+
+        const leadData = await leadRes.json();
+        if (!leadRes.ok) {
+          setError(leadData.error || 'Failed to load lead');
           return;
         }
-        setLead(data.lead);
-        setViolations(data.violations || []);
-        setFullAccess(data.full_access);
+        setLead(leadData.lead);
+        setViolations(leadData.violations || []);
+        setFullAccess(leadData.full_access);
+
+        if (subRes.ok) {
+          const subData = await subRes.json();
+          setIsSubscribed(
+            subData.subscription_plan === 'monthly_unlimited' &&
+            subData.subscription_status === 'active'
+          );
+        }
       } catch {
         setError('Failed to load lead details.');
       } finally {
         setLoading(false);
       }
     }
-    if (id) fetchLead();
+    if (id) fetchData();
   }, [id]);
 
   async function handleClaim() {
@@ -78,7 +91,11 @@ export default function LeadDetailPage() {
         setError(data.error || 'Failed to start checkout');
         return;
       }
-      if (data.checkout_url) {
+      if (data.redirect_url) {
+        // Instant claim (subscription)
+        window.location.href = data.redirect_url;
+      } else if (data.checkout_url) {
+        // Per-lead Stripe checkout
         window.location.href = data.checkout_url;
       }
     } catch {
@@ -143,7 +160,11 @@ export default function LeadDetailPage() {
 
           {!fullAccess && (
             <div className="text-right">
-              <p className="text-2xl font-bold text-[#1B2A4A]">{formatCurrency(price)}</p>
+              {isSubscribed ? (
+                <Badge variant="success" className="text-sm px-3 py-1">Included in Subscription</Badge>
+              ) : (
+                <p className="text-2xl font-bold text-[#1B2A4A]">{formatCurrency(price)}</p>
+              )}
               <Button variant="attorney" onClick={handleClaim} loading={claiming} className="mt-2">
                 Claim This Lead
               </Button>

@@ -103,10 +103,19 @@ Point-based scoring system (0–100+):
 
 ### Lead Claim Flow
 
+**Per-lead (default):**
 1. Attorney browses marketplace (anonymized leads)
 2. Clicks claim → Stripe checkout session created
 3. Stripe webhook `checkout.session.completed` → atomic update (only if unclaimed)
 4. Attorney receives full contact details, consumer gets notification
+
+**Monthly Unlimited subscription ($2,000/mo):**
+1. Attorney subscribes via Billing page → Stripe subscription checkout
+2. Webhook activates subscription fields on attorney record
+3. Subscribed attorney clicks claim → instant claim (no checkout), $0 transaction with `payment_type: 'subscription'`
+4. Marketplace/lead detail shows "Included" badge instead of price
+5. Subscription managed via Billing page (cancel at period end)
+6. Webhook events: `customer.subscription.updated`, `customer.subscription.deleted`, `invoice.payment_failed`
 5. Fee tracking record created (open status)
 
 ### Consumer Intake Form
@@ -142,6 +151,7 @@ STRIPE_WEBHOOK_SECRET=
 STRIPE_LEAD_PRICE_HOT=100000   # cents ($1,000)
 STRIPE_LEAD_PRICE_WARM=60000   # cents ($600)
 STRIPE_LEAD_PRICE_COLD=30000   # cents ($300)
+STRIPE_SUBSCRIPTION_PRICE_ID=  # Stripe Price ID for monthly unlimited plan
 
 # Resend (required for emails)
 RESEND_API_KEY=

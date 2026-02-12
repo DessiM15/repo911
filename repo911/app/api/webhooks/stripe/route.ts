@@ -3,6 +3,7 @@ import { stripe, LEAD_PRICES } from '@/lib/stripe';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { sendLeadClaimedToConsumer, sendLeadClaimedToAttorney } from '@/lib/emails';
 import type { QualificationTier } from '@/types';
+import Stripe from 'stripe';
 
 export async function POST(request: NextRequest) {
   const body = await request.text();
@@ -29,6 +30,44 @@ export async function POST(request: NextRequest) {
   switch (event.type) {
     case 'checkout.session.completed': {
       const session = event.data.object;
+
+      // --- Subscription checkout ---
+      if (session.mode === 'subscription') {
+        const { attorney_id } = session.metadata || {};
+        if (!attorney_id) break;
+
+        const subscriptionId = session.subscription as string;
+
+        // Fetch the subscription to get period details
+        const subscription = await stripe.subscriptions.retrieve(subscriptionId);
+        const periodEnd = subscription.items.data[0]?.current_period_end;
+
+        await supabase
+          .from('attorneys')
+          .update({
+            subscription_plan: 'monthly_unlimited',
+            subscription_status: subscription.status === 'active' ? 'active' : 'incomplete',
+            stripe_subscription_id: subscriptionId,
+            stripe_customer_id: session.customer as string,
+            subscription_current_period_end: periodEnd ? new Date(periodEnd * 1000).toISOString() : null,
+            subscription_cancel_at_period_end: subscription.cancel_at_period_end,
+          })
+          .eq('id', attorney_id);
+
+        // Notify attorney
+        await supabase.from('notifications').insert({
+          recipient_type: 'attorney',
+          recipient_id: attorney_id,
+          title: 'Subscription Activated',
+          message: 'Your Monthly Unlimited subscription is now active. You can claim leads instantly at no additional cost.',
+          type: 'system',
+          link: '/attorney/billing',
+        });
+
+        break;
+      }
+
+      // --- Per-lead checkout (existing logic) ---
       const { lead_id, attorney_id, tier } = session.metadata || {};
 
       if (!lead_id || !attorney_id) break;
@@ -68,6 +107,7 @@ export async function POST(request: NextRequest) {
         status: 'succeeded',
         description: `Lead claim — ${(tier as string)?.toUpperCase()} lead`,
         receipt_url: null,
+        payment_type: 'per_lead',
       });
 
       // Create fee tracking record
@@ -139,6 +179,97 @@ export async function POST(request: NextRequest) {
           activity_type: 'lead_claimed',
           description: `Lead claimed by attorney ${attorney_id}. Payment: $${(price / 100).toFixed(2)}`,
           metadata: { attorney_id, payment_intent: session.payment_intent, tier },
+        });
+      }
+
+      break;
+    }
+
+    case 'customer.subscription.updated': {
+      const subscription = event.data.object as Stripe.Subscription;
+      const subscriptionId = subscription.id;
+      const periodEnd = subscription.items?.data?.[0]?.current_period_end;
+
+      // Map Stripe status to our SubscriptionStatus
+      let mappedStatus: string;
+      switch (subscription.status) {
+        case 'active': mappedStatus = 'active'; break;
+        case 'past_due': mappedStatus = 'past_due'; break;
+        case 'canceled': mappedStatus = 'canceled'; break;
+        default: mappedStatus = 'incomplete'; break;
+      }
+
+      await supabase
+        .from('attorneys')
+        .update({
+          subscription_status: mappedStatus,
+          subscription_current_period_end: periodEnd ? new Date(periodEnd * 1000).toISOString() : null,
+          subscription_cancel_at_period_end: subscription.cancel_at_period_end,
+        })
+        .eq('stripe_subscription_id', subscriptionId);
+
+      break;
+    }
+
+    case 'customer.subscription.deleted': {
+      const subscription = event.data.object as Stripe.Subscription;
+      const subscriptionId = subscription.id;
+
+      // Find attorney BEFORE clearing subscription fields
+      const { data: atty } = await supabase
+        .from('attorneys')
+        .select('id')
+        .eq('stripe_subscription_id', subscriptionId)
+        .single();
+
+      // Revert attorney to per-lead (clear subscription fields)
+      await supabase
+        .from('attorneys')
+        .update({
+          subscription_plan: null,
+          subscription_status: null,
+          stripe_subscription_id: null,
+          subscription_current_period_end: null,
+          subscription_cancel_at_period_end: false,
+        })
+        .eq('stripe_subscription_id', subscriptionId);
+
+      // Notify attorney
+      if (atty) {
+        await supabase.from('notifications').insert({
+          recipient_type: 'attorney',
+          recipient_id: atty.id,
+          title: 'Subscription Ended',
+          message: 'Your Monthly Unlimited subscription has ended. You can still claim leads on a per-lead basis.',
+          type: 'system',
+          link: '/attorney/billing',
+        });
+      }
+
+      break;
+    }
+
+    case 'invoice.payment_failed': {
+      const invoice = event.data.object as Stripe.Invoice;
+      const customerId = invoice.customer as string;
+
+      if (!customerId) break;
+
+      // Find attorney by Stripe customer ID
+      const { data: failedAtty } = await supabase
+        .from('attorneys')
+        .select('id')
+        .eq('stripe_customer_id', customerId)
+        .single();
+
+      if (failedAtty) {
+        await supabase.from('notifications').insert({
+          recipient_type: 'attorney',
+          recipient_id: failedAtty.id,
+          title: 'Payment Failed',
+          message: 'Your subscription payment failed. Please update your payment method to keep your subscription active.',
+          type: 'system',
+          link: '/attorney/billing',
         });
       }
 
