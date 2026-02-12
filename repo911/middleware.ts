@@ -57,7 +57,7 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(url);
     }
 
-    // Check if user has an attorney record with signed fee agreement
+    // Check if user has an attorney record with signed lead purchase agreement
     const { data: attorney } = await supabase
       .from('attorneys')
       .select('id, fee_agreement_signed, status')
@@ -72,7 +72,7 @@ export async function middleware(request: NextRequest) {
     }
 
     if (!attorney.fee_agreement_signed && !pathname.startsWith('/attorney/register')) {
-      // Attorney hasn't signed fee agreement yet
+      // Attorney hasn't signed lead purchase agreement yet
       const url = request.nextUrl.clone();
       url.pathname = '/attorney/register';
       return NextResponse.redirect(url);

@@ -115,7 +115,7 @@ export async function POST(request: NextRequest) {
       await supabase.from('crm_activities').insert({
         contact_id: crmContact.id,
         activity_type: 'status_change',
-        description: `Attorney registered. Fee agreement signed by "${electronic_signature}".`,
+        description: `Attorney registered. Lead purchase agreement signed by "${electronic_signature}".`,
         metadata: { bar_number, bar_state, licensed_states, firm_name },
       });
     }

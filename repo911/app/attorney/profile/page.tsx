@@ -139,7 +139,7 @@ export default function ProfilePage() {
             <div><span className="text-gray-500">Bar Number</span><p className="font-medium">{attorney.bar_number}</p></div>
             <div><span className="text-gray-500">Bar State</span><p className="font-medium">{attorney.bar_state}</p></div>
             <div><span className="text-gray-500">Licensed States</span><p className="font-medium">{attorney.licensed_states?.join(', ')}</p></div>
-            <div><span className="text-gray-500">Fee Agreement</span><p className="font-medium text-green-600">{attorney.fee_agreement_signed ? 'Signed' : 'Not signed'}</p></div>
+            <div><span className="text-gray-500">Lead Purchase Agreement</span><p className="font-medium text-green-600">{attorney.fee_agreement_signed ? 'Signed' : 'Not signed'}</p></div>
             <div><span className="text-gray-500">Account Status</span><p className="font-medium capitalize">{attorney.status}</p></div>
             <div><span className="text-gray-500">Verified</span><p className="font-medium">{attorney.is_verified ? 'Yes' : 'Pending'}</p></div>
           </div>

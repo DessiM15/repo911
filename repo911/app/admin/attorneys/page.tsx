@@ -116,7 +116,7 @@ export default function AdminAttorneysPage() {
                 <TableHead>Bar</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Verified</TableHead>
-                <TableHead>Fee Agreement</TableHead>
+                <TableHead>Agreement</TableHead>
                 <TableHead>Registered</TableHead>
               </TableRow>
             </TableHeader>

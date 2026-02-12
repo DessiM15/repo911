@@ -181,7 +181,7 @@ export default function AdminAttorneyDetailPage() {
           </h3>
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
-              <span className="text-gray-500">Fee Agreement</span>
+              <span className="text-gray-500">Lead Purchase Agreement</span>
               <span className={attorney.fee_agreement_signed ? 'text-green-600 font-medium' : 'text-amber-500'}>{attorney.fee_agreement_signed ? 'Signed' : 'Pending'}</span>
             </div>
             {attorney.fee_agreement_signed_at && (

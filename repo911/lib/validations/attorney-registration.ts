@@ -23,7 +23,7 @@ export type AttorneyRegistrationData = z.infer<typeof attorneyRegistrationSchema
 export const feeAgreementSchema = z.object({
   electronic_signature: z.string().min(1, 'Electronic signature is required'),
   agree_to_terms: z.literal(true, {
-    error: 'You must agree to the fee-sharing agreement',
+    error: 'You must agree to the lead purchase agreement',
   }),
 });
 

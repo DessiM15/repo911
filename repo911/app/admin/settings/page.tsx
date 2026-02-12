@@ -254,10 +254,10 @@ export default function SettingsPage() {
       {/* Fee Share */}
       <div className="bg-white rounded-xl border border-gray-200 p-6">
         <h2 className="font-semibold text-gray-900 mb-1 flex items-center gap-2">
-          <Shield className="h-5 w-5 text-blue-500" /> Fee-Sharing Agreement
+          <Shield className="h-5 w-5 text-blue-500" /> Lead Purchase Agreement
         </h2>
         <p className="text-sm text-gray-500 mb-4">
-          The percentage of attorney legal fees that Repo911 receives from each case.
+          The revenue share percentage from attorney case outcomes tracked in fee tracking.
         </p>
         <div className="max-w-xs">
           <label className="block text-sm font-medium text-gray-700 mb-1">Revenue Share (%)</label>

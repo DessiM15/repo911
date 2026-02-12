@@ -38,7 +38,7 @@ export default function TermsPage() {
 
         <section>
           <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-3">5. Attorney Fee Structure</h2>
-          <p>Attorneys in our network pay a fee to Repo911 to claim and receive qualified leads. Separately, attorneys who claim leads agree to a fee-sharing arrangement with Repo911. These arrangements are between Repo911 and the attorney and do not affect any fees or costs that may apply between you and your attorney.</p>
+          <p>Attorneys in our network pay a lead purchase fee to Repo911 to claim and receive qualified leads. These arrangements are between Repo911 and the attorney and do not affect any fees or costs that may apply between you and your attorney.</p>
         </section>
 
         <section>

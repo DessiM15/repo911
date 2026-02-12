@@ -92,7 +92,7 @@ export default function AttorneyRegisterPage() {
           <p className="text-gray-600 mt-1">
             {step === 'register'
               ? 'Create your account to access the lead marketplace.'
-              : 'Review and sign the fee-sharing agreement to complete registration.'}
+              : 'Review and sign the lead purchase agreement to complete registration.'}
           </p>
         </div>
 
@@ -109,7 +109,7 @@ export default function AttorneyRegisterPage() {
             <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${step === 'agreement' ? 'bg-[#1B2A4A] text-white' : 'bg-gray-200 text-gray-500'}`}>
               2
             </span>
-            Fee Agreement
+            Lead Purchase Agreement
           </div>
         </div>
 
@@ -233,7 +233,7 @@ export default function AttorneyRegisterPage() {
               </div>
 
               <Button type="submit" variant="attorney" className="w-full" size="lg">
-                Continue to Fee Agreement
+                Continue to Lead Purchase Agreement
               </Button>
             </form>
           ) : (
