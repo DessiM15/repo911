@@ -1,5 +1,5 @@
 export const LEAD_PRICES = {
-  hot: 15000,
-  warm: 10000,
-  cold: 5000,
+  hot: 100000,
+  warm: 60000,
+  cold: 30000,
 } as const;

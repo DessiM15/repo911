@@ -99,7 +99,7 @@ Point-based scoring system (0–100+):
 - **Evidence**: photos/videos (+10), witnesses (+10)
 - **Penalty**: repo >2 years ago (-50)
 
-**Tiers**: hot (>=60, $150), warm (>=30, $100), cold (>=10, $50), disqualified (<10)
+**Tiers**: hot (>=60, $1,000), warm (>=30, $600), cold (>=10, $300), disqualified (<10)
 
 ### Lead Claim Flow
 
@@ -139,9 +139,9 @@ SUPABASE_SERVICE_ROLE_KEY=
 STRIPE_SECRET_KEY=
 NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=
 STRIPE_WEBHOOK_SECRET=
-STRIPE_LEAD_PRICE_HOT=15000    # cents ($150)
-STRIPE_LEAD_PRICE_WARM=10000   # cents ($100)
-STRIPE_LEAD_PRICE_COLD=5000    # cents ($50)
+STRIPE_LEAD_PRICE_HOT=100000   # cents ($1,000)
+STRIPE_LEAD_PRICE_WARM=60000   # cents ($600)
+STRIPE_LEAD_PRICE_COLD=30000   # cents ($300)
 
 # Resend (required for emails)
 RESEND_API_KEY=

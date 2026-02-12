@@ -3,9 +3,9 @@ import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 
 const DEFAULT_SETTINGS: Record<string, unknown> = {
-  lead_price_hot: 15000,
-  lead_price_warm: 10000,
-  lead_price_cold: 5000,
+  lead_price_hot: 100000,
+  lead_price_warm: 60000,
+  lead_price_cold: 30000,
   notification_email_from: 'notify@repo911.com',
   platform_name: 'Repo911',
   fee_share_percentage: 50,
