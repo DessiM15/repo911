@@ -2,22 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { scrubPII } from '@/lib/error-tracking/scrubber';
-
-// Simple in-memory rate limiter: max 30 error reports per IP per minute
-const ipBuckets = new Map<string, { count: number; reset: number }>();
-const RATE_LIMIT = 30;
-const WINDOW_MS = 60_000;
-
-function isRateLimited(ip: string): boolean {
-  const now = Date.now();
-  const bucket = ipBuckets.get(ip);
-  if (!bucket || now > bucket.reset) {
-    ipBuckets.set(ip, { count: 1, reset: now + WINDOW_MS });
-    return false;
-  }
-  bucket.count++;
-  return bucket.count > RATE_LIMIT;
-}
+import { rateLimit } from '@/lib/rate-limit';
 
 export async function POST(request: NextRequest) {
   const clientIp =
@@ -25,7 +10,9 @@ export async function POST(request: NextRequest) {
     request.headers.get('x-real-ip') ||
     'unknown';
 
-  if (isRateLimited(clientIp)) {
+  // Rate limit: 30 error reports per IP per minute
+  const rateLimitResult = rateLimit(`error_track:${clientIp}`, { limit: 30, windowSeconds: 60 });
+  if (!rateLimitResult.success) {
     return NextResponse.json({ error: 'Rate limited' }, { status: 429 });
   }
 

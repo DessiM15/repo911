@@ -2,9 +2,28 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { stripe, isStripeConfigured } from '@/lib/stripe';
 import { sendAttorneyRegistrationAlert } from '@/lib/emails';
+import { rateLimit } from '@/lib/rate-limit';
 
 export async function POST(request: NextRequest) {
   try {
+    // Rate limit: 5 registrations per IP per hour
+    const ip =
+      request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+      request.headers.get('x-real-ip') ||
+      'unknown';
+    const rateLimitResult = rateLimit(`attorney_register:${ip}`, { limit: 5, windowSeconds: 3600 });
+    if (!rateLimitResult.success) {
+      return NextResponse.json(
+        { error: 'Too many registration attempts. Please try again later.' },
+        {
+          status: 429,
+          headers: {
+            'Retry-After': Math.ceil((rateLimitResult.resetAt - Date.now()) / 1000).toString(),
+          },
+        }
+      );
+    }
+
     const body = await request.json();
     const {
       first_name, last_name, email, password, phone,

@@ -5,6 +5,7 @@ import { stripe, isStripeConfigured, LEAD_PRICES } from '@/lib/stripe';
 import { isSubscriptionActive } from '@/lib/subscription';
 import { sendLeadClaimedToConsumer, sendLeadClaimedToAttorney } from '@/lib/emails';
 import { captureServerException } from '@/lib/error-tracking/server-tracker';
+import { rateLimit } from '@/lib/rate-limit';
 import type { QualificationTier, SubscriptionPlan, SubscriptionStatus } from '@/types';
 
 export async function POST(request: NextRequest) {
@@ -37,6 +38,20 @@ export async function POST(request: NextRequest) {
 
     if (!attorney || attorney.status !== 'active') {
       return NextResponse.json({ error: 'Attorney account is not active' }, { status: 403 });
+    }
+
+    // Rate limit: 20 claims per attorney per hour
+    const rateLimitResult = rateLimit(`attorney_claim:${attorney.id}`, { limit: 20, windowSeconds: 3600 });
+    if (!rateLimitResult.success) {
+      return NextResponse.json(
+        { error: 'Too many claim attempts. Please try again later.' },
+        {
+          status: 429,
+          headers: {
+            'Retry-After': Math.ceil((rateLimitResult.resetAt - Date.now()) / 1000).toString(),
+          },
+        }
+      );
     }
 
     // Verify lead is available

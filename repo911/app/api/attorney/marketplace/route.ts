@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { getEstimatedValueRange } from '@/lib/utils';
+import { rateLimit } from '@/lib/rate-limit';
 import type { MarketplaceLead, QualificationBreakdown } from '@/types';
 
 export async function GET(request: NextRequest) {
@@ -11,6 +12,20 @@ export async function GET(request: NextRequest) {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    // Rate limit: 60 requests per user per minute
+    const rateLimitResult = rateLimit(`attorney_marketplace:${user.id}`, { limit: 60, windowSeconds: 60 });
+    if (!rateLimitResult.success) {
+      return NextResponse.json(
+        { error: 'Too many requests. Please try again later.' },
+        {
+          status: 429,
+          headers: {
+            'Retry-After': Math.ceil((rateLimitResult.resetAt - Date.now()) / 1000).toString(),
+          },
+        }
+      );
     }
 
     const searchParams = request.nextUrl.searchParams;

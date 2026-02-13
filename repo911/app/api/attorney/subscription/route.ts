@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { stripe, isStripeConfigured } from '@/lib/stripe';
 import { SUBSCRIPTION_PRICE_ID } from '@/lib/subscription';
+import { rateLimit } from '@/lib/rate-limit';
 
 // GET — Return attorney's subscription fields
 export async function GET() {
@@ -71,6 +72,20 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'You already have an active subscription' }, { status: 400 });
     }
 
+    // Rate limit: 10 subscription creations per attorney per hour
+    const rateLimitResult = rateLimit(`attorney_sub_create:${attorney.id}`, { limit: 10, windowSeconds: 3600 });
+    if (!rateLimitResult.success) {
+      return NextResponse.json(
+        { error: 'Too many requests. Please try again later.' },
+        {
+          status: 429,
+          headers: {
+            'Retry-After': Math.ceil((rateLimitResult.resetAt - Date.now()) / 1000).toString(),
+          },
+        }
+      );
+    }
+
     // Suppress unused variable warning
     void request;
 
@@ -123,6 +138,20 @@ export async function DELETE() {
 
     if (!attorney.stripe_subscription_id || attorney.subscription_status !== 'active') {
       return NextResponse.json({ error: 'No active subscription to cancel' }, { status: 400 });
+    }
+
+    // Rate limit: 5 cancellations per attorney per hour
+    const rateLimitResult = rateLimit(`attorney_sub_cancel:${attorney.id}`, { limit: 5, windowSeconds: 3600 });
+    if (!rateLimitResult.success) {
+      return NextResponse.json(
+        { error: 'Too many requests. Please try again later.' },
+        {
+          status: 429,
+          headers: {
+            'Retry-After': Math.ceil((rateLimitResult.resetAt - Date.now()) / 1000).toString(),
+          },
+        }
+      );
     }
 
     await stripe.subscriptions.update(attorney.stripe_subscription_id, {
