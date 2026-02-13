@@ -30,6 +30,7 @@ export default function FeeTrackingPage() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editValues, setEditValues] = useState<Record<string, string>>({});
   const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
 
   const fetchFees = useCallback(async () => {
     setLoading(true);
@@ -38,13 +39,15 @@ export default function FeeTrackingPage() {
       if (caseStatusFilter) params.set('case_status', caseStatusFilter);
 
       const res = await fetch(`/api/admin/fee-tracking?${params}`);
-      if (res.ok) {
-        const data = await res.json();
-        setFees(data.fees);
-        setAttorneys(data.attorneys);
+      if (!res.ok) {
+        setError('Failed to load case tracking data.');
+        return;
       }
+      const data = await res.json();
+      setFees(data.fees);
+      setAttorneys(data.attorneys);
     } catch {
-      // silently fail
+      setError('Failed to load case tracking data.');
     } finally {
       setLoading(false);
     }
@@ -96,9 +99,11 @@ export default function FeeTrackingPage() {
           )
         );
         setEditingId(null);
+      } else {
+        setError('Failed to save changes.');
       }
     } catch {
-      // silently fail
+      setError('Failed to save changes.');
     } finally {
       setSaving(false);
     }
@@ -107,6 +112,12 @@ export default function FeeTrackingPage() {
   return (
     <div className="space-y-4">
       <h1 className="text-2xl font-bold text-gray-900">Case Tracking</h1>
+
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg p-4">
+          {error}
+        </div>
+      )}
 
       {/* Filters */}
       <div className="flex flex-col sm:flex-row gap-3">
