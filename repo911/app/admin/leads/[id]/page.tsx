@@ -11,6 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { formatDate, formatCurrency } from '@/lib/utils';
+import type { Lead, Attorney, Transaction } from '@/types';
 
 function BoolIndicator({ value, label }: { value: boolean; label: string }) {
   return (
@@ -24,12 +25,9 @@ function BoolIndicator({ value, label }: { value: boolean; label: string }) {
 export default function AdminLeadDetailPage() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [lead, setLead] = useState<any>(null);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [attorney, setAttorney] = useState<any>(null);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [transaction, setTransaction] = useState<any>(null);
+  const [lead, setLead] = useState<Lead | null>(null);
+  const [attorney, setAttorney] = useState<Pick<Attorney, 'id' | 'first_name' | 'last_name' | 'email' | 'firm_name'> | null>(null);
+  const [transaction, setTransaction] = useState<Transaction | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
@@ -66,7 +64,7 @@ export default function AdminLeadDetailPage() {
         body: JSON.stringify({ status: statusEdit }),
       });
       if (res.ok) {
-        setLead((prev: typeof lead) => ({ ...prev, status: statusEdit }));
+        setLead((prev) => prev ? { ...prev, status: statusEdit } as Lead : prev);
       } else {
         setError('Failed to update status');
       }

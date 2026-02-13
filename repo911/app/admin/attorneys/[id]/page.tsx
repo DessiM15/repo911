@@ -12,16 +12,14 @@ import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
 import { formatDate, formatCurrency } from '@/lib/utils';
+import type { Attorney, Lead, Transaction } from '@/types';
 
 export default function AdminAttorneyDetailPage() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [attorney, setAttorney] = useState<any>(null);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [claimedLeads, setClaimedLeads] = useState<any[]>([]);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [transactions, setTransactions] = useState<any[]>([]);
+  const [attorney, setAttorney] = useState<Attorney | null>(null);
+  const [claimedLeads, setClaimedLeads] = useState<Pick<Lead, 'id' | 'first_name' | 'last_name' | 'qualification_tier' | 'qualification_score' | 'repo_state' | 'claimed_at' | 'status'>[]>([]);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [totalSpent, setTotalSpent] = useState(0);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -62,7 +60,7 @@ export default function AdminAttorneyDetailPage() {
         body: JSON.stringify({ status: statusEdit, is_verified: verifiedEdit }),
       });
       if (res.ok) {
-        setAttorney((prev: typeof attorney) => ({ ...prev, status: statusEdit, is_verified: verifiedEdit }));
+        setAttorney((prev) => prev ? { ...prev, status: statusEdit, is_verified: verifiedEdit } as Attorney : prev);
       } else {
         setError('Failed to update attorney');
       }

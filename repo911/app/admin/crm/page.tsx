@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
 import { formatDate } from '@/lib/utils';
+import type { CrmContact } from '@/types';
 
 const STAGE_OPTIONS = [
   { value: '', label: 'All Stages' },
@@ -35,8 +36,7 @@ function getStageBadgeVariant(stage: string): 'info' | 'warning' | 'success' | '
 }
 
 export default function CRMPage() {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [contacts, setContacts] = useState<any[]>([]);
+  const [contacts, setContacts] = useState<CrmContact[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [search, setSearch] = useState('');
@@ -180,7 +180,7 @@ export default function CRMPage() {
                         </span>
                       ))}
                       {(contact.tags || []).length > 3 && (
-                        <span className="text-[10px] text-gray-400">+{contact.tags.length - 3}</span>
+                        <span className="text-[10px] text-gray-400">+{contact.tags!.length - 3}</span>
                       )}
                     </div>
                   </TableCell>

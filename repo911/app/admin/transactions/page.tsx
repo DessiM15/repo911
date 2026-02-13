@@ -7,10 +7,10 @@ import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
 import { formatDate, formatCurrency } from '@/lib/utils';
+import type { Transaction } from '@/types';
 
 export default function TransactionsPage() {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [transactions, setTransactions] = useState<any[]>([]);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [attorneys, setAttorneys] = useState<Record<string, string>>({});
   const [totalRevenue, setTotalRevenue] = useState(0);
   const [totalRefunded, setTotalRefunded] = useState(0);

@@ -11,6 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { formatDate } from '@/lib/utils';
+import type { CrmContact, CrmActivity, Lead, Attorney } from '@/types';
 
 const STAGES = ['new', 'contacted', 'engaged', 'converted', 'closed'];
 
@@ -41,14 +42,10 @@ function getActivityColor(type: string) {
 export default function CRMContactDetailPage() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [contact, setContact] = useState<any>(null);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [activities, setActivities] = useState<any[]>([]);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [lead, setLead] = useState<any>(null);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [attorney, setAttorney] = useState<any>(null);
+  const [contact, setContact] = useState<CrmContact | null>(null);
+  const [activities, setActivities] = useState<CrmActivity[]>([]);
+  const [lead, setLead] = useState<Pick<Lead, 'id' | 'first_name' | 'last_name' | 'status' | 'qualification_tier' | 'qualification_score'> | null>(null);
+  const [attorney, setAttorney] = useState<Pick<Attorney, 'id' | 'first_name' | 'last_name' | 'status' | 'firm_name'> | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [newNote, setNewNote] = useState('');
@@ -95,11 +92,13 @@ export default function CRMContactDetailPage() {
       });
       if (res.ok) {
         // Add to local state
-        const noteActivity = {
+        const noteActivity: CrmActivity = {
           id: Date.now().toString(),
           created_at: new Date().toISOString(),
+          contact_id: id,
           activity_type: 'note',
           description: newNote,
+          metadata: null,
           performed_by: 'Admin',
         };
         setActivities((prev) => [noteActivity, ...prev]);
@@ -108,10 +107,10 @@ export default function CRMContactDetailPage() {
           author: 'Admin',
           note_text: newNote,
         };
-        setContact((prev: typeof contact) => ({
+        setContact((prev) => prev ? {
           ...prev,
           notes: [...(prev.notes || []), noteObj],
-        }));
+        } as CrmContact : prev);
         setNewNote('');
       }
     } catch {
@@ -130,7 +129,7 @@ export default function CRMContactDetailPage() {
         body: JSON.stringify({ lifecycle_stage: stageEdit }),
       });
       if (res.ok) {
-        setContact((prev: typeof contact) => ({ ...prev, lifecycle_stage: stageEdit }));
+        setContact((prev) => prev ? { ...prev, lifecycle_stage: stageEdit } as CrmContact : prev);
       }
     } catch {
       setError('Failed to update stage');
@@ -141,17 +140,17 @@ export default function CRMContactDetailPage() {
 
   async function handleAddTag() {
     const tag = newTag.trim().toLowerCase().replace(/\s+/g, '_');
-    if (!tag || (contact.tags || []).includes(tag)) { setNewTag(''); return; }
+    if (!tag || (contact?.tags || []).includes(tag)) { setNewTag(''); return; }
     setSavingTags(true);
     try {
-      const updatedTags = [...(contact.tags || []), tag];
+      const updatedTags = [...(contact?.tags || []), tag];
       const res = await fetch(`/api/admin/crm/contacts/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ tags: updatedTags }),
       });
       if (res.ok) {
-        setContact((prev: typeof contact) => ({ ...prev, tags: updatedTags }));
+        setContact((prev) => prev ? { ...prev, tags: updatedTags } as CrmContact : prev);
         setNewTag('');
       }
     } catch {
@@ -164,14 +163,14 @@ export default function CRMContactDetailPage() {
   async function handleRemoveTag(tagToRemove: string) {
     setSavingTags(true);
     try {
-      const updatedTags = (contact.tags || []).filter((t: string) => t !== tagToRemove);
+      const updatedTags = (contact?.tags || []).filter((t: string) => t !== tagToRemove);
       const res = await fetch(`/api/admin/crm/contacts/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ tags: updatedTags }),
       });
       if (res.ok) {
-        setContact((prev: typeof contact) => ({ ...prev, tags: updatedTags }));
+        setContact((prev) => prev ? { ...prev, tags: updatedTags } as CrmContact : prev);
       }
     } catch {
       setError('Failed to remove tag');
@@ -189,7 +188,7 @@ export default function CRMContactDetailPage() {
         body: JSON.stringify({ next_follow_up: followUp || null }),
       });
       if (res.ok) {
-        setContact((prev: typeof contact) => ({ ...prev, next_follow_up: followUp || null }));
+        setContact((prev) => prev ? { ...prev, next_follow_up: followUp || null } as CrmContact : prev);
       }
     } catch {
       setError('Failed to update follow-up date');

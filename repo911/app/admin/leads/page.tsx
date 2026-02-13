@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
 import { formatDate } from '@/lib/utils';
+import type { Lead } from '@/types';
 
 const STATUS_OPTIONS = [
   { value: '', label: 'All Statuses' },
@@ -46,8 +47,7 @@ function getStatusBadgeVariant(status: string): 'success' | 'warning' | 'info' |
 }
 
 export default function AdminLeadsPage() {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [leads, setLeads] = useState<any[]>([]);
+  const [leads, setLeads] = useState<Pick<Lead, 'id' | 'first_name' | 'last_name' | 'email' | 'phone' | 'status' | 'qualification_tier' | 'qualification_score' | 'repo_state' | 'repo_date' | 'lender_name' | 'claimed_by' | 'claimed_at' | 'created_at'>[]>([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');

@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
 import { formatDate } from '@/lib/utils';
+import type { Attorney } from '@/types';
 
 function getStatusBadgeVariant(status: string): 'success' | 'warning' | 'danger' | 'default' {
   switch (status) {
@@ -18,8 +19,7 @@ function getStatusBadgeVariant(status: string): 'success' | 'warning' | 'danger'
 }
 
 export default function AdminAttorneysPage() {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [attorneys, setAttorneys] = useState<any[]>([]);
+  const [attorneys, setAttorneys] = useState<Pick<Attorney, 'id' | 'first_name' | 'last_name' | 'email' | 'phone' | 'firm_name' | 'bar_number' | 'bar_state' | 'status' | 'is_verified' | 'fee_agreement_signed' | 'created_at' | 'stripe_customer_id'>[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [search, setSearch] = useState('');

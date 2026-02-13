@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
 import { formatDate } from '@/lib/utils';
+import type { FeeTracking } from '@/types';
 
 function getCaseStatusVariant(status: string): 'info' | 'success' | 'warning' | 'default' {
   switch (status) {
@@ -22,8 +23,7 @@ function getCaseStatusVariant(status: string): 'info' | 'success' | 'warning' | 
 }
 
 export default function FeeTrackingPage() {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [fees, setFees] = useState<any[]>([]);
+  const [fees, setFees] = useState<FeeTracking[]>([]);
   const [attorneys, setAttorneys] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
   const [caseStatusFilter, setCaseStatusFilter] = useState('');
@@ -54,8 +54,7 @@ export default function FeeTrackingPage() {
     fetchFees();
   }, [fetchFees]);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  function startEdit(fee: any) {
+  function startEdit(fee: FeeTracking) {
     setEditingId(fee.id);
     setEditValues({
       case_status: fee.case_status || 'open',
@@ -92,7 +91,7 @@ export default function FeeTrackingPage() {
                   case_status: editValues.case_status,
                   attorney_total_fee: editValues.attorney_total_fee ? parseFloat(editValues.attorney_total_fee) : f.attorney_total_fee,
                   notes: editValues.notes || null,
-                }
+                } as FeeTracking
               : f
           )
         );

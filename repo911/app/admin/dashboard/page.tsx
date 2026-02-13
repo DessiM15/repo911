@@ -9,6 +9,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { formatCurrency, formatDate } from '@/lib/utils';
+import type { Lead, Transaction } from '@/types';
 
 interface DashboardData {
   total_leads: number;
@@ -24,10 +25,8 @@ interface DashboardData {
   hot_leads: number;
   warm_leads: number;
   cold_leads: number;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  recent_leads: any[];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  recent_transactions: any[];
+  recent_leads: Pick<Lead, 'id' | 'first_name' | 'last_name' | 'status' | 'qualification_tier' | 'qualification_score' | 'repo_state' | 'created_at'>[];
+  recent_transactions: Pick<Transaction, 'id' | 'amount' | 'status' | 'created_at' | 'attorney_id' | 'lead_id'>[];
 }
 
 function StatCard({ label, value, icon: Icon, sub, color }: {
