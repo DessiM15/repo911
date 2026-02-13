@@ -230,7 +230,7 @@ export default function AdminDashboardPage() {
             Pipeline
           </Link>
           <Link href="/admin/fee-tracking" className="px-4 py-2 bg-[#1B2A4A] text-white text-sm rounded-lg hover:bg-[#2A3D66] transition-colors">
-            Fee Tracking
+            Case Tracking
           </Link>
           <Link href="/admin/settings" className="px-4 py-2 border border-gray-300 text-gray-700 text-sm rounded-lg hover:bg-gray-50 transition-colors">
             Settings

@@ -31,7 +31,7 @@ const navItems = [
     { href: '/admin/crm/pipeline', label: 'Pipeline' },
   ]},
   { href: '/admin/transactions', label: 'Transactions', icon: Receipt },
-  { href: '/admin/fee-tracking', label: 'Fee Tracking', icon: DollarSign },
+  { href: '/admin/fee-tracking', label: 'Case Tracking', icon: DollarSign },
   { href: '/admin/errors', label: 'Error Tracking', icon: Bug },
   { href: '/admin/settings', label: 'Settings', icon: Settings },
 ];

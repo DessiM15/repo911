@@ -105,7 +105,7 @@ export default function FeeTrackingPage() {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-2xl font-bold text-gray-900">Fee Tracking</h1>
+      <h1 className="text-2xl font-bold text-gray-900">Case Tracking</h1>
 
       {/* Filters */}
       <div className="flex flex-col sm:flex-row gap-3">
@@ -133,7 +133,7 @@ export default function FeeTrackingPage() {
         ) : fees.length === 0 ? (
           <div className="p-12 text-center text-gray-500">
             <DollarSign className="h-8 w-8 mx-auto mb-2 text-gray-300" />
-            <p>No fee tracking records found.</p>
+            <p>No case tracking records found.</p>
           </div>
         ) : (
           <Table>
