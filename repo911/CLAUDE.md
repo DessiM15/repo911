@@ -168,7 +168,10 @@ NEXT_PUBLIC_APP_NAME=Repo911
 
 ## Important Patterns
 
-- **Rate limiting**: In-memory sliding window (`lib/rate-limit.ts`). Lead submissions: 5/IP/15min. Case tracking: 10/IP/15min.
+- **Rate limiting**: In-memory sliding window (`lib/rate-limit.ts`). Public endpoints keyed by IP, authenticated endpoints keyed by user/attorney ID. Limits:
+  - Lead submission: 5/IP/15min. Case tracking: 10/IP/15min. Evidence upload: 10/IP/15min.
+  - Attorney register: 5/IP/hour. Claim: 20/attorney/hour. Subscription create: 10/attorney/hour. Subscription cancel: 5/attorney/hour. Marketplace: 60/user/min.
+  - Error tracking: 30/IP/min.
 - **API auth checks**: Admin routes use `createServerClient` + check `admins` table. Attorney routes check `attorneys` table + status.
 - **Emails**: Fire-and-forget via Resend. Failures are logged but don't block responses.
 - **File uploads**: Supabase Storage `lead-evidence` bucket. Max 5 files, 10MB each, images + PDFs. Verified by email + case ID combo.
