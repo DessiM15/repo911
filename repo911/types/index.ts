@@ -452,3 +452,72 @@ export interface LeadClaimPrice {
   warm: number;
   cold: number;
 }
+
+// ---------- Error Tracking ----------
+
+export type ErrorLevel = 'error' | 'warning' | 'fatal' | 'info';
+
+export type ErrorStatus = 'unresolved' | 'resolved' | 'ignored' | 'muted';
+
+export interface TrackedError {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  fingerprint: string;
+  error_type: string;
+  message: string;
+  environment: string;
+  platform: string | null;
+  level: ErrorLevel;
+  first_seen: string;
+  last_seen: string;
+  occurrence_count: number;
+  status: ErrorStatus;
+  assigned_to: string | null;
+  tags: string[];
+}
+
+export interface ErrorOccurrence {
+  id: string;
+  created_at: string;
+  error_id: string;
+  stack_trace: string | null;
+  source_file: string | null;
+  line_number: number | null;
+  column_number: number | null;
+  user_id: string | null;
+  user_ip: string | null;
+  user_agent: string | null;
+  url: string | null;
+  http_method: string | null;
+  query_params: Record<string, unknown> | null;
+  request_headers: Record<string, string> | null;
+  breadcrumbs: Breadcrumb[];
+  extra_data: Record<string, unknown>;
+  browser_name: string | null;
+  browser_version: string | null;
+  os_name: string | null;
+  os_version: string | null;
+  device_type: string | null;
+}
+
+export interface Breadcrumb {
+  timestamp: number;
+  type: 'navigation' | 'click' | 'input' | 'http' | 'error';
+  message: string;
+  data?: Record<string, unknown>;
+}
+
+export interface AlertRule {
+  id: string;
+  created_at: string;
+  name: string;
+  enabled: boolean;
+  error_level: string[] | null;
+  error_types: string[] | null;
+  tags: string[] | null;
+  threshold: number;
+  time_window: number;
+  notification_channels: { email?: string[]; };
+  last_triggered: string | null;
+}

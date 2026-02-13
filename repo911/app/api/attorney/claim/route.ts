@@ -4,6 +4,7 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { stripe, isStripeConfigured, LEAD_PRICES } from '@/lib/stripe';
 import { isSubscriptionActive } from '@/lib/subscription';
 import { sendLeadClaimedToConsumer, sendLeadClaimedToAttorney } from '@/lib/emails';
+import { captureServerException } from '@/lib/error-tracking/server-tracker';
 import type { QualificationTier, SubscriptionPlan, SubscriptionStatus } from '@/types';
 
 export async function POST(request: NextRequest) {
@@ -184,6 +185,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ checkout_url: session.url });
   } catch (error) {
     console.error('Claim error:', error);
+    captureServerException(error instanceof Error ? error : new Error(String(error)), {
+      tags: ['payment', 'claim'],
+      request: { url: request.url, method: request.method },
+    });
     return NextResponse.json({ error: 'Failed to create checkout session' }, { status: 500 });
   }
 }

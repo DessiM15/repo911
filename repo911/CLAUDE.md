@@ -13,7 +13,7 @@ Repo911 is a full-stack lead marketplace connecting consumers who experienced wr
 - **Auth**: Supabase Auth (email/password)
 - **Payments**: Stripe (checkout sessions, webhooks)
 - **Email**: Resend
-- **Monitoring**: Sentry (optional, works without DSN)
+- **Monitoring**: Self-hosted error tracking (Supabase + custom tracker)
 - **Forms**: React Hook Form + Zod
 - **Package Manager**: pnpm
 
@@ -162,11 +162,6 @@ ADMIN_NOTIFICATION_EMAIL=      # optional
 NEXT_PUBLIC_APP_URL=
 NEXT_PUBLIC_APP_NAME=Repo911
 
-# Sentry (optional — works without)
-NEXT_PUBLIC_SENTRY_DSN=
-SENTRY_ORG=
-SENTRY_PROJECT=
-SENTRY_AUTH_TOKEN=
 ```
 
 `next.config.ts` strips whitespace from env vars at build time.

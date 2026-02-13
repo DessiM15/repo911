@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import * as Sentry from '@sentry/nextjs';
+import { captureException } from '@/lib/error-tracking/client-tracker';
 import Link from 'next/link';
 import { Shield, RefreshCw, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -14,7 +14,7 @@ export default function ConsumerError({
   reset: () => void;
 }) {
   useEffect(() => {
-    Sentry.captureException(error);
+    captureException(error, { level: 'fatal', tags: ['error-boundary', 'consumer'] });
     console.error(error);
   }, [error]);
 

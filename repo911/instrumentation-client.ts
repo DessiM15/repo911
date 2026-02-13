@@ -1,4 +1,2 @@
-import * as Sentry from '@sentry/nextjs';
-import './sentry.client.config';
-
-export const onRouterTransitionStart = Sentry.captureRouterTransitionStart;
+// Client-side instrumentation
+// Custom error tracking is initialized via lib/error-tracking/client-tracker.ts

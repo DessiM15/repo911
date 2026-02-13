@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { stripe, LEAD_PRICES } from '@/lib/stripe';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { sendLeadClaimedToConsumer, sendLeadClaimedToAttorney } from '@/lib/emails';
+import { captureServerException, captureServerMessage } from '@/lib/error-tracking/server-tracker';
 import type { QualificationTier } from '@/types';
 import Stripe from 'stripe';
 
@@ -22,6 +23,10 @@ export async function POST(request: NextRequest) {
     );
   } catch (err) {
     console.error('Webhook signature verification failed:', err);
+    captureServerException(err instanceof Error ? err : new Error(String(err)), {
+      tags: ['stripe', 'webhook', 'signature'],
+      request: { url: request.url, method: request.method },
+    });
     return NextResponse.json({ error: 'Invalid signature' }, { status: 400 });
   }
 
@@ -94,6 +99,11 @@ export async function POST(request: NextRequest) {
       if (claimError || !updatedLead) {
         // Lead was already claimed by another attorney — refund will be needed
         console.error('Lead already claimed or not found:', lead_id, claimError);
+        captureServerMessage(
+          `Lead already claimed or not found: ${lead_id}`,
+          'warning',
+          { tags: ['stripe', 'webhook', 'claim-race'], extra: { lead_id, attorney_id } },
+        );
         break;
       }
 
