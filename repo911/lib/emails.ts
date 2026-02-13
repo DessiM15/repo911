@@ -222,7 +222,10 @@ export async function sendAttorneyRegistrationAlert(opts: {
   barState: string;
   firmName: string | null;
 }) {
-  const adminEmail = process.env.ADMIN_NOTIFICATION_EMAIL || EMAIL_FROM;
+  const adminEmailRaw = process.env.ADMIN_NOTIFICATION_EMAIL || EMAIL_FROM;
+  const adminEmail = adminEmailRaw.includes(',')
+    ? adminEmailRaw.split(',').map(e => e.trim())
+    : adminEmailRaw;
 
   const html = wrap('New Attorney Registration', [
     p('A new attorney has registered on the platform:'),
@@ -245,28 +248,4 @@ export async function sendAttorneyRegistrationAlert(opts: {
   });
 }
 
-/**
- * Sent to attorney when a fee payment report is due.
- */
-export async function sendFeePaymentReminder(opts: {
-  to: string;
-  attorneyName: string;
-  leadId: string;
-  dueDate: string;
-}) {
-  const html = wrap('Fee Payment Reminder', [
-    p(`Hi ${escapeHtml(opts.attorneyName)},`),
-    p(`A fee report is due for lead <strong>#${escapeHtml(opts.leadId.slice(0, 8))}</strong>.`),
-    p(`<strong>Due date:</strong> ${escapeHtml(opts.dueDate)}`),
-    p('Please update the case status and submit your payment at your earliest convenience.'),
-    btn('View Billing', `${APP_URL}/attorney/billing`),
-    p(`&mdash; The ${APP_NAME} Team`),
-  ].join(''));
 
-  return resend.emails.send({
-    from: EMAIL_FROM,
-    to: opts.to,
-    subject: `Fee Payment Reminder — ${APP_NAME}`,
-    html,
-  });
-}

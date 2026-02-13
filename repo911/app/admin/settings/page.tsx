@@ -288,10 +288,6 @@ export default function SettingsPage() {
               <span>Attorney Registration Alert (to admin)</span>
               <span className="text-xs text-gray-400">Auto-sent</span>
             </div>
-            <div className="flex items-center justify-between">
-              <span>Fee Payment Reminder (to attorney)</span>
-              <span className="text-xs text-gray-400">Auto-sent</span>
-            </div>
           </div>
           <p className="text-xs text-gray-400 mt-3">Email templates are managed in code. Contact your developer to modify.</p>
         </div>
