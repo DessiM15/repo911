@@ -114,6 +114,13 @@ export async function PATCH(
       return NextResponse.json({ error: 'No valid fields to update' }, { status: 400 });
     }
 
+    // Fetch old values before update
+    const { data: oldLead } = await supabase
+      .from('leads')
+      .select('status, qualification_tier')
+      .eq('id', id)
+      .single();
+
     updates.updated_at = new Date().toISOString();
 
     const { error } = await supabase
@@ -123,6 +130,39 @@ export async function PATCH(
 
     if (error) {
       return NextResponse.json({ error: 'Failed to update lead' }, { status: 500 });
+    }
+
+    // Log status_change activities (fire-and-forget)
+    if (oldLead) {
+      const changes: { field: string; old_value: string; new_value: string }[] = [];
+      if (body.status && body.status !== oldLead.status) {
+        changes.push({ field: 'status', old_value: oldLead.status, new_value: body.status });
+      }
+      if (body.qualification_tier && body.qualification_tier !== oldLead.qualification_tier) {
+        changes.push({ field: 'qualification_tier', old_value: oldLead.qualification_tier, new_value: body.qualification_tier });
+      }
+
+      if (changes.length > 0) {
+        supabase
+          .from('crm_contacts')
+          .select('id')
+          .eq('source_lead_id', id)
+          .single()
+          .then(({ data: contact }) => {
+            if (contact) {
+              const activities = changes.map((c) => ({
+                contact_id: contact.id,
+                activity_type: 'status_change' as const,
+                description: c.field === 'status'
+                  ? `Lead status changed from ${c.old_value} to ${c.new_value}`
+                  : `Qualification tier changed from ${c.old_value} to ${c.new_value}`,
+                performed_by: admin.id,
+                metadata: c,
+              }));
+              supabase.from('crm_activities').insert(activities).then(() => {});
+            }
+          });
+      }
     }
 
     return NextResponse.json({ success: true });

@@ -71,6 +71,13 @@ export async function PATCH(request: NextRequest) {
       return NextResponse.json({ error: 'Invalid status' }, { status: 400 });
     }
 
+    // Fetch old status before update
+    const { data: oldLead } = await supabase
+      .from('leads')
+      .select('status')
+      .eq('id', lead_id)
+      .single();
+
     const { error } = await supabase
       .from('leads')
       .update({ status, updated_at: new Date().toISOString() })
@@ -78,6 +85,26 @@ export async function PATCH(request: NextRequest) {
 
     if (error) {
       return NextResponse.json({ error: 'Failed to update status' }, { status: 500 });
+    }
+
+    // Log status_change activity (fire-and-forget)
+    if (oldLead && oldLead.status !== status) {
+      supabase
+        .from('crm_contacts')
+        .select('id')
+        .eq('source_lead_id', lead_id)
+        .single()
+        .then(({ data: contact }) => {
+          if (contact) {
+            supabase.from('crm_activities').insert({
+              contact_id: contact.id,
+              activity_type: 'status_change',
+              description: `Lead status changed from ${oldLead.status} to ${status}`,
+              performed_by: admin.id,
+              metadata: { field: 'status', old_value: oldLead.status, new_value: status },
+            }).then(() => {});
+          }
+        });
     }
 
     return NextResponse.json({ success: true });

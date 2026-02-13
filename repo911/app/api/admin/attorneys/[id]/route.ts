@@ -100,6 +100,13 @@ export async function PATCH(
       return NextResponse.json({ error: 'No valid fields to update' }, { status: 400 });
     }
 
+    // Fetch old status before update
+    const { data: oldAttorney } = await supabase
+      .from('attorneys')
+      .select('status')
+      .eq('id', id)
+      .single();
+
     updates.updated_at = new Date().toISOString();
 
     const { error } = await supabase
@@ -109,6 +116,26 @@ export async function PATCH(
 
     if (error) {
       return NextResponse.json({ error: 'Failed to update attorney' }, { status: 500 });
+    }
+
+    // Log status_change activity (fire-and-forget)
+    if (oldAttorney && body.status && body.status !== oldAttorney.status) {
+      supabase
+        .from('crm_contacts')
+        .select('id')
+        .eq('source_attorney_id', id)
+        .single()
+        .then(({ data: contact }) => {
+          if (contact) {
+            supabase.from('crm_activities').insert({
+              contact_id: contact.id,
+              activity_type: 'status_change',
+              description: `Attorney status changed from ${oldAttorney.status} to ${body.status}`,
+              performed_by: admin.id,
+              metadata: { field: 'status', old_value: oldAttorney.status, new_value: body.status },
+            }).then(() => {});
+          }
+        });
     }
 
     return NextResponse.json({ success: true });

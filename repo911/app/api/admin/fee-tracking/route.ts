@@ -82,10 +82,10 @@ export async function PATCH(request: NextRequest) {
       return NextResponse.json({ error: 'Missing fee_id' }, { status: 400 });
     }
 
-    // Verify fee record exists
+    // Verify fee record exists and fetch old values
     const { data: existingFee } = await supabase
       .from('fee_tracking')
-      .select('id')
+      .select('id, case_status, lead_id')
       .eq('id', fee_id)
       .single();
 
@@ -124,6 +124,26 @@ export async function PATCH(request: NextRequest) {
 
     if (error) {
       return NextResponse.json({ error: 'Failed to update' }, { status: 500 });
+    }
+
+    // Log status_change activity if case_status changed (fire-and-forget)
+    if (updates.case_status && existingFee.case_status !== updates.case_status && existingFee.lead_id) {
+      supabase
+        .from('crm_contacts')
+        .select('id')
+        .eq('source_lead_id', existingFee.lead_id)
+        .single()
+        .then(({ data: contact }) => {
+          if (contact) {
+            supabase.from('crm_activities').insert({
+              contact_id: contact.id,
+              activity_type: 'status_change',
+              description: `Case status changed from ${existingFee.case_status} to ${updates.case_status}`,
+              performed_by: admin.id,
+              metadata: { field: 'case_status', old_value: existingFee.case_status, new_value: updates.case_status },
+            }).then(() => {});
+          }
+        });
     }
 
     return NextResponse.json({ success: true });

@@ -145,6 +145,17 @@ export async function PATCH(
       return NextResponse.json({ error: 'No valid fields to update' }, { status: 400 });
     }
 
+    // Fetch old lifecycle_stage before update
+    let oldLifecycleStage: string | null = null;
+    if (body.lifecycle_stage) {
+      const { data: oldContact } = await supabase
+        .from('crm_contacts')
+        .select('lifecycle_stage')
+        .eq('id', id)
+        .single();
+      oldLifecycleStage = oldContact?.lifecycle_stage ?? null;
+    }
+
     updates.updated_at = new Date().toISOString();
 
     const { error } = await supabase
@@ -154,6 +165,17 @@ export async function PATCH(
 
     if (error) {
       return NextResponse.json({ error: 'Failed to update contact' }, { status: 500 });
+    }
+
+    // Log status_change activity if lifecycle_stage changed (fire-and-forget)
+    if (body.lifecycle_stage && oldLifecycleStage !== null && oldLifecycleStage !== body.lifecycle_stage) {
+      supabase.from('crm_activities').insert({
+        contact_id: id,
+        activity_type: 'status_change',
+        description: `Lifecycle stage changed from ${oldLifecycleStage} to ${body.lifecycle_stage}`,
+        performed_by: admin.id,
+        metadata: { field: 'lifecycle_stage', old_value: oldLifecycleStage, new_value: body.lifecycle_stage },
+      }).then(() => {});
     }
 
     return NextResponse.json({ success: true });
