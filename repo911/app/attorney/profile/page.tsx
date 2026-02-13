@@ -223,10 +223,11 @@ export default function ProfilePage() {
           />
           <Checkbox
             id="sms_notifications"
-            label="SMS Notifications"
-            description="Receive text alerts for hot leads in your preferred states"
+            label="SMS Notifications (Coming Soon)"
+            description="Text alerts for hot leads are not yet available"
             checked={smsNotifications}
             onChange={(e) => setSmsNotifications(e.target.checked)}
+            disabled
           />
         </CardContent>
       </Card>
