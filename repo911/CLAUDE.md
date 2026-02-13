@@ -79,11 +79,11 @@ Middleware is in `/middleware.ts`. It protects attorney and admin routes, redire
 - **attorneys** — Professional profiles, bar info, Stripe customer ID, preferences, status
 - **admins** — Platform administrators (admin/super_admin roles)
 - **transactions** — Stripe payment records linking attorneys to leads
-- **fee_tracking** — Case outcome billing (attorney fees, Repo911 share)
+- **fee_tracking** — Case outcome tracking (case status, attorney fees)
 - **crm_contacts** — Follow-up pipeline for leads and attorneys
 - **crm_activities** — Interaction log (notes, calls, emails, status changes)
 - **notifications** — In-app alerts for attorneys and admins
-- **settings** — Key-value platform configuration (lead prices, fee share %, etc.)
+- **settings** — Key-value platform configuration (lead prices, notification email, etc.)
 
 All tables use RLS policies. Migrations are in `supabase/migrations/` and must be run manually in the Supabase SQL editor.
 

@@ -119,7 +119,6 @@ export async function POST(request: NextRequest) {
         lead_id,
         transaction_id: null,
         case_status: 'open',
-        payment_status: 'pending',
       });
 
       // In-app notification

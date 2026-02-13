@@ -8,7 +8,6 @@ const DEFAULT_SETTINGS: Record<string, unknown> = {
   lead_price_cold: 30000,
   notification_email_from: 'notify@repo911.com',
   platform_name: 'Repo911',
-  fee_share_percentage: 50,
 };
 
 async function getSettings() {
@@ -84,7 +83,7 @@ export async function PATCH(request: NextRequest) {
 
     const allowedKeys = [
       'lead_price_hot', 'lead_price_warm', 'lead_price_cold',
-      'notification_email_from', 'platform_name', 'fee_share_percentage',
+      'notification_email_from', 'platform_name',
     ];
 
     const adminClient = createAdminClient();

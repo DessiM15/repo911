@@ -126,7 +126,6 @@ export async function POST(request: NextRequest) {
         lead_id,
         transaction_id: null, // Will be linked by trigger or admin
         case_status: 'open',
-        payment_status: 'pending',
       });
 
       // Get lead info for notifications

@@ -21,8 +21,6 @@ export type TransactionStatus = 'pending' | 'succeeded' | 'failed' | 'refunded';
 
 export type CaseStatus = 'open' | 'settled' | 'dismissed' | 'paid';
 
-export type FeePaymentStatus = 'pending' | 'invoiced' | 'paid' | 'overdue';
-
 export type ContactType = 'consumer' | 'attorney';
 
 export type LifecycleStage = 'new' | 'contacted' | 'engaged' | 'converted' | 'closed';
@@ -281,10 +279,6 @@ export interface FeeTracking {
   lead_id: string;
   case_status: CaseStatus;
   attorney_total_fee: number | null;
-  repo911_share: number | null;
-  payment_status: FeePaymentStatus;
-  payment_due_date: string | null;
-  payment_received_date: string | null;
   notes: string | null;
 }
 

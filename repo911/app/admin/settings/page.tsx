@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Settings, DollarSign, Bell, Shield, Users, Plus, Loader2 } from 'lucide-react';
+import { Settings, DollarSign, Bell, Users, Plus, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { formatCurrency } from '@/lib/utils';
@@ -12,7 +12,6 @@ interface PlatformSettings {
   lead_price_cold: number;
   notification_email_from: string;
   platform_name: string;
-  fee_share_percentage: number;
 }
 
 interface AdminUser {
@@ -36,7 +35,6 @@ export default function SettingsPage() {
   const [priceWarm, setPriceWarm] = useState('');
   const [priceCold, setPriceCold] = useState('');
   const [emailFrom, setEmailFrom] = useState('');
-  const [feeShare, setFeeShare] = useState('');
 
   // Admin management
   const [admins, setAdmins] = useState<AdminUser[]>([]);
@@ -62,7 +60,6 @@ export default function SettingsPage() {
           setPriceWarm((data.settings.lead_price_warm / 100).toString());
           setPriceCold((data.settings.lead_price_cold / 100).toString());
           setEmailFrom(data.settings.notification_email_from);
-          setFeeShare(data.settings.fee_share_percentage.toString());
         }
       } catch {
         setError('Failed to load settings');
@@ -146,7 +143,6 @@ export default function SettingsPage() {
           lead_price_warm: Math.round(parseFloat(priceWarm) * 100),
           lead_price_cold: Math.round(parseFloat(priceCold) * 100),
           notification_email_from: emailFrom,
-          fee_share_percentage: parseInt(feeShare),
         }),
       });
       if (res.ok) {
@@ -247,30 +243,6 @@ export default function SettingsPage() {
                 className="w-full pl-7 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1B2A4A]"
               />
             </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Fee Share */}
-      <div className="bg-white rounded-xl border border-gray-200 p-6">
-        <h2 className="font-semibold text-gray-900 mb-1 flex items-center gap-2">
-          <Shield className="h-5 w-5 text-blue-500" /> Lead Purchase Agreement
-        </h2>
-        <p className="text-sm text-gray-500 mb-4">
-          The revenue share percentage from attorney case outcomes tracked in fee tracking.
-        </p>
-        <div className="max-w-xs">
-          <label className="block text-sm font-medium text-gray-700 mb-1">Revenue Share (%)</label>
-          <div className="relative">
-            <input
-              type="number"
-              value={feeShare}
-              onChange={(e) => setFeeShare(e.target.value)}
-              min="0"
-              max="100"
-              className="w-full pr-8 pl-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1B2A4A]"
-            />
-            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">%</span>
           </div>
         </div>
       </div>

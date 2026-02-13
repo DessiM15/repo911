@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import { DollarSign, AlertCircle, CheckCircle } from 'lucide-react';
+import { DollarSign } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -19,26 +19,12 @@ function getCaseStatusVariant(status: string): 'info' | 'success' | 'warning' | 
   }
 }
 
-function getPaymentStatusVariant(status: string): 'success' | 'warning' | 'danger' | 'default' {
-  switch (status) {
-    case 'paid': return 'success';
-    case 'invoiced': return 'info' as 'warning';
-    case 'overdue': return 'danger';
-    case 'pending': return 'warning';
-    default: return 'default';
-  }
-}
-
 export default function FeeTrackingPage() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [fees, setFees] = useState<any[]>([]);
   const [attorneys, setAttorneys] = useState<Record<string, string>>({});
-  const [totalOwed, setTotalOwed] = useState(0);
-  const [totalCollected, setTotalCollected] = useState(0);
-  const [overdueCount, setOverdueCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [caseStatusFilter, setCaseStatusFilter] = useState('');
-  const [paymentStatusFilter, setPaymentStatusFilter] = useState('');
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editValues, setEditValues] = useState<Record<string, string>>({});
   const [saving, setSaving] = useState(false);
@@ -48,23 +34,19 @@ export default function FeeTrackingPage() {
     try {
       const params = new URLSearchParams();
       if (caseStatusFilter) params.set('case_status', caseStatusFilter);
-      if (paymentStatusFilter) params.set('payment_status', paymentStatusFilter);
 
       const res = await fetch(`/api/admin/fee-tracking?${params}`);
       if (res.ok) {
         const data = await res.json();
         setFees(data.fees);
         setAttorneys(data.attorneys);
-        setTotalOwed(data.total_owed);
-        setTotalCollected(data.total_collected);
-        setOverdueCount(data.overdue_count);
       }
     } catch {
       // silently fail
     } finally {
       setLoading(false);
     }
-  }, [caseStatusFilter, paymentStatusFilter]);
+  }, [caseStatusFilter]);
 
   useEffect(() => {
     fetchFees();
@@ -75,9 +57,7 @@ export default function FeeTrackingPage() {
     setEditingId(fee.id);
     setEditValues({
       case_status: fee.case_status || 'open',
-      payment_status: fee.payment_status || 'pending',
       attorney_total_fee: fee.attorney_total_fee?.toString() || '',
-      repo911_share: fee.repo911_share?.toString() || '',
       notes: fee.notes || '',
     });
   }
@@ -89,15 +69,10 @@ export default function FeeTrackingPage() {
       const updates: Record<string, unknown> = {
         fee_id: editingId,
         case_status: editValues.case_status,
-        payment_status: editValues.payment_status,
         notes: editValues.notes || null,
       };
       if (editValues.attorney_total_fee) {
-        const totalFee = parseFloat(editValues.attorney_total_fee);
-        updates.attorney_total_fee = totalFee;
-        // Use configurable fee share percentage (default 50%)
-        const feeSharePct = parseFloat(process.env.NEXT_PUBLIC_FEE_SHARE_PERCENTAGE || '50') / 100;
-        updates.repo911_share = totalFee * feeSharePct;
+        updates.attorney_total_fee = parseFloat(editValues.attorney_total_fee);
       }
 
       const res = await fetch('/api/admin/fee-tracking', {
@@ -113,9 +88,7 @@ export default function FeeTrackingPage() {
               ? {
                   ...f,
                   case_status: editValues.case_status,
-                  payment_status: editValues.payment_status,
                   attorney_total_fee: editValues.attorney_total_fee ? parseFloat(editValues.attorney_total_fee) : f.attorney_total_fee,
-                  repo911_share: editValues.attorney_total_fee ? parseFloat(editValues.attorney_total_fee) * 0.5 : f.repo911_share,
                   notes: editValues.notes || null,
                 }
               : f
@@ -134,31 +107,6 @@ export default function FeeTrackingPage() {
     <div className="space-y-4">
       <h1 className="text-2xl font-bold text-gray-900">Fee Tracking</h1>
 
-      {/* Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="bg-white rounded-xl border border-gray-200 p-5">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-sm text-gray-500">Outstanding</span>
-            <DollarSign className="h-5 w-5 text-amber-500" />
-          </div>
-          <p className="text-2xl font-bold text-gray-900">${(totalOwed / 100).toLocaleString()}</p>
-        </div>
-        <div className="bg-white rounded-xl border border-gray-200 p-5">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-sm text-gray-500">Collected</span>
-            <CheckCircle className="h-5 w-5 text-green-500" />
-          </div>
-          <p className="text-2xl font-bold text-gray-900">${(totalCollected / 100).toLocaleString()}</p>
-        </div>
-        <div className="bg-white rounded-xl border border-gray-200 p-5">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-sm text-gray-500">Overdue</span>
-            <AlertCircle className="h-5 w-5 text-red-500" />
-          </div>
-          <p className="text-2xl font-bold text-red-600">{overdueCount}</p>
-        </div>
-      </div>
-
       {/* Filters */}
       <div className="flex flex-col sm:flex-row gap-3">
         <select
@@ -171,17 +119,6 @@ export default function FeeTrackingPage() {
           <option value="settled">Settled</option>
           <option value="dismissed">Dismissed</option>
           <option value="paid">Paid</option>
-        </select>
-        <select
-          value={paymentStatusFilter}
-          onChange={(e) => setPaymentStatusFilter(e.target.value)}
-          className="w-full sm:w-auto px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1B2A4A]"
-        >
-          <option value="">All Payment Statuses</option>
-          <option value="pending">Pending</option>
-          <option value="invoiced">Invoiced</option>
-          <option value="paid">Paid</option>
-          <option value="overdue">Overdue</option>
         </select>
       </div>
 
@@ -207,9 +144,7 @@ export default function FeeTrackingPage() {
                 <TableHead>Lead</TableHead>
                 <TableHead>Case Status</TableHead>
                 <TableHead>Attorney Fee</TableHead>
-                <TableHead>Repo911 Share (50%)</TableHead>
-                <TableHead>Payment Status</TableHead>
-                <TableHead>Due Date</TableHead>
+                <TableHead>Notes</TableHead>
                 <TableHead></TableHead>
               </TableRow>
             </TableHeader>
@@ -260,29 +195,18 @@ export default function FeeTrackingPage() {
                         <span className="text-sm">{fee.attorney_total_fee ? `$${fee.attorney_total_fee.toLocaleString()}` : '—'}</span>
                       )}
                     </TableCell>
-                    <TableCell className="font-medium text-green-600">
-                      {fee.repo911_share ? `$${fee.repo911_share.toLocaleString()}` : '—'}
-                    </TableCell>
-                    <TableCell>
+                    <TableCell className="text-sm text-gray-500 max-w-[200px] truncate">
                       {isEditing ? (
-                        <select
-                          value={editValues.payment_status}
-                          onChange={(e) => setEditValues((prev) => ({ ...prev, payment_status: e.target.value }))}
-                          className="px-2 py-1 border border-gray-300 rounded text-xs"
-                        >
-                          <option value="pending">Pending</option>
-                          <option value="invoiced">Invoiced</option>
-                          <option value="paid">Paid</option>
-                          <option value="overdue">Overdue</option>
-                        </select>
+                        <input
+                          type="text"
+                          value={editValues.notes}
+                          onChange={(e) => setEditValues((prev) => ({ ...prev, notes: e.target.value }))}
+                          placeholder="Notes..."
+                          className="w-full px-2 py-1 border border-gray-300 rounded text-xs"
+                        />
                       ) : (
-                        <Badge variant={getPaymentStatusVariant(fee.payment_status)}>
-                          {fee.payment_status}
-                        </Badge>
+                        fee.notes || '—'
                       )}
-                    </TableCell>
-                    <TableCell className="text-sm">
-                      {fee.payment_due_date ? formatDate(fee.payment_due_date) : '—'}
                     </TableCell>
                     <TableCell>
                       {isEditing ? (

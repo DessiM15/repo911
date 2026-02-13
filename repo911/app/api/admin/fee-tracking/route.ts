@@ -22,7 +22,6 @@ export async function GET(request: NextRequest) {
 
     const { searchParams } = request.nextUrl;
     const caseStatus = searchParams.get('case_status');
-    const paymentStatus = searchParams.get('payment_status');
 
     let query = supabase
       .from('fee_tracking')
@@ -30,7 +29,6 @@ export async function GET(request: NextRequest) {
       .order('created_at', { ascending: false });
 
     if (caseStatus) query = query.eq('case_status', caseStatus);
-    if (paymentStatus) query = query.eq('payment_status', paymentStatus);
 
     const { data: fees } = await query;
 
@@ -48,22 +46,9 @@ export async function GET(request: NextRequest) {
       }, {} as Record<string, string>);
     }
 
-    // Summary stats
-    const allFees = fees || [];
-    const total_owed = allFees
-      .filter((f) => f.payment_status !== 'paid')
-      .reduce((sum, f) => sum + (f.repo911_share || 0), 0);
-    const total_collected = allFees
-      .filter((f) => f.payment_status === 'paid')
-      .reduce((sum, f) => sum + (f.repo911_share || 0), 0);
-    const overdue_count = allFees.filter((f) => f.payment_status === 'overdue').length;
-
     return NextResponse.json({
-      fees: allFees,
+      fees: fees || [],
       attorneys,
-      total_owed,
-      total_collected,
-      overdue_count,
     });
   } catch (error) {
     console.error('Fee tracking error:', error);
@@ -109,13 +94,9 @@ export async function PATCH(request: NextRequest) {
     }
 
     const VALID_CASE_STATUSES = ['open', 'settled', 'dismissed', 'paid'];
-    const VALID_PAYMENT_STATUSES = ['pending', 'invoiced', 'paid', 'overdue'];
 
     if (updates.case_status && !VALID_CASE_STATUSES.includes(updates.case_status)) {
       return NextResponse.json({ error: 'Invalid case_status' }, { status: 400 });
-    }
-    if (updates.payment_status && !VALID_PAYMENT_STATUSES.includes(updates.payment_status)) {
-      return NextResponse.json({ error: 'Invalid payment_status' }, { status: 400 });
     }
     if (updates.attorney_total_fee !== undefined) {
       const fee = Number(updates.attorney_total_fee);
@@ -123,19 +104,8 @@ export async function PATCH(request: NextRequest) {
         return NextResponse.json({ error: 'attorney_total_fee must be a non-negative number' }, { status: 400 });
       }
     }
-    if (updates.repo911_share !== undefined) {
-      const share = Number(updates.repo911_share);
-      if (isNaN(share) || share < 0) {
-        return NextResponse.json({ error: 'repo911_share must be a non-negative number' }, { status: 400 });
-      }
-      // Ensure share doesn't exceed total fee
-      const totalFee = updates.attorney_total_fee !== undefined ? Number(updates.attorney_total_fee) : null;
-      if (totalFee !== null && share > totalFee) {
-        return NextResponse.json({ error: 'repo911_share cannot exceed attorney_total_fee' }, { status: 400 });
-      }
-    }
 
-    const allowedFields = ['case_status', 'payment_status', 'attorney_total_fee', 'repo911_share', 'payment_due_date', 'payment_received_date', 'notes'];
+    const allowedFields = ['case_status', 'attorney_total_fee', 'notes'];
     const cleanUpdates: Record<string, unknown> = {};
     for (const field of allowedFields) {
       if (updates[field] !== undefined) {
