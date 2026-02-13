@@ -169,6 +169,18 @@ export async function PATCH(
       return NextResponse.json({ error: 'No updates provided' }, { status: 400 });
     }
 
+    // Fetch old case_status before updating (for CRM activity logging)
+    let oldCaseStatus: string | null = null;
+    if (case_status) {
+      const { data: existingFee } = await supabase
+        .from('fee_tracking')
+        .select('case_status')
+        .eq('lead_id', id)
+        .eq('attorney_id', attorney.id)
+        .single();
+      oldCaseStatus = existingFee?.case_status ?? null;
+    }
+
     const { error } = await supabase
       .from('fee_tracking')
       .update(updates)
@@ -178,6 +190,26 @@ export async function PATCH(
     if (error) {
       console.error('Fee tracking update error:', error);
       return NextResponse.json({ error: 'Failed to save' }, { status: 500 });
+    }
+
+    // Log status_change activity if case_status changed (fire-and-forget)
+    if (case_status && oldCaseStatus && oldCaseStatus !== case_status) {
+      supabase
+        .from('crm_contacts')
+        .select('id')
+        .eq('source_lead_id', id)
+        .single()
+        .then(({ data: contact }) => {
+          if (contact) {
+            supabase.from('crm_activities').insert({
+              contact_id: contact.id,
+              activity_type: 'status_change',
+              description: `Case status changed from ${oldCaseStatus} to ${case_status}`,
+              performed_by: attorney.id,
+              metadata: { field: 'case_status', old_value: oldCaseStatus, new_value: case_status },
+            }).then(() => {});
+          }
+        });
     }
 
     return NextResponse.json({ success: true });

@@ -19,7 +19,7 @@ export type AttorneyStatus = 'pending' | 'active' | 'suspended' | 'deactivated';
 
 export type TransactionStatus = 'pending' | 'succeeded' | 'failed' | 'refunded';
 
-export type CaseStatus = 'open' | 'settled' | 'dismissed' | 'paid';
+export type CaseStatus = 'open' | 'in_progress' | 'settled' | 'dismissed' | 'closed' | 'paid';
 
 export type ContactType = 'consumer' | 'attorney';
 

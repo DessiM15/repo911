@@ -231,7 +231,7 @@ export default function MyLeadDetailPage() {
           </div>
           <div className="flex items-center gap-3">
             <Button variant="attorney" size="sm" onClick={handleSaveNotes} loading={saving}>
-              Save Notes
+              Save Changes
             </Button>
             {saveMessage && (
               <span className={`text-sm ${saveMessage.includes('success') ? 'text-green-600' : 'text-red-600'}`}>

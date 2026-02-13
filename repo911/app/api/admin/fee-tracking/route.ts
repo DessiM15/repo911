@@ -93,7 +93,7 @@ export async function PATCH(request: NextRequest) {
       return NextResponse.json({ error: 'Fee record not found' }, { status: 404 });
     }
 
-    const VALID_CASE_STATUSES = ['open', 'settled', 'dismissed', 'paid'];
+    const VALID_CASE_STATUSES = ['open', 'in_progress', 'settled', 'dismissed', 'closed', 'paid'];
 
     if (updates.case_status && !VALID_CASE_STATUSES.includes(updates.case_status)) {
       return NextResponse.json({ error: 'Invalid case_status' }, { status: 400 });

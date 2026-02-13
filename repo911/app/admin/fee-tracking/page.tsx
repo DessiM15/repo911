@@ -12,8 +12,10 @@ import { formatDate } from '@/lib/utils';
 function getCaseStatusVariant(status: string): 'info' | 'success' | 'warning' | 'default' {
   switch (status) {
     case 'open': return 'info';
+    case 'in_progress': return 'warning';
     case 'settled': return 'success';
     case 'dismissed': return 'warning';
+    case 'closed': return 'default';
     case 'paid': return 'success';
     default: return 'default';
   }
@@ -116,8 +118,10 @@ export default function FeeTrackingPage() {
         >
           <option value="">All Case Statuses</option>
           <option value="open">Open</option>
+          <option value="in_progress">In Progress</option>
           <option value="settled">Settled</option>
           <option value="dismissed">Dismissed</option>
+          <option value="closed">Closed</option>
           <option value="paid">Paid</option>
         </select>
       </div>
@@ -172,8 +176,10 @@ export default function FeeTrackingPage() {
                           className="px-2 py-1 border border-gray-300 rounded text-xs"
                         >
                           <option value="open">Open</option>
+                          <option value="in_progress">In Progress</option>
                           <option value="settled">Settled</option>
                           <option value="dismissed">Dismissed</option>
+                          <option value="closed">Closed</option>
                           <option value="paid">Paid</option>
                         </select>
                       ) : (
