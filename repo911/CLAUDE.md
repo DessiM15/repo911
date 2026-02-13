@@ -79,7 +79,7 @@ Middleware is in `/middleware.ts`. It protects attorney and admin routes, redire
 - **attorneys** — Professional profiles, bar info, Stripe customer ID, preferences, status
 - **admins** — Platform administrators (admin/super_admin roles)
 - **transactions** — Stripe payment records linking attorneys to leads
-- **fee_tracking** — Case outcome tracking (case status, attorney fees)
+- **fee_tracking** — Case tracking (case status, attorney fees)
 - **crm_contacts** — Follow-up pipeline for leads and attorneys
 - **crm_activities** — Interaction log (notes, calls, emails, status changes)
 - **notifications** — In-app alerts for attorneys and admins
@@ -116,7 +116,7 @@ Point-based scoring system (0–100+):
 4. Marketplace/lead detail shows "Included" badge instead of price
 5. Subscription managed via Billing page (cancel at period end)
 6. Webhook events: `customer.subscription.updated`, `customer.subscription.deleted`, `invoice.payment_failed`
-5. Fee tracking record created (open status)
+5. Case tracking record created (open status)
 
 ### Consumer Intake Form
 
