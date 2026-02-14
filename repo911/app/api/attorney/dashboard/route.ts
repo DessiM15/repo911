@@ -36,11 +36,51 @@ export async function GET() {
     // Total spent
     const { data: transactions } = await supabase
       .from('transactions')
-      .select('amount')
+      .select('amount, created_at')
       .eq('attorney_id', attorney.id)
       .eq('status', 'succeeded');
 
-    const total_spent = (transactions || []).reduce((sum, t) => sum + t.amount, 0);
+    const txList = transactions || [];
+    const total_spent = txList.reduce((sum, t) => sum + t.amount, 0);
+
+    // This month spent
+    const now = new Date();
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+    const this_month_spent = txList
+      .filter((t) => t.created_at >= monthStart)
+      .reduce((sum, t) => sum + t.amount, 0);
+
+    // Avg cost per lead
+    const claimedCount = claimed_leads || 0;
+    const avg_cost_per_lead = claimedCount > 0 ? total_spent / claimedCount : 0;
+
+    // Leads by tier
+    const { data: tierData } = await supabase
+      .from('leads')
+      .select('qualification_tier')
+      .eq('claimed_by', attorney.id);
+
+    const leads_by_tier = { hot: 0, warm: 0, cold: 0 };
+    for (const lead of tierData || []) {
+      const tier = lead.qualification_tier as keyof typeof leads_by_tier;
+      if (tier in leads_by_tier) {
+        leads_by_tier[tier]++;
+      }
+    }
+
+    // Case outcomes
+    const { data: feeData } = await supabase
+      .from('fee_tracking')
+      .select('case_status')
+      .eq('attorney_id', attorney.id);
+
+    const case_outcomes = { open: 0, in_progress: 0, settled: 0, dismissed: 0, closed: 0, paid: 0 };
+    for (const fee of feeData || []) {
+      const status = fee.case_status as keyof typeof case_outcomes;
+      if (status in case_outcomes) {
+        case_outcomes[status]++;
+      }
+    }
 
     // Recent claimed leads
     const { data: recent_leads } = await supabase
@@ -52,8 +92,12 @@ export async function GET() {
 
     return NextResponse.json({
       available_leads: available_leads || 0,
-      claimed_leads: claimed_leads || 0,
+      claimed_leads: claimedCount,
       total_spent,
+      this_month_spent,
+      avg_cost_per_lead,
+      leads_by_tier,
+      case_outcomes,
       recent_leads: recent_leads || [],
     });
   } catch (error) {
