@@ -1,15 +1,16 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import {
-  ArrowLeft, Mail, Phone, MapPin, Tag, Calendar,
+  Mail, Phone, MapPin, Tag, Calendar,
   MessageSquare, AlertTriangle, Clock, Send,
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Breadcrumb } from '@/components/ui/breadcrumb';
 import { formatDate } from '@/lib/utils';
 import type { CrmContact, CrmActivity, Lead, Attorney } from '@/types';
 
@@ -41,7 +42,6 @@ function getActivityColor(type: string) {
 
 export default function CRMContactDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const router = useRouter();
   const [contact, setContact] = useState<CrmContact | null>(null);
   const [activities, setActivities] = useState<CrmActivity[]>([]);
   const [lead, setLead] = useState<Pick<Lead, 'id' | 'first_name' | 'last_name' | 'status' | 'qualification_tier' | 'qualification_score'> | null>(null);
@@ -222,9 +222,10 @@ export default function CRMContactDetailPage() {
 
   return (
     <div className="max-w-5xl mx-auto space-y-4">
-      <button onClick={() => router.back()} className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700">
-        <ArrowLeft className="h-4 w-4" /> Back
-      </button>
+      <Breadcrumb items={[
+        { label: 'CRM', href: '/admin/crm' },
+        { label: contact.first_name + ' ' + contact.last_name },
+      ]} />
 
       {error && (
         <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg p-3 text-sm">{error}</div>

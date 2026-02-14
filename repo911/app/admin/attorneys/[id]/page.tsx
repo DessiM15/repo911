@@ -1,22 +1,22 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import {
-  ArrowLeft, User, Mail, Phone, Globe, Shield,
+  User, Mail, Phone, Globe, Shield,
   FileText, DollarSign, AlertTriangle,
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Breadcrumb } from '@/components/ui/breadcrumb';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
 import { formatDate, formatCurrency } from '@/lib/utils';
 import type { Attorney, Lead, Transaction } from '@/types';
 
 export default function AdminAttorneyDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const router = useRouter();
   const [attorney, setAttorney] = useState<Attorney | null>(null);
   const [claimedLeads, setClaimedLeads] = useState<Pick<Lead, 'id' | 'first_name' | 'last_name' | 'qualification_tier' | 'qualification_score' | 'repo_state' | 'claimed_at' | 'status'>[]>([]);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
@@ -98,9 +98,10 @@ export default function AdminAttorneyDetailPage() {
 
   return (
     <div className="max-w-5xl mx-auto space-y-4">
-      <button onClick={() => router.back()} className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700">
-        <ArrowLeft className="h-4 w-4" /> Back
-      </button>
+      <Breadcrumb items={[
+        { label: 'Attorneys', href: '/admin/attorneys' },
+        { label: attorney.first_name + ' ' + attorney.last_name },
+      ]} />
 
       {error && (
         <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg p-3 text-sm">{error}</div>

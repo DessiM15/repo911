@@ -1,15 +1,16 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import {
-  ArrowLeft, MapPin, Calendar, Car, Shield, AlertTriangle,
+  MapPin, Calendar, Car, Shield, AlertTriangle,
   FileText, Camera, Users, DollarSign, User, Phone, Mail,
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Breadcrumb } from '@/components/ui/breadcrumb';
 import { formatDate, formatCurrency } from '@/lib/utils';
 import type { Lead, Attorney, Transaction } from '@/types';
 
@@ -24,7 +25,6 @@ function BoolIndicator({ value, label }: { value: boolean; label: string }) {
 
 export default function AdminLeadDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const router = useRouter();
   const [lead, setLead] = useState<Lead | null>(null);
   const [attorney, setAttorney] = useState<Pick<Attorney, 'id' | 'first_name' | 'last_name' | 'email' | 'firm_name'> | null>(null);
   const [transaction, setTransaction] = useState<Transaction | null>(null);
@@ -100,9 +100,10 @@ export default function AdminLeadDetailPage() {
 
   return (
     <div className="max-w-5xl mx-auto space-y-4">
-      <button onClick={() => router.back()} className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700">
-        <ArrowLeft className="h-4 w-4" /> Back
-      </button>
+      <Breadcrumb items={[
+        { label: 'Leads', href: '/admin/leads' },
+        { label: lead.first_name + ' ' + lead.last_name },
+      ]} />
 
       {error && (
         <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg p-3 text-sm">{error}</div>
