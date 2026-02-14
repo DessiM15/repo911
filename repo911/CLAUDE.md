@@ -129,7 +129,7 @@ Boolean Yes/No radio fields use `z.preprocess` to store strings (`'true'`/`'fals
 
 - **Tailwind CSS v4** with `cn()` utility (clsx + tailwind-merge)
 - **Color palette**:
-  - Consumer primary: `#4A90D9` (blue)
+  - Consumer primary: `#3474BA` (blue, WCAG AA compliant)
   - Consumer accent: `#F5A623` (orange)
   - Attorney/Admin dark: `#1B2A4A` (navy)
   - Attorney accent: `#2ECC71` (green)
