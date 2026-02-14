@@ -18,10 +18,10 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
             id={id}
             type="checkbox"
             className={cn(
-              'peer h-5 w-5 rounded border-gray-300 text-[#4A90D9]',
-              'focus:ring-2 focus:ring-[#4A90D9] focus:ring-offset-1',
+              'peer h-5 w-5 rounded border-gray-300 text-[#3474BA]',
+              'focus:ring-2 focus:ring-[#3474BA] focus:ring-offset-1',
               'disabled:opacity-50 disabled:cursor-not-allowed',
-              'cursor-pointer appearance-none border-2 bg-white checked:bg-[#4A90D9] checked:border-[#4A90D9]',
+              'cursor-pointer appearance-none border-2 bg-white checked:bg-[#3474BA] checked:border-[#3474BA]',
               'transition-colors',
               error && 'border-red-500',
               className

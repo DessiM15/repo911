@@ -218,7 +218,7 @@ export default function ErrorDashboard() {
                     key={err.id}
                     onClick={() => loadOccurrences(err)}
                     className={`w-full text-left p-4 hover:bg-gray-50 transition-colors ${
-                      selectedError?.id === err.id ? 'bg-blue-50 border-l-2 border-l-[#4A90D9]' : ''
+                      selectedError?.id === err.id ? 'bg-blue-50 border-l-2 border-l-[#3474BA]' : ''
                     }`}
                   >
                     <div className="flex items-start justify-between mb-1.5">
@@ -316,7 +316,7 @@ export default function ErrorDashboard() {
                 ) : (
                   <div className="space-y-4 max-h-[450px] overflow-y-auto">
                     {occurrences.map((occ) => (
-                      <div key={occ.id} className="border-l-2 border-[#4A90D9] pl-3 pb-3">
+                      <div key={occ.id} className="border-l-2 border-[#3474BA] pl-3 pb-3">
                         <p className="text-[10px] text-gray-400 mb-1">
                           {new Date(occ.created_at).toLocaleString()}
                         </p>

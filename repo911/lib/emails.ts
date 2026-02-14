@@ -55,7 +55,7 @@ function p(text: string): string {
 
 function btn(label: string, url: string): string {
   return `<table cellpadding="0" cellspacing="0" style="margin:24px 0;"><tr><td>
-<a href="${url}" style="display:inline-block;padding:12px 24px;background:#4A90D9;color:#ffffff;text-decoration:none;border-radius:6px;font-size:14px;font-weight:600;">${label}</a>
+<a href="${url}" style="display:inline-block;padding:12px 24px;background:#3474BA;color:#ffffff;text-decoration:none;border-radius:6px;font-size:14px;font-weight:600;">${label}</a>
 </td></tr></table>`;
 }
 

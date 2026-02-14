@@ -20,9 +20,9 @@ export function ConsumerHeader() {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2">
-            <Shield className="h-8 w-8 text-[#4A90D9]" />
+            <Shield className="h-8 w-8 text-[#3474BA]" />
             <span className="text-xl font-bold text-gray-900">
-              Repo<span className="text-[#4A90D9]">911</span>
+              Repo<span className="text-[#3474BA]">911</span>
             </span>
           </Link>
 
@@ -32,7 +32,7 @@ export function ConsumerHeader() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-sm font-medium text-gray-600 hover:text-[#4A90D9] transition-colors"
+                className="text-sm font-medium text-gray-600 hover:text-[#3474BA] transition-colors"
               >
                 {link.label}
               </Link>
@@ -63,7 +63,7 @@ export function ConsumerHeader() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="block px-3 py-2 text-base font-medium text-gray-600 hover:text-[#4A90D9] hover:bg-gray-50 rounded-lg"
+                className="block px-3 py-2 text-base font-medium text-gray-600 hover:text-[#3474BA] hover:bg-gray-50 rounded-lg"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 {link.label}

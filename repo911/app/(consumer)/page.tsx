@@ -82,12 +82,12 @@ export default function HomePage() {
       />
 
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-[#4A90D9]/5 via-white to-[#F5A623]/5 py-16 sm:py-24">
+      <section className="relative bg-gradient-to-br from-[#3474BA]/5 via-white to-[#F5A623]/5 py-16 sm:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="text-3xl sm:text-5xl lg:text-7xl font-bold text-gray-900 leading-tight">
               Was Your Car{' '}
-              <span className="text-[#4A90D9]">Wrongfully Repossessed?</span>
+              <span className="text-[#3474BA]">Wrongfully Repossessed?</span>
             </h1>
             <p className="mt-4 text-xl sm:text-2xl text-gray-900 font-semibold">
               You May Be Owed $10,000–$100,000+
@@ -105,15 +105,15 @@ export default function HomePage() {
             </div>
             <div className="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-gray-500">
               <span className="flex items-center gap-1">
-                <Shield className="h-4 w-4 text-[#4A90D9]" />
+                <Shield className="h-4 w-4 text-[#3474BA]" />
                 Free Case Review
               </span>
               <span className="flex items-center gap-1">
-                <Shield className="h-4 w-4 text-[#4A90D9]" />
+                <Shield className="h-4 w-4 text-[#3474BA]" />
                 No Obligation
               </span>
               <span className="flex items-center gap-1">
-                <Shield className="h-4 w-4 text-[#4A90D9]" />
+                <Shield className="h-4 w-4 text-[#3474BA]" />
                 Nationwide Coverage
               </span>
             </div>
@@ -180,7 +180,7 @@ export default function HomePage() {
                 key={item.step}
                 className="relative bg-gray-50 rounded-2xl p-8 text-center hover:shadow-md transition-shadow"
               >
-                <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-[#4A90D9]/10 text-[#4A90D9] mb-4">
+                <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-[#3474BA]/10 text-[#3474BA] mb-4">
                   <item.icon className="h-7 w-7" />
                 </div>
                 <div className="absolute top-4 right-4 w-8 h-8 rounded-full bg-[#F5A623] text-white flex items-center justify-center text-sm font-bold">
@@ -241,9 +241,9 @@ export default function HomePage() {
               <Link
                 key={item.violation}
                 href="/claim"
-                className="block bg-white rounded-xl p-4 sm:p-6 border border-gray-200 hover:border-[#4A90D9] hover:shadow-md transition-all group"
+                className="block bg-white rounded-xl p-4 sm:p-6 border border-gray-200 hover:border-[#3474BA] hover:shadow-md transition-all group"
               >
-                <p className="text-[#4A90D9] font-medium italic mb-3">{item.quote}</p>
+                <p className="text-[#3474BA] font-medium italic mb-3">{item.quote}</p>
                 <h3 className="text-lg font-semibold text-gray-900 mb-1 flex items-center gap-1">
                   {item.violation}
                   <ChevronRight className="h-4 w-4 text-[#F5A623] opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -271,7 +271,7 @@ export default function HomePage() {
               <p className="text-gray-700 leading-relaxed">
                 Most states have a <strong>statute of limitations</strong> on wrongful repossession claims — typically 2-4 years from the date of repossession. Once this window closes, you may lose your right to compensation forever. The sooner you act, the stronger your case.
               </p>
-              <Link href="/claim" className="inline-flex items-center gap-1 mt-3 text-[#4A90D9] font-semibold hover:underline">
+              <Link href="/claim" className="inline-flex items-center gap-1 mt-3 text-[#3474BA] font-semibold hover:underline">
                 Check your case now before it&apos;s too late <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
@@ -292,21 +292,21 @@ export default function HomePage() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 mb-12">
             <div className="text-center p-6">
-              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-[#4A90D9]/10 text-[#4A90D9] mb-4">
+              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-[#3474BA]/10 text-[#3474BA] mb-4">
                 <Scale className="h-6 w-6" />
               </div>
               <h3 className="font-semibold text-gray-900 mb-2">Licensed Attorneys Only</h3>
               <p className="text-sm text-gray-600">Every attorney in our network is licensed and verified in their state.</p>
             </div>
             <div className="text-center p-6">
-              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-[#4A90D9]/10 text-[#4A90D9] mb-4">
+              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-[#3474BA]/10 text-[#3474BA] mb-4">
                 <Lock className="h-6 w-6" />
               </div>
               <h3 className="font-semibold text-gray-900 mb-2">Your Info Is Protected</h3>
               <p className="text-sm text-gray-600">Your personal information is encrypted and only shared with your matched attorney.</p>
             </div>
             <div className="text-center p-6">
-              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-[#4A90D9]/10 text-[#4A90D9] mb-4">
+              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-[#3474BA]/10 text-[#3474BA] mb-4">
                 <Shield className="h-6 w-6" />
               </div>
               <h3 className="font-semibold text-gray-900 mb-2">No Win, No Fee</h3>
@@ -370,7 +370,7 @@ export default function HomePage() {
             ))}
           </div>
           <div className="text-center mt-8">
-            <Link href="/faq" className="text-[#4A90D9] font-medium hover:underline">
+            <Link href="/faq" className="text-[#3474BA] font-medium hover:underline">
               View all frequently asked questions
             </Link>
           </div>
@@ -378,7 +378,7 @@ export default function HomePage() {
       </section>
 
       {/* Final CTA */}
-      <section className="py-16 sm:py-20 bg-[#4A90D9]">
+      <section className="py-16 sm:py-20 bg-[#3474BA]">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
             Ready to Find Out If You Have a Case?

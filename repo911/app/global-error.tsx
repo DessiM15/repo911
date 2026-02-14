@@ -38,7 +38,7 @@ export default function GlobalError({
                 alignItems: 'center',
                 gap: '0.5rem',
                 padding: '0.75rem 1.5rem',
-                backgroundColor: '#4A90D9',
+                backgroundColor: '#3474BA',
                 color: '#fff',
                 border: 'none',
                 borderRadius: '0.5rem',

@@ -33,7 +33,7 @@ export function ProgressIndicator({ currentSection, completedSections, onSection
         <span className="text-sm font-medium text-gray-700">
           Step {currentSection + 1} of {SECTIONS.length}: {SECTIONS[currentSection]}
         </span>
-        <span className="text-sm font-medium text-[#4A90D9]">{progress}% complete</span>
+        <span className="text-sm font-medium text-[#3474BA]">{progress}% complete</span>
       </div>
       <div className="w-full bg-gray-200 rounded-full h-2.5">
         <div
@@ -42,7 +42,7 @@ export function ProgressIndicator({ currentSection, completedSections, onSection
           aria-valuemin={0}
           aria-valuemax={100}
           aria-label="Form progress"
-          className="bg-[#4A90D9] h-2.5 rounded-full transition-all duration-500"
+          className="bg-[#3474BA] h-2.5 rounded-full transition-all duration-500"
           style={{ width: `${progress}%` }}
         />
       </div>
@@ -68,9 +68,9 @@ export function ProgressIndicator({ currentSection, completedSections, onSection
                 className={cn(
                   'w-7 h-7 rounded-full flex items-center justify-center text-xs font-medium transition-colors',
                   isCompleted
-                    ? 'bg-[#4A90D9] text-white'
+                    ? 'bg-[#3474BA] text-white'
                     : isCurrent
-                    ? 'bg-[#4A90D9]/20 text-[#4A90D9] ring-2 ring-[#4A90D9]'
+                    ? 'bg-[#3474BA]/20 text-[#3474BA] ring-2 ring-[#3474BA]'
                     : 'bg-gray-100 text-gray-400'
                 )}
               >
@@ -79,7 +79,7 @@ export function ProgressIndicator({ currentSection, completedSections, onSection
               <span
                 className={cn(
                   'text-[10px] max-w-[60px] text-center leading-tight',
-                  isCurrent ? 'text-[#4A90D9] font-medium' : isCompleted ? 'text-gray-600' : 'text-gray-400'
+                  isCurrent ? 'text-[#3474BA] font-medium' : isCompleted ? 'text-gray-600' : 'text-gray-400'
                 )}
               >
                 {name}

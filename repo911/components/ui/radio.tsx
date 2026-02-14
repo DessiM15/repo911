@@ -74,8 +74,8 @@ const RadioItem = forwardRef<HTMLInputElement, RadioItemProps>(
           id={inputId}
           type="radio"
           className={cn(
-            'mt-0.5 h-5 w-5 border-gray-300 text-[#4A90D9]',
-            'focus:ring-2 focus:ring-[#4A90D9] focus:ring-offset-1',
+            'mt-0.5 h-5 w-5 border-gray-300 text-[#3474BA]',
+            'focus:ring-2 focus:ring-[#3474BA] focus:ring-offset-1',
             'disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer',
             className
           )}

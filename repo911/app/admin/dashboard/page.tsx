@@ -161,7 +161,7 @@ export default function AdminDashboardPage() {
         <div className="bg-white rounded-xl border border-gray-200 p-5">
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-semibold text-gray-900">Recent Leads</h2>
-            <Link href="/admin/leads" className="text-sm text-[#4A90D9] hover:underline flex items-center gap-1">
+            <Link href="/admin/leads" className="text-sm text-[#3474BA] hover:underline flex items-center gap-1">
               View all <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           </div>
@@ -189,7 +189,7 @@ export default function AdminDashboardPage() {
         <div className="bg-white rounded-xl border border-gray-200 p-5">
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-semibold text-gray-900">Recent Transactions</h2>
-            <Link href="/admin/transactions" className="text-sm text-[#4A90D9] hover:underline flex items-center gap-1">
+            <Link href="/admin/transactions" className="text-sm text-[#3474BA] hover:underline flex items-center gap-1">
               View all <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           </div>

@@ -24,7 +24,7 @@ function getStatusIcon(status: string) {
   if (status === 'disqualified' || status === 'closed') {
     return <AlertTriangle className="h-5 w-5 text-gray-400" />;
   }
-  return <Clock className="h-5 w-5 text-[#4A90D9]" />;
+  return <Clock className="h-5 w-5 text-[#3474BA]" />;
 }
 
 function getTierBadge(tier: string) {
@@ -48,7 +48,7 @@ export default function TrackPage() {
   return (
     <Suspense fallback={
       <div className="max-w-xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 text-center">
-        <Loader2 className="h-8 w-8 animate-spin mx-auto text-[#4A90D9]" />
+        <Loader2 className="h-8 w-8 animate-spin mx-auto text-[#3474BA]" />
       </div>
     }>
       <TrackPageContent />
@@ -185,7 +185,7 @@ function TrackPageContent() {
   return (
     <div className="max-w-xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
       <div className="text-center mb-8">
-        <Search className="h-12 w-12 mx-auto mb-4 text-[#4A90D9]" />
+        <Search className="h-12 w-12 mx-auto mb-4 text-[#3474BA]" />
         <h1 className="text-3xl sm:text-4xl font-bold text-gray-900">Track Your Case</h1>
         <p className="mt-3 text-gray-600">
           Enter the email you used to submit your case and your case ID to check your status.
@@ -204,7 +204,7 @@ function TrackPageContent() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="you@example.com"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#4A90D9]"
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#3474BA]"
           />
         </div>
 
@@ -219,7 +219,7 @@ function TrackPageContent() {
             value={leadId}
             onChange={(e) => setLeadId(e.target.value)}
             placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm font-mono focus:outline-none focus:ring-2 focus:ring-[#4A90D9]"
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm font-mono focus:outline-none focus:ring-2 focus:ring-[#3474BA]"
           />
           <p className="mt-1 text-xs text-gray-400">You received this in your confirmation email.</p>
         </div>
@@ -241,7 +241,7 @@ function TrackPageContent() {
           {/* Status Card */}
           <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
             <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <Shield className="h-5 w-5 text-[#4A90D9]" />
+              <Shield className="h-5 w-5 text-[#3474BA]" />
               Case Status
             </h2>
 
@@ -288,7 +288,7 @@ function TrackPageContent() {
           {/* File Upload Section */}
           <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
             <h2 className="text-lg font-semibold text-gray-900 mb-1 flex items-center gap-2">
-              <FileText className="h-5 w-5 text-[#4A90D9]" />
+              <FileText className="h-5 w-5 text-[#3474BA]" />
               Evidence & Documents
             </h2>
             <p className="text-sm text-gray-500 mb-4">
@@ -319,12 +319,12 @@ function TrackPageContent() {
                   onDrop={handleDrop}
                   onClick={() => fileInputRef.current?.click()}
                   className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors ${
-                    dragOver ? 'border-[#4A90D9] bg-blue-50' : 'border-gray-300 hover:border-gray-400'
+                    dragOver ? 'border-[#3474BA] bg-blue-50' : 'border-gray-300 hover:border-gray-400'
                   }`}
                 >
                   <Upload className="h-8 w-8 mx-auto mb-2 text-gray-400" />
                   <p className="text-sm text-gray-600">
-                    Drag and drop files here, or <span className="text-[#4A90D9] font-medium">browse</span>
+                    Drag and drop files here, or <span className="text-[#3474BA] font-medium">browse</span>
                   </p>
                   <p className="text-xs text-gray-400 mt-1">JPG, PNG, WebP, or PDF up to 10MB</p>
                 </div>

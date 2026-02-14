@@ -201,7 +201,7 @@ export default function FeeTrackingPage() {
                       </Link>
                     </TableCell>
                     <TableCell>
-                      <Link href={`/admin/leads/${fee.lead_id}`} className="text-sm text-[#4A90D9] hover:underline">
+                      <Link href={`/admin/leads/${fee.lead_id}`} className="text-sm text-[#3474BA] hover:underline">
                         View
                       </Link>
                     </TableCell>
@@ -264,7 +264,7 @@ export default function FeeTrackingPage() {
                       ) : (
                         <button
                           onClick={() => startEdit(fee)}
-                          className="text-xs text-[#4A90D9] hover:underline"
+                          className="text-xs text-[#3474BA] hover:underline"
                         >
                           Edit
                         </button>

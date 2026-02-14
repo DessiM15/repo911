@@ -9,9 +9,9 @@ export function ConsumerFooter() {
           {/* Brand */}
           <div className="md:col-span-1">
             <Link href="/" className="flex items-center gap-2 mb-4">
-              <Shield className="h-7 w-7 text-[#4A90D9]" />
+              <Shield className="h-7 w-7 text-[#3474BA]" />
               <span className="text-lg font-bold text-gray-900">
-                Repo<span className="text-[#4A90D9]">911</span>
+                Repo<span className="text-[#3474BA]">911</span>
               </span>
             </Link>
             <p className="text-sm text-gray-500 leading-relaxed">
@@ -21,25 +21,25 @@ export function ConsumerFooter() {
 
           {/* Quick Links */}
           <div>
-            <h4 className="text-sm font-semibold text-gray-900 mb-4">Quick Links</h4>
+            <h2 className="text-sm font-semibold text-gray-900 mb-4">Quick Links</h2>
             <ul className="space-y-2">
               <li>
-                <Link href="/claim" className="text-sm text-gray-500 hover:text-[#4A90D9] transition-colors">
+                <Link href="/claim" className="text-sm text-gray-500 hover:text-[#3474BA] transition-colors">
                   Free Case Review
                 </Link>
               </li>
               <li>
-                <Link href="/how-it-works" className="text-sm text-gray-500 hover:text-[#4A90D9] transition-colors">
+                <Link href="/how-it-works" className="text-sm text-gray-500 hover:text-[#3474BA] transition-colors">
                   How It Works
                 </Link>
               </li>
               <li>
-                <Link href="/faq" className="text-sm text-gray-500 hover:text-[#4A90D9] transition-colors">
+                <Link href="/faq" className="text-sm text-gray-500 hover:text-[#3474BA] transition-colors">
                   FAQ
                 </Link>
               </li>
               <li>
-                <Link href="/track" className="text-sm text-gray-500 hover:text-[#4A90D9] transition-colors">
+                <Link href="/track" className="text-sm text-gray-500 hover:text-[#3474BA] transition-colors">
                   Track My Case
                 </Link>
               </li>
@@ -48,20 +48,20 @@ export function ConsumerFooter() {
 
           {/* Legal */}
           <div>
-            <h4 className="text-sm font-semibold text-gray-900 mb-4">Legal</h4>
+            <h2 className="text-sm font-semibold text-gray-900 mb-4">Legal</h2>
             <ul className="space-y-2">
               <li>
-                <Link href="/privacy" className="text-sm text-gray-500 hover:text-[#4A90D9] transition-colors">
+                <Link href="/privacy" className="text-sm text-gray-500 hover:text-[#3474BA] transition-colors">
                   Privacy Policy
                 </Link>
               </li>
               <li>
-                <Link href="/terms" className="text-sm text-gray-500 hover:text-[#4A90D9] transition-colors">
+                <Link href="/terms" className="text-sm text-gray-500 hover:text-[#3474BA] transition-colors">
                   Terms of Service
                 </Link>
               </li>
               <li>
-                <Link href="/disclaimer" className="text-sm text-gray-500 hover:text-[#4A90D9] transition-colors">
+                <Link href="/disclaimer" className="text-sm text-gray-500 hover:text-[#3474BA] transition-colors">
                   Disclaimer
                 </Link>
               </li>
@@ -70,15 +70,15 @@ export function ConsumerFooter() {
 
           {/* For Attorneys */}
           <div>
-            <h4 className="text-sm font-semibold text-gray-900 mb-4">For Attorneys</h4>
+            <h2 className="text-sm font-semibold text-gray-900 mb-4">For Attorneys</h2>
             <ul className="space-y-2">
               <li>
-                <Link href="/attorney/login" className="text-sm text-gray-500 hover:text-[#4A90D9] transition-colors">
+                <Link href="/attorney/login" className="text-sm text-gray-500 hover:text-[#3474BA] transition-colors">
                   Attorney Login
                 </Link>
               </li>
               <li>
-                <Link href="/attorney/register" className="text-sm text-gray-500 hover:text-[#4A90D9] transition-colors">
+                <Link href="/attorney/register" className="text-sm text-gray-500 hover:text-[#3474BA] transition-colors">
                   Join Our Network
                 </Link>
               </li>
@@ -89,10 +89,10 @@ export function ConsumerFooter() {
         {/* Bottom Bar */}
         <div className="mt-10 pt-8 border-t border-gray-200">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-xs text-gray-400">
+            <p className="text-xs text-gray-500">
               &copy; {new Date().getFullYear()} Repo911. All rights reserved.
             </p>
-            <p className="text-xs text-gray-400 text-center max-w-2xl">
+            <p className="text-xs text-gray-500 text-center max-w-2xl">
               This website is not a law firm and does not provide legal advice. The information provided is for general informational purposes only. No attorney-client relationship is formed by using this site.
             </p>
           </div>

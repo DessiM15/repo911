@@ -31,7 +31,7 @@ export default function ClaimPage() {
         <p className="mt-3 text-lg text-gray-600">
           Tell us about your repossession experience. This takes about 5 minutes.
         </p>
-        <p className="mt-2 text-sm text-gray-400">
+        <p className="mt-2 text-sm text-gray-500">
           All fields marked with <span className="text-red-500">*</span> are required.
         </p>
       </div>

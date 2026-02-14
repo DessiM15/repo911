@@ -57,7 +57,7 @@ ${error.level}
 ${error.tags?.length ? `<tr><td style="padding:8px 12px;border:1px solid #e5e7eb;font-weight:600;font-size:13px;">Tags</td><td style="padding:8px 12px;border:1px solid #e5e7eb;font-size:13px;">${(error.tags as string[]).join(', ')}</td></tr>` : ''}
 </table>
 <table cellpadding="0" cellspacing="0" style="margin:24px 0;"><tr><td>
-<a href="${APP_URL}/admin/errors" style="display:inline-block;padding:12px 24px;background:#4A90D9;color:#ffffff;text-decoration:none;border-radius:6px;font-size:14px;font-weight:600;">View in Dashboard</a>
+<a href="${APP_URL}/admin/errors" style="display:inline-block;padding:12px 24px;background:#3474BA;color:#ffffff;text-decoration:none;border-radius:6px;font-size:14px;font-weight:600;">View in Dashboard</a>
 </td></tr></table>
 <p style="margin:0;font-size:13px;color:#9ca3af;">Alert rule: ${escapeHtml(rule.name)}</p>
 </td></tr>

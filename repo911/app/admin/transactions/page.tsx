@@ -190,7 +190,7 @@ export default function TransactionsPage() {
                   </TableCell>
                   <TableCell>
                     {tx.lead_id ? (
-                      <Link href={`/admin/leads/${tx.lead_id}`} className="text-sm text-[#4A90D9] hover:underline">
+                      <Link href={`/admin/leads/${tx.lead_id}`} className="text-sm text-[#3474BA] hover:underline">
                         View
                       </Link>
                     ) : '—'}

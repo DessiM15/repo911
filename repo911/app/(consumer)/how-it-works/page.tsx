@@ -85,19 +85,19 @@ export default function HowItWorksPage() {
           return (
             <div key={step.number} className="bg-white rounded-xl border border-gray-200 p-6 sm:p-8">
               <div className="flex items-start gap-4 sm:gap-6">
-                <div className="flex-shrink-0 w-12 h-12 rounded-full bg-[#4A90D9] flex items-center justify-center">
+                <div className="flex-shrink-0 w-12 h-12 rounded-full bg-[#3474BA] flex items-center justify-center">
                   <Icon className="h-6 w-6 text-white" />
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-2">
-                    <span className="text-sm font-semibold text-[#4A90D9] uppercase tracking-wide">Step {step.number}</span>
+                    <span className="text-sm font-semibold text-[#3474BA] uppercase tracking-wide">Step {step.number}</span>
                   </div>
                   <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3">{step.title}</h2>
                   <p className="text-gray-600 mb-4 leading-relaxed">{step.description}</p>
                   <ul className="space-y-2">
                     {step.details.map((detail, i) => (
                       <li key={i} className="flex items-start gap-2 text-gray-600">
-                        <span className="text-[#4A90D9] mt-1.5 flex-shrink-0">&#8226;</span>
+                        <span className="text-[#3474BA] mt-1.5 flex-shrink-0">&#8226;</span>
                         <span>{detail}</span>
                       </li>
                     ))}
@@ -115,7 +115,7 @@ export default function HowItWorksPage() {
           const Icon = point.icon;
           return (
             <div key={point.title} className="text-center p-6 bg-blue-50 rounded-xl border border-blue-100">
-              <Icon className="h-8 w-8 text-[#4A90D9] mx-auto mb-3" />
+              <Icon className="h-8 w-8 text-[#3474BA] mx-auto mb-3" />
               <h3 className="font-semibold text-gray-900 mb-2">{point.title}</h3>
               <p className="text-sm text-gray-600">{point.description}</p>
             </div>
@@ -169,7 +169,7 @@ export default function HowItWorksPage() {
       </div>
 
       {/* CTA */}
-      <div className="text-center bg-[#4A90D9] rounded-xl p-8 sm:p-10">
+      <div className="text-center bg-[#3474BA] rounded-xl p-8 sm:p-10">
         <h2 className="text-2xl font-bold text-white mb-3">Think Your Rights Were Violated?</h2>
         <p className="text-blue-100 mb-6 max-w-lg mx-auto">
           It only takes 5 minutes to find out if you have a case. Our free case review costs you nothing and could be worth thousands.

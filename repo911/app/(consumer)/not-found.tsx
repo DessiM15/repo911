@@ -6,7 +6,7 @@ export default function ConsumerNotFound() {
   return (
     <div className="flex items-center justify-center min-h-[60vh] px-4">
       <div className="text-center max-w-md">
-        <Shield className="h-12 w-12 text-[#4A90D9] mx-auto mb-4" />
+        <Shield className="h-12 w-12 text-[#3474BA] mx-auto mb-4" />
         <h2 className="text-4xl font-bold text-gray-900 mb-2">404</h2>
         <h3 className="text-lg font-semibold text-gray-700 mb-4">Page Not Found</h3>
         <p className="text-gray-500 mb-6">

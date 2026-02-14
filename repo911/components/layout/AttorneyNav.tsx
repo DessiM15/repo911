@@ -121,7 +121,7 @@ export function AttorneyNav() {
           {unreadCount > 0 && (
             <button
               onClick={handleMarkAllRead}
-              className="text-xs text-[#4A90D9] hover:underline flex items-center gap-1"
+              className="text-xs text-[#3474BA] hover:underline flex items-center gap-1"
             >
               <CheckCheck className="h-3 w-3" />
               Mark all read
@@ -145,7 +145,7 @@ export function AttorneyNav() {
               >
                 <div className="flex items-start gap-2">
                   {!n.read && (
-                    <span className="mt-1.5 h-2 w-2 rounded-full bg-[#4A90D9] shrink-0" />
+                    <span className="mt-1.5 h-2 w-2 rounded-full bg-[#3474BA] shrink-0" />
                   )}
                   <div className={cn(!n.read ? '' : 'ml-4')}>
                     <p className="text-sm font-medium text-gray-900">{n.title}</p>

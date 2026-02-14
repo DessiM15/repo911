@@ -85,7 +85,7 @@ export default function AdminAttorneyDetailPage() {
       <div className="text-center py-12">
         <AlertTriangle className="h-12 w-12 text-red-400 mx-auto mb-4" />
         <p className="text-red-600 font-medium">{error}</p>
-        <Link href="/admin/attorneys" className="text-sm text-[#4A90D9] hover:underline mt-2 inline-block">
+        <Link href="/admin/attorneys" className="text-sm text-[#3474BA] hover:underline mt-2 inline-block">
           Back to Attorneys
         </Link>
       </div>

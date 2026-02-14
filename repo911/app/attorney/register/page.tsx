@@ -240,7 +240,7 @@ export default function AttorneyRegisterPage() {
             <div>
               <button
                 onClick={() => setStep('register')}
-                className="text-sm text-[#4A90D9] hover:underline mb-4"
+                className="text-sm text-[#3474BA] hover:underline mb-4"
               >
                 &larr; Back to account details
               </button>

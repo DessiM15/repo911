@@ -211,7 +211,7 @@ export default function CRMContactDetailPage() {
       <div className="text-center py-12">
         <AlertTriangle className="h-12 w-12 text-red-400 mx-auto mb-4" />
         <p className="text-red-600 font-medium">{error}</p>
-        <Link href="/admin/crm" className="text-sm text-[#4A90D9] hover:underline mt-2 inline-block">
+        <Link href="/admin/crm" className="text-sm text-[#3474BA] hover:underline mt-2 inline-block">
           Back to CRM
         </Link>
       </div>
@@ -249,12 +249,12 @@ export default function CRMContactDetailPage() {
           </div>
           <div>
             {lead && (
-              <Link href={`/admin/leads/${lead.id}`} className="text-sm text-[#4A90D9] hover:underline">
+              <Link href={`/admin/leads/${lead.id}`} className="text-sm text-[#3474BA] hover:underline">
                 View Lead &rarr;
               </Link>
             )}
             {attorney && (
-              <Link href={`/admin/attorneys/${attorney.id}`} className="text-sm text-[#4A90D9] hover:underline">
+              <Link href={`/admin/attorneys/${attorney.id}`} className="text-sm text-[#3474BA] hover:underline">
                 View Attorney &rarr;
               </Link>
             )}
@@ -310,7 +310,7 @@ export default function CRMContactDetailPage() {
               <button
                 onClick={handleAddTag}
                 disabled={!newTag.trim() || savingTags}
-                className="text-xs text-[#4A90D9] hover:underline disabled:opacity-50"
+                className="text-xs text-[#3474BA] hover:underline disabled:opacity-50"
               >
                 Add
               </button>
