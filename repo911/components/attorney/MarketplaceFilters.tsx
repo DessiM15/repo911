@@ -19,7 +19,7 @@ export function MarketplaceFilters({
   return (
     <div className="flex flex-col sm:flex-row gap-3">
       <Select
-        label=""
+        label="Filter by tier"
         value={tier}
         onChange={(e) => onTierChange(e.target.value)}
         options={[
@@ -30,7 +30,7 @@ export function MarketplaceFilters({
         ]}
       />
       <Select
-        label=""
+        label="Filter by state"
         value={state}
         onChange={(e) => onStateChange(e.target.value)}
         options={[
@@ -39,7 +39,7 @@ export function MarketplaceFilters({
         ]}
       />
       <Select
-        label=""
+        label="Sort by"
         value={sort}
         onChange={(e) => onSortChange(e.target.value)}
         options={[

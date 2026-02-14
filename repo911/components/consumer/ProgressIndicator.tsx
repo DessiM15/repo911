@@ -37,6 +37,11 @@ export function ProgressIndicator({ currentSection, completedSections, onSection
       </div>
       <div className="w-full bg-gray-200 rounded-full h-2.5">
         <div
+          role="progressbar"
+          aria-valuenow={progress}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-label="Form progress"
           className="bg-[#4A90D9] h-2.5 rounded-full transition-all duration-500"
           style={{ width: `${progress}%` }}
         />

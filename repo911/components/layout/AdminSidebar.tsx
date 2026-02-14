@@ -47,7 +47,7 @@ export function AdminSidebar() {
   }
 
   const renderNavItems = (closeMobile?: () => void) => (
-    <nav className="flex-1 px-3 py-4 space-y-1">
+    <nav aria-label="Admin navigation" className="flex-1 px-3 py-4 space-y-1">
       {navItems.map((item) => {
         const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
         return (
@@ -115,7 +115,7 @@ export function AdminSidebar() {
 
       {/* Desktop Top Bar */}
       <div className="hidden lg:flex lg:ml-64 h-16 bg-white border-b border-gray-200 items-center justify-end px-6 sticky top-0 z-30">
-        <button className="relative p-2 text-gray-400 hover:text-gray-600 transition-colors">
+        <button aria-label="Notifications" className="relative p-2 text-gray-400 hover:text-gray-600 transition-colors">
           <Bell className="h-5 w-5" />
           <span className="absolute top-1 right-1 h-2 w-2 bg-red-500 rounded-full" />
         </button>
@@ -131,7 +131,7 @@ export function AdminSidebar() {
           <span className="text-xs text-white/50 ml-1">Admin</span>
         </Link>
         <div className="flex items-center gap-2">
-          <button className="relative p-2 text-white/70 hover:text-white">
+          <button aria-label="Notifications" className="relative p-2 text-white/70 hover:text-white">
             <Bell className="h-5 w-5" />
             <span className="absolute top-1 right-1 h-2 w-2 bg-red-500 rounded-full" />
           </button>
@@ -157,7 +157,7 @@ export function AdminSidebar() {
                   Repo<span className="text-[#2ECC71]">911</span>
                 </span>
               </div>
-              <button onClick={() => setMobileOpen(false)} className="p-1 text-white/60 hover:text-white">
+              <button onClick={() => setMobileOpen(false)} aria-label="Close menu" className="p-1 text-white/60 hover:text-white">
                 <X className="h-5 w-5" />
               </button>
             </div>

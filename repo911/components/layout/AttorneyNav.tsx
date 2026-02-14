@@ -115,7 +115,7 @@ export function AttorneyNav() {
 
   function NotificationDropdown() {
     return (
-      <div className="absolute right-0 top-full mt-2 w-[calc(100vw-2rem)] sm:w-80 max-w-sm bg-white rounded-xl border border-gray-200 shadow-lg overflow-hidden z-50">
+      <div role="menu" aria-label="Notifications" className="absolute right-0 top-full mt-2 w-[calc(100vw-2rem)] sm:w-80 max-w-sm bg-white rounded-xl border border-gray-200 shadow-lg overflow-hidden z-50">
         <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
           <h3 className="text-sm font-semibold text-gray-900">Notifications</h3>
           {unreadCount > 0 && (
@@ -175,7 +175,7 @@ export function AttorneyNav() {
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 px-3 py-4 space-y-1">
+        <nav aria-label="Attorney navigation" className="flex-1 px-3 py-4 space-y-1">
           {navItems.map((item) => {
             const isActive = pathname.startsWith(item.href);
             return (
@@ -213,6 +213,9 @@ export function AttorneyNav() {
         <div ref={bellRef} className="relative">
           <button
             onClick={() => setBellOpen(!bellOpen)}
+            aria-label="Notifications"
+            aria-haspopup="true"
+            aria-expanded={bellOpen}
             className="relative p-2 text-gray-400 hover:text-gray-600 transition-colors"
           >
             <Bell className="h-5 w-5" />
@@ -238,6 +241,9 @@ export function AttorneyNav() {
           <div ref={bellRef} className="relative">
             <button
               onClick={() => setBellOpen(!bellOpen)}
+              aria-label="Notifications"
+              aria-haspopup="true"
+              aria-expanded={bellOpen}
               className="relative p-2 text-white/70 hover:text-white"
             >
               <Bell className="h-5 w-5" />
@@ -271,11 +277,11 @@ export function AttorneyNav() {
                   Repo<span className="text-[#2ECC71]">911</span>
                 </span>
               </div>
-              <button onClick={() => setMobileOpen(false)} className="p-1 text-white/60 hover:text-white">
+              <button onClick={() => setMobileOpen(false)} aria-label="Close menu" className="p-1 text-white/60 hover:text-white">
                 <X className="h-5 w-5" />
               </button>
             </div>
-            <nav className="flex-1 px-3 py-4 space-y-1">
+            <nav aria-label="Attorney navigation" className="flex-1 px-3 py-4 space-y-1">
               {navItems.map((item) => {
                 const isActive = pathname.startsWith(item.href);
                 return (

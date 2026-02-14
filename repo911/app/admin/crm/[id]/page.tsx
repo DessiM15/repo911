@@ -354,7 +354,7 @@ export default function CRMContactDetailPage() {
               onKeyDown={(e) => e.key === 'Enter' && handleAddNote()}
               className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1B2A4A]"
             />
-            <Button size="sm" variant="primary" onClick={handleAddNote} loading={addingNote} disabled={!newNote.trim()}>
+            <Button size="sm" variant="primary" onClick={handleAddNote} loading={addingNote} disabled={!newNote.trim()} aria-label="Add note">
               <Send className="h-4 w-4" />
             </Button>
           </div>
