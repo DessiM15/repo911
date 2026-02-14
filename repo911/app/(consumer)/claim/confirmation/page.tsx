@@ -148,7 +148,7 @@ export default async function ConfirmationPage({
         </Link>
       </div>
 
-      <p className="text-xs text-gray-400 text-center mt-8">
+      <p className="text-xs text-gray-500 text-center mt-8">
         This is not legal advice. Submitting this form does not create an attorney-client relationship.
         Results vary based on individual circumstances and applicable law.
       </p>

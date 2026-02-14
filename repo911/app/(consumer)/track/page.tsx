@@ -221,7 +221,7 @@ function TrackPageContent() {
             placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
             className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm font-mono focus:outline-none focus:ring-2 focus:ring-[#3474BA]"
           />
-          <p className="mt-1 text-xs text-gray-400">You received this in your confirmation email.</p>
+          <p className="mt-1 text-xs text-gray-500">You received this in your confirmation email.</p>
         </div>
 
         {error && (

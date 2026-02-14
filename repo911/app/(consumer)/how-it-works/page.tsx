@@ -171,7 +171,7 @@ export default function HowItWorksPage() {
       {/* CTA */}
       <div className="text-center bg-[#3474BA] rounded-xl p-8 sm:p-10">
         <h2 className="text-2xl font-bold text-white mb-3">Think Your Rights Were Violated?</h2>
-        <p className="text-blue-100 mb-6 max-w-lg mx-auto">
+        <p className="text-white mb-6 max-w-lg mx-auto">
           It only takes 5 minutes to find out if you have a case. Our free case review costs you nothing and could be worth thousands.
         </p>
         <Link href="/claim">
@@ -181,7 +181,7 @@ export default function HowItWorksPage() {
         </Link>
       </div>
 
-      <p className="text-xs text-gray-400 text-center mt-8">
+      <p className="text-xs text-gray-500 text-center mt-8">
         This is not legal advice. Repo911 is not a law firm and does not provide legal representation.
         Results vary based on individual circumstances and applicable law.
       </p>
