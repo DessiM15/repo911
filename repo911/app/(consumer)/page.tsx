@@ -183,7 +183,7 @@ export default function HomePage() {
                 <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-[#3474BA]/10 text-[#3474BA] mb-4">
                   <item.icon className="h-7 w-7" />
                 </div>
-                <div className="absolute top-4 right-4 w-8 h-8 rounded-full bg-[#F5A623] text-white flex items-center justify-center text-sm font-bold">
+                <div className="absolute top-4 right-4 w-8 h-8 rounded-full bg-[#F5A623] text-gray-900 flex items-center justify-center text-sm font-bold">
                   {item.step}
                 </div>
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">{item.title}</h3>
@@ -271,7 +271,7 @@ export default function HomePage() {
               <p className="text-gray-700 leading-relaxed">
                 Most states have a <strong>statute of limitations</strong> on wrongful repossession claims — typically 2-4 years from the date of repossession. Once this window closes, you may lose your right to compensation forever. The sooner you act, the stronger your case.
               </p>
-              <Link href="/claim" className="inline-flex items-center gap-1 mt-3 text-[#3474BA] font-semibold hover:underline">
+              <Link href="/claim" className="inline-flex items-center gap-1 mt-3 text-[#2B5EA2] font-semibold hover:underline">
                 Check your case now before it&apos;s too late <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
@@ -313,7 +313,7 @@ export default function HomePage() {
               <p className="text-sm text-gray-600">Attorneys typically work on contingency — you pay nothing unless you win your case.</p>
             </div>
           </div>
-          <div className="flex flex-wrap items-center justify-center gap-8 text-gray-400 pt-8 border-t border-gray-100">
+          <div className="flex flex-wrap items-center justify-center gap-8 text-gray-500 pt-8 border-t border-gray-100">
             <div className="text-center">
               <p className="text-sm font-medium uppercase tracking-wider">Protected by</p>
               <p className="text-lg font-bold text-gray-700 mt-1">UCC Article 9</p>
@@ -383,13 +383,13 @@ export default function HomePage() {
           <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
             Ready to Find Out If You Have a Case?
           </h2>
-          <p className="text-lg text-white/80 mb-8">
+          <p className="text-lg text-white mb-8">
             It only takes 5 minutes and it&apos;s completely free. No obligation.
           </p>
           <Link href="/claim">
             <Button
               size="lg"
-              className="bg-[#F5A623] hover:bg-[#E09612] text-white text-lg px-8 py-4"
+              className="bg-[#F5A623] hover:bg-[#E09612] text-gray-900 text-lg px-8 py-4"
             >
               Check My Case Now <ArrowRight className="ml-2 h-5 w-5" />
             </Button>

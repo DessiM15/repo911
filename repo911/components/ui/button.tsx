@@ -24,7 +24,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
             'text-gray-700 hover:bg-gray-100 focus:ring-gray-400': variant === 'ghost',
             'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500': variant === 'danger',
             'bg-[#2ECC71] text-white hover:bg-[#27AE60] focus:ring-[#2ECC71]': variant === 'attorney',
-            'bg-[#F5A623] text-white hover:bg-[#E09612] focus:ring-[#F5A623]': variant === 'consumer',
+            'bg-[#F5A623] text-gray-900 hover:bg-[#E09612] focus:ring-[#F5A623]': variant === 'consumer',
             // Sizes
             'text-sm px-3 py-1.5': size === 'sm',
             'text-sm px-4 py-2': size === 'md',
