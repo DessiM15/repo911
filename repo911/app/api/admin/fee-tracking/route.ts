@@ -22,15 +22,39 @@ export async function GET(request: NextRequest) {
 
     const { searchParams } = request.nextUrl;
     const caseStatus = searchParams.get('case_status');
+    const search = searchParams.get('search');
+    const page = Math.max(1, parseInt(searchParams.get('page') || '1', 10));
+    const limit = Math.min(100, Math.max(1, parseInt(searchParams.get('limit') || '25', 10)));
+    const offset = (page - 1) * limit;
+
+    // If searching, find matching attorney IDs first
+    let matchingAttorneyIds: string[] | null = null;
+    if (search) {
+      const { data: matchedAttorneys } = await supabase
+        .from('attorneys')
+        .select('id')
+        .or(`first_name.ilike.%${search}%,last_name.ilike.%${search}%`);
+      matchingAttorneyIds = (matchedAttorneys || []).map((a) => a.id);
+    }
 
     let query = supabase
       .from('fee_tracking')
-      .select('*')
+      .select('*', { count: 'exact' })
       .order('created_at', { ascending: false });
 
     if (caseStatus) query = query.eq('case_status', caseStatus);
 
-    const { data: fees } = await query;
+    if (search) {
+      if (matchingAttorneyIds && matchingAttorneyIds.length > 0) {
+        query = query.or(`notes.ilike.%${search}%,attorney_id.in.(${matchingAttorneyIds.join(',')})`);
+      } else {
+        query = query.ilike('notes', `%${search}%`);
+      }
+    }
+
+    query = query.range(offset, offset + limit - 1);
+
+    const { data: fees, count } = await query;
 
     // Get attorney names
     const attorneyIds = [...new Set((fees || []).map((f) => f.attorney_id).filter(Boolean))];
@@ -46,9 +70,12 @@ export async function GET(request: NextRequest) {
       }, {} as Record<string, string>);
     }
 
+    const total = count || 0;
+
     return NextResponse.json({
       fees: fees || [],
       attorneys,
+      pagination: { page, limit, total, totalPages: Math.ceil(total / limit) },
     });
   } catch (error) {
     console.error('Fee tracking error:', error);

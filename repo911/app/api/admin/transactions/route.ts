@@ -22,15 +22,58 @@ export async function GET(request: NextRequest) {
 
     const { searchParams } = request.nextUrl;
     const status = searchParams.get('status');
+    const search = searchParams.get('search');
+    const page = Math.max(1, parseInt(searchParams.get('page') || '1', 10));
+    const limit = Math.min(100, Math.max(1, parseInt(searchParams.get('limit') || '25', 10)));
+    const offset = (page - 1) * limit;
 
+    // If searching, find matching attorney IDs first
+    let matchingAttorneyIds: string[] | null = null;
+    if (search) {
+      const { data: matchedAttorneys } = await supabase
+        .from('attorneys')
+        .select('id')
+        .or(`first_name.ilike.%${search}%,last_name.ilike.%${search}%`);
+      matchingAttorneyIds = (matchedAttorneys || []).map((a) => a.id);
+    }
+
+    // Build main query
     let query = supabase
       .from('transactions')
-      .select('*')
+      .select('*', { count: 'exact' })
       .order('created_at', { ascending: false });
 
     if (status) query = query.eq('status', status);
 
-    const { data: transactions } = await query;
+    if (search) {
+      if (matchingAttorneyIds && matchingAttorneyIds.length > 0) {
+        query = query.or(`stripe_payment_intent_id.ilike.%${search}%,attorney_id.in.(${matchingAttorneyIds.join(',')})`);
+      } else {
+        query = query.ilike('stripe_payment_intent_id', `%${search}%`);
+      }
+    }
+
+    // Stats query (same filters, no pagination)
+    let statsQuery = supabase
+      .from('transactions')
+      .select('amount, status');
+
+    if (status) statsQuery = statsQuery.eq('status', status);
+
+    if (search) {
+      if (matchingAttorneyIds && matchingAttorneyIds.length > 0) {
+        statsQuery = statsQuery.or(`stripe_payment_intent_id.ilike.%${search}%,attorney_id.in.(${matchingAttorneyIds.join(',')})`);
+      } else {
+        statsQuery = statsQuery.ilike('stripe_payment_intent_id', `%${search}%`);
+      }
+    }
+
+    const { data: statsData } = await statsQuery;
+
+    // Paginate main query
+    query = query.range(offset, offset + limit - 1);
+
+    const { data: transactions, count } = await query;
 
     // Get attorney names for display
     const attorneyIds = [...new Set((transactions || []).map((t) => t.attorney_id).filter(Boolean))];
@@ -46,21 +89,24 @@ export async function GET(request: NextRequest) {
       }, {} as Record<string, string>);
     }
 
-    // Stats
-    const allTx = transactions || [];
-    const total_revenue = allTx
+    // Stats from unfiltered-by-pagination data
+    const allStats = statsData || [];
+    const total_revenue = allStats
       .filter((t) => t.status === 'succeeded')
       .reduce((sum, t) => sum + t.amount, 0);
-    const total_refunded = allTx
+    const total_refunded = allStats
       .filter((t) => t.status === 'refunded')
       .reduce((sum, t) => sum + t.amount, 0);
 
+    const total = count || 0;
+
     return NextResponse.json({
-      transactions: allTx,
+      transactions: transactions || [],
       attorneys,
       total_revenue,
       total_refunded,
-      total_count: allTx.length,
+      total_count: total,
+      pagination: { page, limit, total, totalPages: Math.ceil(total / limit) },
     });
   } catch (error) {
     console.error('Admin transactions error:', error);

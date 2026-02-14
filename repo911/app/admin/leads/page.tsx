@@ -2,11 +2,12 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import { Search, Filter, ChevronLeft, ChevronRight, Download } from 'lucide-react';
+import { Search, Filter, ChevronLeft, ChevronRight, Download, ArrowUpDown } from 'lucide-react';
+import { useDebounce } from '@/lib/hooks/useDebounce';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
-import { formatDate } from '@/lib/utils';
+import { formatDate, US_STATES } from '@/lib/utils';
 import type { Lead } from '@/types';
 
 const STATUS_OPTIONS = [
@@ -53,17 +54,24 @@ export default function AdminLeadsPage() {
   const [error, setError] = useState('');
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
+  const debouncedSearch = useDebounce(search);
   const [statusFilter, setStatusFilter] = useState('');
   const [tierFilter, setTierFilter] = useState('');
+  const [stateFilter, setStateFilter] = useState('');
+  const [sortField, setSortField] = useState('created_at');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   const limit = 25;
 
   const fetchLeads = useCallback(async () => {
     setLoading(true);
     try {
       const params = new URLSearchParams({ page: page.toString(), limit: limit.toString() });
-      if (search) params.set('search', search);
+      if (debouncedSearch) params.set('search', debouncedSearch);
       if (statusFilter) params.set('status', statusFilter);
       if (tierFilter) params.set('tier', tierFilter);
+      if (stateFilter) params.set('state', stateFilter);
+      params.set('sort', sortField);
+      params.set('order', sortOrder);
 
       const res = await fetch(`/api/admin/leads?${params}`);
       if (!res.ok) {
@@ -78,7 +86,7 @@ export default function AdminLeadsPage() {
     } finally {
       setLoading(false);
     }
-  }, [page, search, statusFilter, tierFilter]);
+  }, [page, debouncedSearch, statusFilter, tierFilter, stateFilter, sortField, sortOrder]);
 
   useEffect(() => {
     fetchLeads();
@@ -166,6 +174,16 @@ export default function AdminLeadsPage() {
               <option key={o.value} value={o.value}>{o.label}</option>
             ))}
           </select>
+          <select
+            value={stateFilter}
+            onChange={(e) => { setStateFilter(e.target.value); setPage(1); }}
+            className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1B2A4A]"
+          >
+            <option value="">All States</option>
+            {US_STATES.map((s) => (
+              <option key={s.value} value={s.value}>{s.label}</option>
+            ))}
+          </select>
         </div>
       </div>
 
@@ -189,10 +207,31 @@ export default function AdminLeadsPage() {
                 <TableHead>Name</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Tier</TableHead>
-                <TableHead>Score</TableHead>
-                <TableHead>State</TableHead>
+                <TableHead>
+                  <button
+                    onClick={() => { setSortField('qualification_score'); setSortOrder(sortField === 'qualification_score' ? (sortOrder === 'desc' ? 'asc' : 'desc') : 'desc'); setPage(1); }}
+                    className="flex items-center gap-1 hover:text-gray-900"
+                  >
+                    Score <ArrowUpDown className="h-3 w-3" />
+                  </button>
+                </TableHead>
+                <TableHead>
+                  <button
+                    onClick={() => { setSortField('repo_state'); setSortOrder(sortField === 'repo_state' ? (sortOrder === 'desc' ? 'asc' : 'desc') : 'desc'); setPage(1); }}
+                    className="flex items-center gap-1 hover:text-gray-900"
+                  >
+                    State <ArrowUpDown className="h-3 w-3" />
+                  </button>
+                </TableHead>
                 <TableHead>Lender</TableHead>
-                <TableHead>Date</TableHead>
+                <TableHead>
+                  <button
+                    onClick={() => { setSortField('created_at'); setSortOrder(sortField === 'created_at' ? (sortOrder === 'desc' ? 'asc' : 'desc') : 'desc'); setPage(1); }}
+                    className="flex items-center gap-1 hover:text-gray-900"
+                  >
+                    Date <ArrowUpDown className="h-3 w-3" />
+                  </button>
+                </TableHead>
                 <TableHead>Claimed</TableHead>
               </TableRow>
             </TableHeader>

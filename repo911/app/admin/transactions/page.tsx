@@ -2,7 +2,8 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import { DollarSign, Receipt, RefreshCw, Download } from 'lucide-react';
+import { DollarSign, Receipt, RefreshCw, Download, Search, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useDebounce } from '@/lib/hooks/useDebounce';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
@@ -14,15 +15,22 @@ export default function TransactionsPage() {
   const [attorneys, setAttorneys] = useState<Record<string, string>>({});
   const [totalRevenue, setTotalRevenue] = useState(0);
   const [totalRefunded, setTotalRefunded] = useState(0);
+  const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
+  const [search, setSearch] = useState('');
+  const debouncedSearch = useDebounce(search);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const limit = 25;
 
   const fetchTransactions = useCallback(async () => {
     setLoading(true);
     try {
-      const params = new URLSearchParams();
+      const params = new URLSearchParams({ page: page.toString(), limit: limit.toString() });
       if (statusFilter) params.set('status', statusFilter);
+      if (debouncedSearch) params.set('search', debouncedSearch);
 
       const res = await fetch(`/api/admin/transactions?${params}`);
       if (!res.ok) {
@@ -34,12 +42,14 @@ export default function TransactionsPage() {
       setAttorneys(data.attorneys);
       setTotalRevenue(data.total_revenue);
       setTotalRefunded(data.total_refunded);
+      setTotalCount(data.pagination?.total || data.transactions.length);
+      setTotalPages(data.pagination?.totalPages || 1);
     } catch {
       setError('Failed to load data. Please try again.');
     } finally {
       setLoading(false);
     }
-  }, [statusFilter]);
+  }, [statusFilter, debouncedSearch, page]);
 
   useEffect(() => {
     fetchTransactions();
@@ -108,23 +118,35 @@ export default function TransactionsPage() {
             <span className="text-sm text-gray-500">Total Transactions</span>
             <Receipt className="h-5 w-5 text-blue-500" />
           </div>
-          <p className="text-2xl font-bold text-gray-900">{transactions.length}</p>
+          <p className="text-2xl font-bold text-gray-900">{totalCount}</p>
         </div>
       </div>
 
-      {/* Filter */}
-      <div className="flex items-center gap-3">
-        <select
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
-          className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1B2A4A]"
-        >
-          <option value="">All Statuses</option>
-          <option value="succeeded">Succeeded</option>
-          <option value="pending">Pending</option>
-          <option value="failed">Failed</option>
-          <option value="refunded">Refunded</option>
-        </select>
+      {/* Filters */}
+      <div className="bg-white rounded-xl border border-gray-200 p-4">
+        <div className="flex flex-col sm:flex-row gap-3">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Search by attorney name or Stripe ID..."
+              value={search}
+              onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1B2A4A] focus:border-transparent"
+            />
+          </div>
+          <select
+            value={statusFilter}
+            onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
+            className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1B2A4A]"
+          >
+            <option value="">All Statuses</option>
+            <option value="succeeded">Succeeded</option>
+            <option value="pending">Pending</option>
+            <option value="failed">Failed</option>
+            <option value="refunded">Refunded</option>
+          </select>
+        </div>
       </div>
 
       {/* Table */}
@@ -189,6 +211,30 @@ export default function TransactionsPage() {
               ))}
             </TableBody>
           </Table>
+        )}
+
+        {totalPages > 1 && (
+          <div className="flex items-center justify-between px-4 py-3 border-t border-gray-200">
+            <p className="text-sm text-gray-500">
+              Page {page} of {totalPages}
+            </p>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                disabled={page === 1}
+                className="p-1.5 rounded-lg border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </button>
+              <button
+                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                disabled={page === totalPages}
+                className="p-1.5 rounded-lg border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
         )}
       </div>
     </div>

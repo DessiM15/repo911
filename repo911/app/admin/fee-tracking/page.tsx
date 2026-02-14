@@ -2,7 +2,8 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import { DollarSign } from 'lucide-react';
+import { DollarSign, Search, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useDebounce } from '@/lib/hooks/useDebounce';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -27,6 +28,12 @@ export default function FeeTrackingPage() {
   const [attorneys, setAttorneys] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
   const [caseStatusFilter, setCaseStatusFilter] = useState('');
+  const [search, setSearch] = useState('');
+  const debouncedSearch = useDebounce(search);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [total, setTotal] = useState(0);
+  const limit = 25;
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editValues, setEditValues] = useState<Record<string, string>>({});
   const [saving, setSaving] = useState(false);
@@ -35,8 +42,9 @@ export default function FeeTrackingPage() {
   const fetchFees = useCallback(async () => {
     setLoading(true);
     try {
-      const params = new URLSearchParams();
+      const params = new URLSearchParams({ page: page.toString(), limit: limit.toString() });
       if (caseStatusFilter) params.set('case_status', caseStatusFilter);
+      if (debouncedSearch) params.set('search', debouncedSearch);
 
       const res = await fetch(`/api/admin/fee-tracking?${params}`);
       if (!res.ok) {
@@ -46,12 +54,14 @@ export default function FeeTrackingPage() {
       const data = await res.json();
       setFees(data.fees);
       setAttorneys(data.attorneys);
+      setTotal(data.pagination?.total || data.fees.length);
+      setTotalPages(data.pagination?.totalPages || 1);
     } catch {
       setError('Failed to load case tracking data.');
     } finally {
       setLoading(false);
     }
-  }, [caseStatusFilter]);
+  }, [caseStatusFilter, debouncedSearch, page]);
 
   useEffect(() => {
     fetchFees();
@@ -111,7 +121,10 @@ export default function FeeTrackingPage() {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-2xl font-bold text-gray-900">Case Tracking</h1>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <h1 className="text-2xl font-bold text-gray-900">Case Tracking</h1>
+        <span className="text-sm text-gray-500">{total} records</span>
+      </div>
 
       {error && (
         <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg p-4">
@@ -120,20 +133,32 @@ export default function FeeTrackingPage() {
       )}
 
       {/* Filters */}
-      <div className="flex flex-col sm:flex-row gap-3">
-        <select
-          value={caseStatusFilter}
-          onChange={(e) => setCaseStatusFilter(e.target.value)}
-          className="w-full sm:w-auto px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1B2A4A]"
-        >
-          <option value="">All Case Statuses</option>
-          <option value="open">Open</option>
-          <option value="in_progress">In Progress</option>
-          <option value="settled">Settled</option>
-          <option value="dismissed">Dismissed</option>
-          <option value="closed">Closed</option>
-          <option value="paid">Paid</option>
-        </select>
+      <div className="bg-white rounded-xl border border-gray-200 p-4">
+        <div className="flex flex-col sm:flex-row gap-3">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Search by attorney name or notes..."
+              value={search}
+              onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1B2A4A] focus:border-transparent"
+            />
+          </div>
+          <select
+            value={caseStatusFilter}
+            onChange={(e) => { setCaseStatusFilter(e.target.value); setPage(1); }}
+            className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1B2A4A]"
+          >
+            <option value="">All Case Statuses</option>
+            <option value="open">Open</option>
+            <option value="in_progress">In Progress</option>
+            <option value="settled">Settled</option>
+            <option value="dismissed">Dismissed</option>
+            <option value="closed">Closed</option>
+            <option value="paid">Paid</option>
+          </select>
+        </div>
       </div>
 
       {/* Table */}
@@ -248,6 +273,30 @@ export default function FeeTrackingPage() {
               })}
             </TableBody>
           </Table>
+        )}
+
+        {totalPages > 1 && (
+          <div className="flex items-center justify-between px-4 py-3 border-t border-gray-200">
+            <p className="text-sm text-gray-500">
+              Page {page} of {totalPages}
+            </p>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                disabled={page === 1}
+                className="p-1.5 rounded-lg border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </button>
+              <button
+                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                disabled={page === totalPages}
+                className="p-1.5 rounded-lg border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
         )}
       </div>
     </div>

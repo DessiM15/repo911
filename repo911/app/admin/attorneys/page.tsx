@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { Search, Users, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useDebounce } from '@/lib/hooks/useDebounce';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
@@ -23,6 +24,7 @@ export default function AdminAttorneysPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [search, setSearch] = useState('');
+  const debouncedSearch = useDebounce(search);
   const [statusFilter, setStatusFilter] = useState('');
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -33,7 +35,7 @@ export default function AdminAttorneysPage() {
     setLoading(true);
     try {
       const params = new URLSearchParams({ page: page.toString(), limit: limit.toString() });
-      if (search) params.set('search', search);
+      if (debouncedSearch) params.set('search', debouncedSearch);
       if (statusFilter) params.set('status', statusFilter);
 
       const res = await fetch(`/api/admin/attorneys?${params}`);
@@ -50,7 +52,7 @@ export default function AdminAttorneysPage() {
     } finally {
       setLoading(false);
     }
-  }, [search, statusFilter, page]);
+  }, [debouncedSearch, statusFilter, page]);
 
   useEffect(() => {
     fetchAttorneys();

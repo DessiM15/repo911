@@ -2,7 +2,8 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import { Search, Contact, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Search, Contact, ChevronLeft, ChevronRight, Tag } from 'lucide-react';
+import { useDebounce } from '@/lib/hooks/useDebounce';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
@@ -40,8 +41,11 @@ export default function CRMPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [search, setSearch] = useState('');
+  const debouncedSearch = useDebounce(search);
   const [typeFilter, setTypeFilter] = useState('');
   const [stageFilter, setStageFilter] = useState('');
+  const [tagFilter, setTagFilter] = useState('');
+  const debouncedTag = useDebounce(tagFilter);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [total, setTotal] = useState(0);
@@ -51,9 +55,10 @@ export default function CRMPage() {
     setLoading(true);
     try {
       const params = new URLSearchParams({ page: page.toString(), limit: limit.toString() });
-      if (search) params.set('search', search);
+      if (debouncedSearch) params.set('search', debouncedSearch);
       if (typeFilter) params.set('type', typeFilter);
       if (stageFilter) params.set('stage', stageFilter);
+      if (debouncedTag) params.set('tag', debouncedTag);
 
       const res = await fetch(`/api/admin/crm/contacts?${params}`);
       if (!res.ok) {
@@ -69,7 +74,7 @@ export default function CRMPage() {
     } finally {
       setLoading(false);
     }
-  }, [search, typeFilter, stageFilter, page]);
+  }, [debouncedSearch, typeFilter, stageFilter, debouncedTag, page]);
 
   useEffect(() => {
     fetchContacts();
@@ -123,6 +128,16 @@ export default function CRMPage() {
               <option key={o.value} value={o.value}>{o.label}</option>
             ))}
           </select>
+          <div className="relative">
+            <Tag className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Filter by tag..."
+              value={tagFilter}
+              onChange={(e) => { setTagFilter(e.target.value); setPage(1); }}
+              className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1B2A4A] focus:border-transparent"
+            />
+          </div>
         </div>
       </div>
 
