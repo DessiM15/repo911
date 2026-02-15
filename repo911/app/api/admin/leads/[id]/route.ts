@@ -1,5 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { adminLeadUpdateSchema } from '@/lib/validations/admin';
+import { apiSuccess, apiError } from '@/lib/api-response';
 
 export async function GET(
   _request: NextRequest,
@@ -11,7 +13,7 @@ export async function GET(
 
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return apiError('Unauthorized', 401);
     }
 
     const { data: admin } = await supabase
@@ -21,7 +23,7 @@ export async function GET(
       .single();
 
     if (!admin) {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+      return apiError('Forbidden', 403);
     }
 
     const { data: lead, error } = await supabase
@@ -31,7 +33,7 @@ export async function GET(
       .single();
 
     if (error || !lead) {
-      return NextResponse.json({ error: 'Lead not found' }, { status: 404 });
+      return apiError('Lead not found', 404);
     }
 
     // Get claiming attorney info if claimed
@@ -54,10 +56,10 @@ export async function GET(
       .limit(1)
       .maybeSingle();
 
-    return NextResponse.json({ lead, attorney, transaction });
+    return apiSuccess({ lead, attorney, transaction });
   } catch (error) {
     console.error('Admin lead detail error:', error);
-    return NextResponse.json({ error: 'An unexpected error occurred' }, { status: 500 });
+    return apiError('An unexpected error occurred', 500);
   }
 }
 
@@ -71,7 +73,7 @@ export async function PATCH(
 
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return apiError('Unauthorized', 401);
     }
 
     const { data: admin } = await supabase
@@ -81,38 +83,17 @@ export async function PATCH(
       .single();
 
     if (!admin) {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+      return apiError('Forbidden', 403);
     }
 
     const body = await request.json();
 
-    const VALID_STATUSES = ['pending', 'qualified_hot', 'qualified_warm', 'qualified_cold', 'disqualified', 'claimed', 'closed'];
-    const VALID_TIERS = ['hot', 'warm', 'cold', 'disqualified'];
-
-    if (body.status && !VALID_STATUSES.includes(body.status)) {
-      return NextResponse.json({ error: 'Invalid status value' }, { status: 400 });
-    }
-    if (body.qualification_tier && !VALID_TIERS.includes(body.qualification_tier)) {
-      return NextResponse.json({ error: 'Invalid qualification tier' }, { status: 400 });
-    }
-    if (body.qualification_score !== undefined) {
-      const score = Number(body.qualification_score);
-      if (isNaN(score) || score < 0 || score > 200) {
-        return NextResponse.json({ error: 'Invalid qualification score (0-200)' }, { status: 400 });
-      }
+    const parsed = adminLeadUpdateSchema.safeParse(body);
+    if (!parsed.success) {
+      return apiError('Validation failed', 400, parsed.error.flatten());
     }
 
-    const allowedFields = ['status', 'qualification_tier', 'qualification_score'];
-    const updates: Record<string, unknown> = {};
-    for (const field of allowedFields) {
-      if (body[field] !== undefined) {
-        updates[field] = body[field];
-      }
-    }
-
-    if (Object.keys(updates).length === 0) {
-      return NextResponse.json({ error: 'No valid fields to update' }, { status: 400 });
-    }
+    const updates: Record<string, unknown> = { ...parsed.data };
 
     // Fetch old values before update
     const { data: oldLead } = await supabase
@@ -129,7 +110,7 @@ export async function PATCH(
       .eq('id', id);
 
     if (error) {
-      return NextResponse.json({ error: 'Failed to update lead' }, { status: 500 });
+      return apiError('Failed to update lead', 500);
     }
 
     // Insert audit log entry (fire-and-forget)
@@ -160,11 +141,11 @@ export async function PATCH(
     // Log status_change activities (fire-and-forget)
     if (oldLead) {
       const changes: { field: string; old_value: string; new_value: string }[] = [];
-      if (body.status && body.status !== oldLead.status) {
-        changes.push({ field: 'status', old_value: oldLead.status, new_value: body.status });
+      if (parsed.data.status && parsed.data.status !== oldLead.status) {
+        changes.push({ field: 'status', old_value: oldLead.status, new_value: parsed.data.status });
       }
-      if (body.qualification_tier && body.qualification_tier !== oldLead.qualification_tier) {
-        changes.push({ field: 'qualification_tier', old_value: oldLead.qualification_tier, new_value: body.qualification_tier });
+      if (parsed.data.qualification_tier && parsed.data.qualification_tier !== oldLead.qualification_tier) {
+        changes.push({ field: 'qualification_tier', old_value: oldLead.qualification_tier, new_value: parsed.data.qualification_tier });
       }
 
       if (changes.length > 0) {
@@ -190,9 +171,9 @@ export async function PATCH(
       }
     }
 
-    return NextResponse.json({ success: true });
+    return apiSuccess({ success: true });
   } catch (error) {
     console.error('Admin lead update error:', error);
-    return NextResponse.json({ error: 'An unexpected error occurred' }, { status: 500 });
+    return apiError('An unexpected error occurred', 500);
   }
 }

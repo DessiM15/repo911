@@ -1,5 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { adminAttorneyUpdateSchema } from '@/lib/validations/admin';
+import { apiSuccess, apiError } from '@/lib/api-response';
 
 export async function GET(
   _request: NextRequest,
@@ -11,7 +13,7 @@ export async function GET(
 
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return apiError('Unauthorized', 401);
     }
 
     const { data: admin } = await supabase
@@ -21,7 +23,7 @@ export async function GET(
       .single();
 
     if (!admin) {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+      return apiError('Forbidden', 403);
     }
 
     const { data: attorney, error } = await supabase
@@ -31,7 +33,7 @@ export async function GET(
       .single();
 
     if (error || !attorney) {
-      return NextResponse.json({ error: 'Attorney not found' }, { status: 404 });
+      return apiError('Attorney not found', 404);
     }
 
     // Get claimed leads
@@ -52,7 +54,7 @@ export async function GET(
       .filter((t) => t.status === 'succeeded')
       .reduce((sum, t) => sum + t.amount, 0);
 
-    return NextResponse.json({
+    return apiSuccess({
       attorney,
       claimed_leads: claimed_leads || [],
       transactions: transactions || [],
@@ -60,7 +62,7 @@ export async function GET(
     });
   } catch (error) {
     console.error('Admin attorney detail error:', error);
-    return NextResponse.json({ error: 'An unexpected error occurred' }, { status: 500 });
+    return apiError('An unexpected error occurred', 500);
   }
 }
 
@@ -74,7 +76,7 @@ export async function PATCH(
 
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return apiError('Unauthorized', 401);
     }
 
     const { data: admin } = await supabase
@@ -84,21 +86,17 @@ export async function PATCH(
       .single();
 
     if (!admin) {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+      return apiError('Forbidden', 403);
     }
 
     const body = await request.json();
-    const allowedFields = ['status', 'is_verified'];
-    const updates: Record<string, unknown> = {};
-    for (const field of allowedFields) {
-      if (body[field] !== undefined) {
-        updates[field] = body[field];
-      }
+
+    const parsed = adminAttorneyUpdateSchema.safeParse(body);
+    if (!parsed.success) {
+      return apiError('Validation failed', 400, parsed.error.flatten());
     }
 
-    if (Object.keys(updates).length === 0) {
-      return NextResponse.json({ error: 'No valid fields to update' }, { status: 400 });
-    }
+    const updates: Record<string, unknown> = { ...parsed.data };
 
     // Fetch old values before update
     const { data: oldAttorney } = await supabase
@@ -115,7 +113,7 @@ export async function PATCH(
       .eq('id', id);
 
     if (error) {
-      return NextResponse.json({ error: 'Failed to update attorney' }, { status: 500 });
+      return apiError('Failed to update attorney', 500);
     }
 
     // Insert audit log entry (fire-and-forget)
@@ -144,7 +142,7 @@ export async function PATCH(
     }
 
     // Log status_change activity (fire-and-forget)
-    if (oldAttorney && body.status && body.status !== oldAttorney.status) {
+    if (oldAttorney && parsed.data.status && parsed.data.status !== oldAttorney.status) {
       supabase
         .from('crm_contacts')
         .select('id')
@@ -155,17 +153,17 @@ export async function PATCH(
             supabase.from('crm_activities').insert({
               contact_id: contact.id,
               activity_type: 'status_change',
-              description: `Attorney status changed from ${oldAttorney.status} to ${body.status}`,
+              description: `Attorney status changed from ${oldAttorney.status} to ${parsed.data.status}`,
               performed_by: admin.id,
-              metadata: { field: 'status', old_value: oldAttorney.status, new_value: body.status },
+              metadata: { field: 'status', old_value: oldAttorney.status, new_value: parsed.data.status },
             }).then(() => {});
           }
         });
     }
 
-    return NextResponse.json({ success: true });
+    return apiSuccess({ success: true });
   } catch (error) {
     console.error('Admin attorney update error:', error);
-    return NextResponse.json({ error: 'An unexpected error occurred' }, { status: 500 });
+    return apiError('An unexpected error occurred', 500);
   }
 }

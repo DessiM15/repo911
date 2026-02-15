@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { stripe, isStripeConfigured, LEAD_PRICES } from '@/lib/stripe';
@@ -6,20 +6,23 @@ import { isSubscriptionActive } from '@/lib/subscription';
 import { sendLeadClaimedToConsumer, sendLeadClaimedToAttorney } from '@/lib/emails';
 import { captureServerException } from '@/lib/error-tracking/server-tracker';
 import { rateLimit } from '@/lib/rate-limit';
+import { attorneyClaimSchema } from '@/lib/validations/attorney';
+import { apiSuccess, apiError } from '@/lib/api-response';
 import type { QualificationTier, SubscriptionPlan, SubscriptionStatus } from '@/types';
 
 export async function POST(request: NextRequest) {
   try {
-    const { lead_id } = await request.json();
-    if (!lead_id) {
-      return NextResponse.json({ error: 'Lead ID is required' }, { status: 400 });
+    const body = await request.json();
+
+    const parsed = attorneyClaimSchema.safeParse(body);
+    if (!parsed.success) {
+      return apiError('Validation failed', 400, parsed.error.flatten());
     }
 
+    const { lead_id } = parsed.data;
+
     if (!isStripeConfigured()) {
-      return NextResponse.json(
-        { error: 'Payments are not yet available. Please check back soon.' },
-        { status: 503 }
-      );
+      return apiError('Payments are not yet available. Please check back soon.', 503);
     }
 
     const supabase = await createClient();
@@ -27,7 +30,7 @@ export async function POST(request: NextRequest) {
     // Verify attorney
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return apiError('Unauthorized', 401);
     }
 
     const { data: attorney } = await supabase
@@ -37,20 +40,17 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (!attorney || attorney.status !== 'active') {
-      return NextResponse.json({ error: 'Attorney account is not active' }, { status: 403 });
+      return apiError('Attorney account is not active', 403);
     }
 
     // Rate limit: 20 claims per attorney per hour
     const rateLimitResult = rateLimit(`attorney_claim:${attorney.id}`, { limit: 20, windowSeconds: 3600 });
     if (!rateLimitResult.success) {
-      return NextResponse.json(
-        { error: 'Too many claim attempts. Please try again later.' },
-        {
-          status: 429,
-          headers: {
-            'Retry-After': Math.ceil((rateLimitResult.resetAt - Date.now()) / 1000).toString(),
-          },
-        }
+      return apiError(
+        'Too many claim attempts. Please try again later.',
+        429,
+        undefined,
+        { 'Retry-After': Math.ceil((rateLimitResult.resetAt - Date.now()) / 1000).toString() }
       );
     }
 
@@ -62,11 +62,11 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (!lead) {
-      return NextResponse.json({ error: 'Lead not found' }, { status: 404 });
+      return apiError('Lead not found', 404);
     }
 
     if (lead.claimed_by) {
-      return NextResponse.json({ error: 'This lead has already been claimed' }, { status: 409 });
+      return apiError('This lead has already been claimed', 409);
     }
 
     const tier = lead.qualification_tier as QualificationTier;
@@ -97,7 +97,7 @@ export async function POST(request: NextRequest) {
         .single();
 
       if (claimError || !updatedLead) {
-        return NextResponse.json({ error: 'This lead has already been claimed' }, { status: 409 });
+        return apiError('This lead has already been claimed', 409);
       }
 
       // Create $0 transaction record
@@ -164,7 +164,7 @@ export async function POST(request: NextRequest) {
         });
       }
 
-      return NextResponse.json({
+      return apiSuccess({
         success: true,
         redirect_url: `${process.env.NEXT_PUBLIC_APP_URL}/attorney/my-leads?claimed=${lead.id}`,
       });
@@ -196,13 +196,13 @@ export async function POST(request: NextRequest) {
       cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/attorney/leads/${lead.id}?cancelled=true`,
     });
 
-    return NextResponse.json({ checkout_url: session.url });
+    return apiSuccess({ checkout_url: session.url });
   } catch (error) {
     console.error('Claim error:', error);
     captureServerException(error instanceof Error ? error : new Error(String(error)), {
       tags: ['payment', 'claim'],
       request: { url: request.url, method: request.method },
     });
-    return NextResponse.json({ error: 'Failed to create checkout session' }, { status: 500 });
+    return apiError('Failed to create checkout session', 500);
   }
 }

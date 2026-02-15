@@ -1,5 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { notificationUpdateSchema } from '@/lib/validations/attorney';
+import { apiSuccess, apiError } from '@/lib/api-response';
 
 export async function GET() {
   try {
@@ -7,7 +9,7 @@ export async function GET() {
 
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return apiError('Unauthorized', 401);
     }
 
     const { data: attorney } = await supabase
@@ -17,7 +19,7 @@ export async function GET() {
       .single();
 
     if (!attorney) {
-      return NextResponse.json({ error: 'Attorney not found' }, { status: 404 });
+      return apiError('Attorney not found', 404);
     }
 
     // Get recent notifications (last 50)
@@ -37,13 +39,13 @@ export async function GET() {
       .eq('recipient_id', attorney.id)
       .eq('read', false);
 
-    return NextResponse.json({
+    return apiSuccess({
       notifications: notifications || [],
       unread_count: unreadCount || 0,
     });
   } catch (error) {
     console.error('Notifications error:', error);
-    return NextResponse.json({ error: 'An unexpected error occurred' }, { status: 500 });
+    return apiError('An unexpected error occurred', 500);
   }
 }
 
@@ -53,7 +55,7 @@ export async function PATCH(request: NextRequest) {
 
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return apiError('Unauthorized', 401);
     }
 
     const { data: attorney } = await supabase
@@ -63,12 +65,19 @@ export async function PATCH(request: NextRequest) {
       .single();
 
     if (!attorney) {
-      return NextResponse.json({ error: 'Attorney not found' }, { status: 404 });
+      return apiError('Attorney not found', 404);
     }
 
     const body = await request.json();
 
-    if (body.mark_all_read) {
+    const parsed = notificationUpdateSchema.safeParse(body);
+    if (!parsed.success) {
+      return apiError('Validation failed', 400, parsed.error.flatten());
+    }
+
+    const { mark_all_read, notification_id } = parsed.data;
+
+    if (mark_all_read) {
       // Mark all as read
       await supabase
         .from('notifications')
@@ -76,18 +85,18 @@ export async function PATCH(request: NextRequest) {
         .eq('recipient_type', 'attorney')
         .eq('recipient_id', attorney.id)
         .eq('read', false);
-    } else if (body.notification_id) {
+    } else if (notification_id) {
       // Mark single notification as read
       await supabase
         .from('notifications')
         .update({ read: true, read_at: new Date().toISOString() })
-        .eq('id', body.notification_id)
+        .eq('id', notification_id)
         .eq('recipient_id', attorney.id);
     }
 
-    return NextResponse.json({ success: true });
+    return apiSuccess({ success: true });
   } catch (error) {
     console.error('Notification update error:', error);
-    return NextResponse.json({ error: 'An unexpected error occurred' }, { status: 500 });
+    return apiError('An unexpected error occurred', 500);
   }
 }

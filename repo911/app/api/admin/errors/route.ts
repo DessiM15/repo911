@@ -1,13 +1,15 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
+import { errorStatusUpdateSchema } from '@/lib/validations/admin';
+import { apiSuccess, apiError } from '@/lib/api-response';
 
 export async function GET(request: NextRequest) {
   // Auth check
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    return apiError('Unauthorized', 401);
   }
   const { data: admin } = await supabase
     .from('admins')
@@ -15,7 +17,7 @@ export async function GET(request: NextRequest) {
     .eq('supabase_auth_id', user.id)
     .single();
   if (!admin) {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    return apiError('Forbidden', 403);
   }
 
   const { searchParams } = request.nextUrl;
@@ -38,7 +40,7 @@ export async function GET(request: NextRequest) {
       .order('created_at', { ascending: false })
       .limit(20);
 
-    return NextResponse.json({ occurrences: occurrences || [] });
+    return apiSuccess({ occurrences: occurrences || [] });
   }
 
   // Build errors list query
@@ -66,7 +68,7 @@ export async function GET(request: NextRequest) {
     .from('errors')
     .select('id', { count: 'exact', head: true });
 
-  return NextResponse.json({
+  return apiSuccess({
     errors: errors || [],
     total: count || 0,
     stats: {
@@ -83,7 +85,7 @@ export async function PATCH(request: NextRequest) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    return apiError('Unauthorized', 401);
   }
   const { data: admin } = await supabase
     .from('admins')
@@ -91,18 +93,17 @@ export async function PATCH(request: NextRequest) {
     .eq('supabase_auth_id', user.id)
     .single();
   if (!admin) {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    return apiError('Forbidden', 403);
   }
 
-  const { id, status } = await request.json();
-  if (!id || !status) {
-    return NextResponse.json({ error: 'id and status are required' }, { status: 400 });
+  const body = await request.json();
+
+  const parsed = errorStatusUpdateSchema.safeParse(body);
+  if (!parsed.success) {
+    return apiError('Validation failed', 400, parsed.error.flatten());
   }
 
-  const validStatuses = ['unresolved', 'resolved', 'ignored', 'muted'];
-  if (!validStatuses.includes(status)) {
-    return NextResponse.json({ error: 'Invalid status' }, { status: 400 });
-  }
+  const { id, status } = parsed.data;
 
   const adminSupabase = createAdminClient();
   const { error } = await adminSupabase
@@ -111,8 +112,8 @@ export async function PATCH(request: NextRequest) {
     .eq('id', id);
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return apiError(error.message, 500);
   }
 
-  return NextResponse.json({ success: true });
+  return apiSuccess({ success: true });
 }

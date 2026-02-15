@@ -1,6 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
+import { adminCreateSchema } from '@/lib/validations/admin';
+import { apiSuccess, apiError } from '@/lib/api-response';
 
 export async function GET() {
   try {
@@ -8,7 +10,7 @@ export async function GET() {
 
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return apiError('Unauthorized', 401);
     }
 
     const adminClient = createAdminClient();
@@ -21,7 +23,7 @@ export async function GET() {
       .single();
 
     if (!callerAdmin) {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+      return apiError('Forbidden', 403);
     }
 
     // List all admins
@@ -32,13 +34,13 @@ export async function GET() {
 
     if (listError) {
       console.error('List admins error:', listError);
-      return NextResponse.json({ error: 'Failed to load admins' }, { status: 500 });
+      return apiError('Failed to load admins', 500);
     }
 
-    return NextResponse.json({ admins });
+    return apiSuccess({ admins });
   } catch (error) {
     console.error('Admin list error:', error);
-    return NextResponse.json({ error: 'An unexpected error occurred' }, { status: 500 });
+    return apiError('An unexpected error occurred', 500);
   }
 }
 
@@ -48,7 +50,7 @@ export async function POST(request: NextRequest) {
 
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return apiError('Unauthorized', 401);
     }
 
     const adminClient = createAdminClient();
@@ -61,33 +63,21 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (!callerAdmin) {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+      return apiError('Forbidden', 403);
     }
 
     if (callerAdmin.role !== 'super_admin' && callerAdmin.role !== 'admin') {
-      return NextResponse.json({ error: 'Insufficient permissions' }, { status: 403 });
+      return apiError('Insufficient permissions', 403);
     }
 
     const body = await request.json();
-    const { email, firstName, lastName, password, role } = body;
 
-    // Validate required fields
-    if (!email || !firstName || !password) {
-      return NextResponse.json(
-        { error: 'Email, first name, and password are required.' },
-        { status: 400 }
-      );
+    const parsed = adminCreateSchema.safeParse(body);
+    if (!parsed.success) {
+      return apiError('Validation failed', 400, parsed.error.flatten());
     }
 
-    if (password.length < 8) {
-      return NextResponse.json(
-        { error: 'Password must be at least 8 characters.' },
-        { status: 400 }
-      );
-    }
-
-    const allowedRoles = ['admin', 'viewer'];
-    const adminRole = allowedRoles.includes(role) ? role : 'viewer';
+    const { email, firstName, password, lastName, role } = parsed.data;
 
     // Create auth user
     const { data: authUser, error: authError } = await adminClient.auth.admin.createUser({
@@ -99,15 +89,9 @@ export async function POST(request: NextRequest) {
     if (authError) {
       console.error('Auth user creation error:', authError);
       if (authError.message?.includes('already been registered')) {
-        return NextResponse.json(
-          { error: 'An account with this email already exists.' },
-          { status: 409 }
-        );
+        return apiError('An account with this email already exists.', 409);
       }
-      return NextResponse.json(
-        { error: 'Failed to create user account.' },
-        { status: 500 }
-      );
+      return apiError('Failed to create user account.', 500);
     }
 
     // Insert into admins table
@@ -118,33 +102,27 @@ export async function POST(request: NextRequest) {
         email,
         first_name: firstName,
         last_name: lastName || null,
-        role: adminRole,
+        role,
       });
 
     if (insertError) {
       console.error('Admin insert error:', insertError);
       // Rollback: delete the auth user
       await adminClient.auth.admin.deleteUser(authUser.user.id);
-      return NextResponse.json(
-        { error: 'Failed to create admin record. The operation has been rolled back.' },
-        { status: 500 }
-      );
+      return apiError('Failed to create admin record. The operation has been rolled back.', 500);
     }
 
-    return NextResponse.json({
+    return apiSuccess({
       success: true,
       admin: {
         email,
         firstName,
         lastName: lastName || null,
-        role: adminRole,
+        role,
       },
     });
   } catch (error) {
     console.error('Admin creation error:', error);
-    return NextResponse.json(
-      { error: 'An unexpected error occurred' },
-      { status: 500 }
-    );
+    return apiError('An unexpected error occurred', 500);
   }
 }

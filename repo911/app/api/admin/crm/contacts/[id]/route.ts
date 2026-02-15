@@ -1,5 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { crmContactUpdateSchema } from '@/lib/validations/admin';
+import { apiSuccess, apiError } from '@/lib/api-response';
 
 export async function GET(
   _request: NextRequest,
@@ -11,7 +13,7 @@ export async function GET(
 
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return apiError('Unauthorized', 401);
     }
 
     const { data: admin } = await supabase
@@ -21,7 +23,7 @@ export async function GET(
       .single();
 
     if (!admin) {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+      return apiError('Forbidden', 403);
     }
 
     const { data: contact, error } = await supabase
@@ -31,7 +33,7 @@ export async function GET(
       .single();
 
     if (error || !contact) {
-      return NextResponse.json({ error: 'Contact not found' }, { status: 404 });
+      return apiError('Contact not found', 404);
     }
 
     // Get activities
@@ -61,7 +63,7 @@ export async function GET(
       attorney = data;
     }
 
-    return NextResponse.json({
+    return apiSuccess({
       contact,
       activities: activities || [],
       lead,
@@ -69,7 +71,7 @@ export async function GET(
     });
   } catch (error) {
     console.error('CRM contact detail error:', error);
-    return NextResponse.json({ error: 'An unexpected error occurred' }, { status: 500 });
+    return apiError('An unexpected error occurred', 500);
   }
 }
 
@@ -83,7 +85,7 @@ export async function PATCH(
 
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return apiError('Unauthorized', 401);
     }
 
     const { data: admin } = await supabase
@@ -93,13 +95,20 @@ export async function PATCH(
       .single();
 
     if (!admin) {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+      return apiError('Forbidden', 403);
     }
 
     const body = await request.json();
 
+    const parsed = crmContactUpdateSchema.safeParse(body);
+    if (!parsed.success) {
+      return apiError('Validation failed', 400, parsed.error.flatten());
+    }
+
+    const { add_note, lifecycle_stage, tags, next_follow_up } = parsed.data;
+
     // Handle adding a note
-    if (body.add_note) {
+    if (add_note) {
       const { data: contact } = await supabase
         .from('crm_contacts')
         .select('notes')
@@ -110,7 +119,7 @@ export async function PATCH(
       const newNote = {
         timestamp: new Date().toISOString(),
         author: 'Admin',
-        note_text: body.add_note,
+        note_text: add_note,
       };
 
       await supabase
@@ -125,29 +134,26 @@ export async function PATCH(
       await supabase.from('crm_activities').insert({
         contact_id: id,
         activity_type: 'note',
-        description: body.add_note,
+        description: add_note,
         performed_by: admin.id,
       });
 
-      return NextResponse.json({ success: true });
+      return apiSuccess({ success: true });
     }
 
     // Handle field updates
-    const allowedFields = ['lifecycle_stage', 'tags', 'next_follow_up'];
     const updates: Record<string, unknown> = {};
-    for (const field of allowedFields) {
-      if (body[field] !== undefined) {
-        updates[field] = body[field];
-      }
-    }
+    if (lifecycle_stage !== undefined) updates.lifecycle_stage = lifecycle_stage;
+    if (tags !== undefined) updates.tags = tags;
+    if (next_follow_up !== undefined) updates.next_follow_up = next_follow_up;
 
     if (Object.keys(updates).length === 0) {
-      return NextResponse.json({ error: 'No valid fields to update' }, { status: 400 });
+      return apiError('No valid fields to update', 400);
     }
 
     // Fetch old lifecycle_stage before update
     let oldLifecycleStage: string | null = null;
-    if (body.lifecycle_stage) {
+    if (lifecycle_stage) {
       const { data: oldContact } = await supabase
         .from('crm_contacts')
         .select('lifecycle_stage')
@@ -164,23 +170,23 @@ export async function PATCH(
       .eq('id', id);
 
     if (error) {
-      return NextResponse.json({ error: 'Failed to update contact' }, { status: 500 });
+      return apiError('Failed to update contact', 500);
     }
 
     // Log status_change activity if lifecycle_stage changed (fire-and-forget)
-    if (body.lifecycle_stage && oldLifecycleStage !== null && oldLifecycleStage !== body.lifecycle_stage) {
+    if (lifecycle_stage && oldLifecycleStage !== null && oldLifecycleStage !== lifecycle_stage) {
       supabase.from('crm_activities').insert({
         contact_id: id,
         activity_type: 'status_change',
-        description: `Lifecycle stage changed from ${oldLifecycleStage} to ${body.lifecycle_stage}`,
+        description: `Lifecycle stage changed from ${oldLifecycleStage} to ${lifecycle_stage}`,
         performed_by: admin.id,
-        metadata: { field: 'lifecycle_stage', old_value: oldLifecycleStage, new_value: body.lifecycle_stage },
+        metadata: { field: 'lifecycle_stage', old_value: oldLifecycleStage, new_value: lifecycle_stage },
       }).then(() => {});
     }
 
-    return NextResponse.json({ success: true });
+    return apiSuccess({ success: true });
   } catch (error) {
     console.error('CRM contact update error:', error);
-    return NextResponse.json({ error: 'An unexpected error occurred' }, { status: 500 });
+    return apiError('An unexpected error occurred', 500);
   }
 }

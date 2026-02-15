@@ -1,5 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { feeTrackingUpdateSchema } from '@/lib/validations/admin';
+import { apiSuccess, apiError } from '@/lib/api-response';
 
 export async function GET(request: NextRequest) {
   try {
@@ -7,7 +9,7 @@ export async function GET(request: NextRequest) {
 
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return apiError('Unauthorized', 401);
     }
 
     const { data: admin } = await supabase
@@ -17,7 +19,7 @@ export async function GET(request: NextRequest) {
       .single();
 
     if (!admin) {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+      return apiError('Forbidden', 403);
     }
 
     const { searchParams } = request.nextUrl;
@@ -72,14 +74,14 @@ export async function GET(request: NextRequest) {
 
     const total = count || 0;
 
-    return NextResponse.json({
+    return apiSuccess({
       fees: fees || [],
       attorneys,
       pagination: { page, limit, total, totalPages: Math.ceil(total / limit) },
     });
   } catch (error) {
     console.error('Fee tracking error:', error);
-    return NextResponse.json({ error: 'An unexpected error occurred' }, { status: 500 });
+    return apiError('An unexpected error occurred', 500);
   }
 }
 
@@ -89,7 +91,7 @@ export async function PATCH(request: NextRequest) {
 
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return apiError('Unauthorized', 401);
     }
 
     const { data: admin } = await supabase
@@ -99,15 +101,17 @@ export async function PATCH(request: NextRequest) {
       .single();
 
     if (!admin) {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+      return apiError('Forbidden', 403);
     }
 
     const body = await request.json();
-    const { fee_id, ...updates } = body;
 
-    if (!fee_id) {
-      return NextResponse.json({ error: 'Missing fee_id' }, { status: 400 });
+    const parsed = feeTrackingUpdateSchema.safeParse(body);
+    if (!parsed.success) {
+      return apiError('Validation failed', 400, parsed.error.flatten());
     }
+
+    const { fee_id, ...updateFields } = parsed.data;
 
     // Verify fee record exists and fetch old values
     const { data: existingFee } = await supabase
@@ -117,31 +121,16 @@ export async function PATCH(request: NextRequest) {
       .single();
 
     if (!existingFee) {
-      return NextResponse.json({ error: 'Fee record not found' }, { status: 404 });
+      return apiError('Fee record not found', 404);
     }
 
-    const VALID_CASE_STATUSES = ['open', 'in_progress', 'settled', 'dismissed', 'closed', 'paid'];
-
-    if (updates.case_status && !VALID_CASE_STATUSES.includes(updates.case_status)) {
-      return NextResponse.json({ error: 'Invalid case_status' }, { status: 400 });
-    }
-    if (updates.attorney_total_fee !== undefined) {
-      const fee = Number(updates.attorney_total_fee);
-      if (isNaN(fee) || fee < 0) {
-        return NextResponse.json({ error: 'attorney_total_fee must be a non-negative number' }, { status: 400 });
-      }
-    }
-
-    const allowedFields = ['case_status', 'attorney_total_fee', 'notes'];
     const cleanUpdates: Record<string, unknown> = {};
-    for (const field of allowedFields) {
-      if (updates[field] !== undefined) {
-        cleanUpdates[field] = updates[field];
-      }
-    }
+    if (updateFields.case_status !== undefined) cleanUpdates.case_status = updateFields.case_status;
+    if (updateFields.attorney_total_fee !== undefined) cleanUpdates.attorney_total_fee = updateFields.attorney_total_fee;
+    if (updateFields.notes !== undefined) cleanUpdates.notes = updateFields.notes;
 
     if (Object.keys(cleanUpdates).length === 0) {
-      return NextResponse.json({ error: 'No valid fields' }, { status: 400 });
+      return apiError('No valid fields', 400);
     }
 
     const { error } = await supabase
@@ -150,11 +139,11 @@ export async function PATCH(request: NextRequest) {
       .eq('id', fee_id);
 
     if (error) {
-      return NextResponse.json({ error: 'Failed to update' }, { status: 500 });
+      return apiError('Failed to update', 500);
     }
 
     // Log status_change activity if case_status changed (fire-and-forget)
-    if (updates.case_status && existingFee.case_status !== updates.case_status && existingFee.lead_id) {
+    if (updateFields.case_status && existingFee.case_status !== updateFields.case_status && existingFee.lead_id) {
       supabase
         .from('crm_contacts')
         .select('id')
@@ -165,17 +154,17 @@ export async function PATCH(request: NextRequest) {
             supabase.from('crm_activities').insert({
               contact_id: contact.id,
               activity_type: 'status_change',
-              description: `Case status changed from ${existingFee.case_status} to ${updates.case_status}`,
+              description: `Case status changed from ${existingFee.case_status} to ${updateFields.case_status}`,
               performed_by: admin.id,
-              metadata: { field: 'case_status', old_value: existingFee.case_status, new_value: updates.case_status },
+              metadata: { field: 'case_status', old_value: existingFee.case_status, new_value: updateFields.case_status },
             }).then(() => {});
           }
         });
     }
 
-    return NextResponse.json({ success: true });
+    return apiSuccess({ success: true });
   } catch (error) {
     console.error('Fee tracking update error:', error);
-    return NextResponse.json({ error: 'An unexpected error occurred' }, { status: 500 });
+    return apiError('An unexpected error occurred', 500);
   }
 }

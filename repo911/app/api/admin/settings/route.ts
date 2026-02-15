@@ -1,6 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
+import { settingsUpdateSchema } from '@/lib/validations/admin';
+import { apiSuccess, apiError } from '@/lib/api-response';
 
 const DEFAULT_SETTINGS: Record<string, unknown> = {
   lead_price_hot: 100000,
@@ -35,7 +37,7 @@ export async function GET() {
 
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return apiError('Unauthorized', 401);
     }
 
     const { data: admin } = await supabase
@@ -45,14 +47,14 @@ export async function GET() {
       .single();
 
     if (!admin) {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+      return apiError('Forbidden', 403);
     }
 
     const settings = await getSettings();
-    return NextResponse.json({ settings });
+    return apiSuccess({ settings });
   } catch (error) {
     console.error('Settings error:', error);
-    return NextResponse.json({ error: 'An unexpected error occurred' }, { status: 500 });
+    return apiError('An unexpected error occurred', 500);
   }
 }
 
@@ -62,7 +64,7 @@ export async function PATCH(request: NextRequest) {
 
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return apiError('Unauthorized', 401);
     }
 
     const { data: admin } = await supabase
@@ -72,42 +74,43 @@ export async function PATCH(request: NextRequest) {
       .single();
 
     if (!admin) {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+      return apiError('Forbidden', 403);
     }
 
     if (admin.role !== 'super_admin' && admin.role !== 'admin') {
-      return NextResponse.json({ error: 'Insufficient permissions' }, { status: 403 });
+      return apiError('Insufficient permissions', 403);
     }
 
     const body = await request.json();
 
-    const allowedKeys = [
-      'lead_price_hot', 'lead_price_warm', 'lead_price_cold',
-      'notification_email_from', 'platform_name',
-    ];
+    const parsed = settingsUpdateSchema.safeParse(body);
+    if (!parsed.success) {
+      return apiError('Validation failed', 400, parsed.error.flatten());
+    }
 
     const adminClient = createAdminClient();
     const now = new Date().toISOString();
 
-    for (const key of allowedKeys) {
-      if (body[key] !== undefined) {
+    const entries = Object.entries(parsed.data) as [string, unknown][];
+    for (const [key, value] of entries) {
+      if (value !== undefined) {
         await adminClient
           .from('settings')
           .upsert({
             key,
-            value: body[key],
+            value,
             updated_at: now,
             updated_by: admin.id,
           }, { onConflict: 'key' });
       }
     }
 
-    return NextResponse.json({
+    return apiSuccess({
       success: true,
       message: 'Settings saved successfully.',
     });
   } catch (error) {
     console.error('Settings update error:', error);
-    return NextResponse.json({ error: 'An unexpected error occurred' }, { status: 500 });
+    return apiError('An unexpected error occurred', 500);
   }
 }

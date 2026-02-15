@@ -1,9 +1,10 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { intakeFormSchema } from '@/lib/validations/intake-form';
 import { qualifyLead } from '@/lib/qualification-engine';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { sendLeadSubmissionConfirmation, sendHotLeadAlert, sendWarmLeadAlert } from '@/lib/emails';
 import { rateLimit } from '@/lib/rate-limit';
+import { apiSuccess, apiError } from '@/lib/api-response';
 import type { LeadSubmission } from '@/types';
 
 export async function POST(request: NextRequest) {
@@ -15,14 +16,11 @@ export async function POST(request: NextRequest) {
       'unknown';
     const rateLimitResult = rateLimit(`lead_submit:${ip}`, { limit: 5, windowSeconds: 900 });
     if (!rateLimitResult.success) {
-      return NextResponse.json(
-        { error: 'Too many submissions. Please try again later.' },
-        {
-          status: 429,
-          headers: {
-            'Retry-After': Math.ceil((rateLimitResult.resetAt - Date.now()) / 1000).toString(),
-          },
-        }
+      return apiError(
+        'Too many submissions. Please try again later.',
+        429,
+        undefined,
+        { 'Retry-After': Math.ceil((rateLimitResult.resetAt - Date.now()) / 1000).toString() }
       );
     }
 
@@ -31,10 +29,7 @@ export async function POST(request: NextRequest) {
     // Validate input
     const parsed = intakeFormSchema.safeParse(body);
     if (!parsed.success) {
-      return NextResponse.json(
-        { error: 'Validation failed', details: parsed.error.flatten() },
-        { status: 400 }
-      );
+      return apiError('Validation failed', 400, parsed.error.flatten());
     }
 
     const data = parsed.data as LeadSubmission;
@@ -172,10 +167,7 @@ export async function POST(request: NextRequest) {
 
     if (leadError) {
       console.error('Lead insert error:', leadError);
-      return NextResponse.json(
-        { error: 'Failed to submit your case. Please try again.' },
-        { status: 500 }
-      );
+      return apiError('Failed to submit your case. Please try again.', 500);
     }
 
     // Create CRM contact record
@@ -267,16 +259,13 @@ export async function POST(request: NextRequest) {
       console.error('Email notification error (non-critical)');
     }
 
-    return NextResponse.json({
+    return apiSuccess({
       id: lead.id,
       tier: lead.qualification_tier,
       score: lead.qualification_score,
     });
   } catch (error) {
     console.error('Lead submission error:', error);
-    return NextResponse.json(
-      { error: 'An unexpected error occurred. Please try again.' },
-      { status: 500 }
-    );
+    return apiError('An unexpected error occurred. Please try again.', 500);
   }
 }

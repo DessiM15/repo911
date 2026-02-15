@@ -1,6 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { rateLimit } from '@/lib/rate-limit';
+import { leadUploadSchema } from '@/lib/validations/consumer';
+import { apiSuccess, apiError } from '@/lib/api-response';
 
 const ALLOWED_TYPES = [
   'image/jpeg',
@@ -21,14 +23,11 @@ export async function POST(request: NextRequest) {
       'unknown';
     const rateLimitResult = rateLimit(`lead_upload:${ip}`, { limit: 10, windowSeconds: 900 });
     if (!rateLimitResult.success) {
-      return NextResponse.json(
-        { error: 'Too many upload requests. Please try again later.' },
-        {
-          status: 429,
-          headers: {
-            'Retry-After': Math.ceil((rateLimitResult.resetAt - Date.now()) / 1000).toString(),
-          },
-        }
+      return apiError(
+        'Too many upload requests. Please try again later.',
+        429,
+        undefined,
+        { 'Retry-After': Math.ceil((rateLimitResult.resetAt - Date.now()) / 1000).toString() }
       );
     }
 
@@ -37,27 +36,14 @@ export async function POST(request: NextRequest) {
     const leadId = formData.get('leadId') as string;
     const files = formData.getAll('files') as File[];
 
-    if (!email || !leadId) {
-      return NextResponse.json(
-        { error: 'Email and case ID are required.' },
-        { status: 400 }
-      );
+    // Validate JSON fields with Zod
+    const parsed = leadUploadSchema.safeParse({ email, leadId });
+    if (!parsed.success) {
+      return apiError('Validation failed', 400, parsed.error.flatten());
     }
 
     if (!files || files.length === 0) {
-      return NextResponse.json(
-        { error: 'At least one file is required.' },
-        { status: 400 }
-      );
-    }
-
-    // Validate UUID format
-    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-    if (!uuidRegex.test(leadId)) {
-      return NextResponse.json(
-        { error: 'Invalid case ID format.' },
-        { status: 400 }
-      );
+      return apiError('At least one file is required.', 400);
     }
 
     const supabase = createAdminClient();
@@ -66,40 +52,34 @@ export async function POST(request: NextRequest) {
     const { data: lead, error: leadError } = await supabase
       .from('leads')
       .select('id, email, uploaded_files')
-      .eq('id', leadId)
-      .eq('email', email.toLowerCase().trim())
+      .eq('id', parsed.data.leadId)
+      .eq('email', parsed.data.email.toLowerCase().trim())
       .single();
 
     if (leadError || !lead) {
-      return NextResponse.json(
-        { error: 'No case found matching that email and case ID.' },
-        { status: 404 }
-      );
+      return apiError('No case found matching that email and case ID.', 404);
     }
 
     const existingFiles: { name: string; path: string; uploadedAt: string }[] = lead.uploaded_files || [];
 
     // Check total file count
     if (existingFiles.length + files.length > MAX_FILES) {
-      return NextResponse.json(
-        { error: `Maximum ${MAX_FILES} files allowed. You already have ${existingFiles.length} uploaded.` },
-        { status: 400 }
+      return apiError(
+        `Maximum ${MAX_FILES} files allowed. You already have ${existingFiles.length} uploaded.`,
+        400
       );
     }
 
-    // Validate each file
+    // Validate each file (type/size stays manual — not JSON)
     for (const file of files) {
       if (!ALLOWED_TYPES.includes(file.type)) {
-        return NextResponse.json(
-          { error: `File "${file.name}" has an unsupported type. Only images (JPG, PNG, WebP) and PDFs are allowed.` },
-          { status: 400 }
+        return apiError(
+          `File "${file.name}" has an unsupported type. Only images (JPG, PNG, WebP) and PDFs are allowed.`,
+          400
         );
       }
       if (file.size > MAX_FILE_SIZE) {
-        return NextResponse.json(
-          { error: `File "${file.name}" exceeds the 10MB size limit.` },
-          { status: 400 }
-        );
+        return apiError(`File "${file.name}" exceeds the 10MB size limit.`, 400);
       }
     }
 
@@ -109,7 +89,7 @@ export async function POST(request: NextRequest) {
     for (const file of files) {
       const timestamp = Date.now();
       const sanitizedName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
-      const storagePath = `${leadId}/${timestamp}_${sanitizedName}`;
+      const storagePath = `${parsed.data.leadId}/${timestamp}_${sanitizedName}`;
 
       const buffer = Buffer.from(await file.arrayBuffer());
 
@@ -122,10 +102,7 @@ export async function POST(request: NextRequest) {
 
       if (uploadError) {
         console.error('Storage upload error:', uploadError);
-        return NextResponse.json(
-          { error: `Failed to upload "${file.name}". Please try again.` },
-          { status: 500 }
-        );
+        return apiError(`Failed to upload "${file.name}". Please try again.`, 500);
       }
 
       uploadedFiles.push({
@@ -140,26 +117,20 @@ export async function POST(request: NextRequest) {
     const { error: updateError } = await supabase
       .from('leads')
       .update({ uploaded_files: allFiles })
-      .eq('id', leadId);
+      .eq('id', parsed.data.leadId);
 
     if (updateError) {
       console.error('Lead update error:', updateError);
-      return NextResponse.json(
-        { error: 'Files uploaded but failed to update case record. Please contact support.' },
-        { status: 500 }
-      );
+      return apiError('Files uploaded but failed to update case record. Please contact support.', 500);
     }
 
-    return NextResponse.json({
+    return apiSuccess({
       success: true,
       uploaded: uploadedFiles.length,
       total: allFiles.length,
     });
   } catch (error) {
     console.error('File upload error:', error);
-    return NextResponse.json(
-      { error: 'An unexpected error occurred. Please try again.' },
-      { status: 500 }
-    );
+    return apiError('An unexpected error occurred. Please try again.', 500);
   }
 }

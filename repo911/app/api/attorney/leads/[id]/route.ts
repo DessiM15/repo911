@@ -1,9 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { getEstimatedValueRange } from '@/lib/utils';
+import { attorneyLeadUpdateSchema } from '@/lib/validations/attorney';
+import { apiSuccess, apiError } from '@/lib/api-response';
 import type { QualificationBreakdown } from '@/types';
-
-const VALID_CASE_STATUSES = ['open', 'in_progress', 'settled', 'dismissed', 'closed'];
 
 export async function GET(
   _request: NextRequest,
@@ -15,7 +15,7 @@ export async function GET(
 
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return apiError('Unauthorized', 401);
     }
 
     const { data: lead, error } = await supabase
@@ -25,7 +25,7 @@ export async function GET(
       .single();
 
     if (error || !lead) {
-      return NextResponse.json({ error: 'Lead not found' }, { status: 404 });
+      return apiError('Lead not found', 404);
     }
 
     // Check if this attorney has claimed this lead
@@ -39,7 +39,7 @@ export async function GET(
     const isMyLead = attorney && lead.claimed_by === attorney.id;
 
     if (isClaimed && !isMyLead) {
-      return NextResponse.json({ error: 'This lead has already been claimed' }, { status: 403 });
+      return apiError('This lead has already been claimed', 403);
     }
 
     const breakdown = lead.qualification_breakdown as QualificationBreakdown | null;
@@ -61,7 +61,7 @@ export async function GET(
         .eq('attorney_id', attorney.id)
         .single();
 
-      return NextResponse.json({ lead, violations, full_access: true, fee_tracking: feeTracking });
+      return apiSuccess({ lead, violations, full_access: true, fee_tracking: feeTracking });
     }
 
     // Otherwise return anonymized version
@@ -109,10 +109,10 @@ export async function GET(
       status: lead.status,
     };
 
-    return NextResponse.json({ lead: anonymized, violations, full_access: false });
+    return apiSuccess({ lead: anonymized, violations, full_access: false });
   } catch (error) {
     console.error('Lead detail error:', error);
-    return NextResponse.json({ error: 'An unexpected error occurred' }, { status: 500 });
+    return apiError('An unexpected error occurred', 500);
   }
 }
 
@@ -130,7 +130,7 @@ export async function PATCH(
 
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return apiError('Unauthorized', 401);
     }
 
     const { data: attorney } = await supabase
@@ -140,7 +140,7 @@ export async function PATCH(
       .single();
 
     if (!attorney) {
-      return NextResponse.json({ error: 'Attorney not found' }, { status: 403 });
+      return apiError('Attorney not found', 403);
     }
 
     // Verify this attorney owns this lead
@@ -151,23 +151,21 @@ export async function PATCH(
       .single();
 
     if (!lead || lead.claimed_by !== attorney.id) {
-      return NextResponse.json({ error: 'Access denied' }, { status: 403 });
+      return apiError('Access denied', 403);
     }
 
     const body = await request.json();
-    const { case_status, notes } = body;
 
-    if (case_status && !VALID_CASE_STATUSES.includes(case_status)) {
-      return NextResponse.json({ error: 'Invalid case status' }, { status: 400 });
+    const parsed = attorneyLeadUpdateSchema.safeParse(body);
+    if (!parsed.success) {
+      return apiError('Validation failed', 400, parsed.error.flatten());
     }
+
+    const { case_status, notes } = parsed.data;
 
     const updates: Record<string, unknown> = {};
     if (case_status) updates.case_status = case_status;
     if (notes !== undefined) updates.notes = notes;
-
-    if (Object.keys(updates).length === 0) {
-      return NextResponse.json({ error: 'No updates provided' }, { status: 400 });
-    }
 
     // Fetch old case_status before updating (for CRM activity logging)
     let oldCaseStatus: string | null = null;
@@ -189,7 +187,7 @@ export async function PATCH(
 
     if (error) {
       console.error('Fee tracking update error:', error);
-      return NextResponse.json({ error: 'Failed to save' }, { status: 500 });
+      return apiError('Failed to save', 500);
     }
 
     // Log status_change activity if case_status changed (fire-and-forget)
@@ -212,9 +210,9 @@ export async function PATCH(
         });
     }
 
-    return NextResponse.json({ success: true });
+    return apiSuccess({ success: true });
   } catch (error) {
     console.error('Lead PATCH error:', error);
-    return NextResponse.json({ error: 'An unexpected error occurred' }, { status: 500 });
+    return apiError('An unexpected error occurred', 500);
   }
 }

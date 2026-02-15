@@ -1,8 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { stripe, isStripeConfigured } from '@/lib/stripe';
 import { SUBSCRIPTION_PRICE_ID } from '@/lib/subscription';
 import { rateLimit } from '@/lib/rate-limit';
+import { apiSuccess, apiError } from '@/lib/api-response';
 
 // GET — Return attorney's subscription fields
 export async function GET() {
@@ -10,7 +11,7 @@ export async function GET() {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return apiError('Unauthorized', 401);
     }
 
     const { data: attorney } = await supabase
@@ -20,10 +21,10 @@ export async function GET() {
       .single();
 
     if (!attorney) {
-      return NextResponse.json({ error: 'Attorney not found' }, { status: 404 });
+      return apiError('Attorney not found', 404);
     }
 
-    return NextResponse.json({
+    return apiSuccess({
       subscription_plan: attorney.subscription_plan,
       subscription_status: attorney.subscription_status,
       subscription_current_period_end: attorney.subscription_current_period_end,
@@ -31,7 +32,7 @@ export async function GET() {
     });
   } catch (error) {
     console.error('Subscription GET error:', error);
-    return NextResponse.json({ error: 'Failed to fetch subscription' }, { status: 500 });
+    return apiError('Failed to fetch subscription', 500);
   }
 }
 
@@ -39,23 +40,17 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     if (!isStripeConfigured()) {
-      return NextResponse.json(
-        { error: 'Payments are not yet available.' },
-        { status: 503 }
-      );
+      return apiError('Payments are not yet available.', 503);
     }
 
     if (!SUBSCRIPTION_PRICE_ID) {
-      return NextResponse.json(
-        { error: 'Subscription is not configured yet.' },
-        { status: 503 }
-      );
+      return apiError('Subscription is not configured yet.', 503);
     }
 
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return apiError('Unauthorized', 401);
     }
 
     const { data: attorney } = await supabase
@@ -65,24 +60,21 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (!attorney || attorney.status !== 'active') {
-      return NextResponse.json({ error: 'Attorney account is not active' }, { status: 403 });
+      return apiError('Attorney account is not active', 403);
     }
 
     if (attorney.subscription_status === 'active') {
-      return NextResponse.json({ error: 'You already have an active subscription' }, { status: 400 });
+      return apiError('You already have an active subscription', 400);
     }
 
     // Rate limit: 10 subscription creations per attorney per hour
     const rateLimitResult = rateLimit(`attorney_sub_create:${attorney.id}`, { limit: 10, windowSeconds: 3600 });
     if (!rateLimitResult.success) {
-      return NextResponse.json(
-        { error: 'Too many requests. Please try again later.' },
-        {
-          status: 429,
-          headers: {
-            'Retry-After': Math.ceil((rateLimitResult.resetAt - Date.now()) / 1000).toString(),
-          },
-        }
+      return apiError(
+        'Too many requests. Please try again later.',
+        429,
+        undefined,
+        { 'Retry-After': Math.ceil((rateLimitResult.resetAt - Date.now()) / 1000).toString() }
       );
     }
 
@@ -106,10 +98,10 @@ export async function POST(request: NextRequest) {
       cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/attorney/billing?cancelled=true`,
     });
 
-    return NextResponse.json({ checkout_url: session.url });
+    return apiSuccess({ checkout_url: session.url });
   } catch (error) {
     console.error('Subscription POST error:', error);
-    return NextResponse.json({ error: 'Failed to create checkout session' }, { status: 500 });
+    return apiError('Failed to create checkout session', 500);
   }
 }
 
@@ -117,13 +109,13 @@ export async function POST(request: NextRequest) {
 export async function DELETE() {
   try {
     if (!isStripeConfigured()) {
-      return NextResponse.json({ error: 'Payments are not yet available.' }, { status: 503 });
+      return apiError('Payments are not yet available.', 503);
     }
 
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return apiError('Unauthorized', 401);
     }
 
     const { data: attorney } = await supabase
@@ -133,24 +125,21 @@ export async function DELETE() {
       .single();
 
     if (!attorney) {
-      return NextResponse.json({ error: 'Attorney not found' }, { status: 404 });
+      return apiError('Attorney not found', 404);
     }
 
     if (!attorney.stripe_subscription_id || attorney.subscription_status !== 'active') {
-      return NextResponse.json({ error: 'No active subscription to cancel' }, { status: 400 });
+      return apiError('No active subscription to cancel', 400);
     }
 
     // Rate limit: 5 cancellations per attorney per hour
     const rateLimitResult = rateLimit(`attorney_sub_cancel:${attorney.id}`, { limit: 5, windowSeconds: 3600 });
     if (!rateLimitResult.success) {
-      return NextResponse.json(
-        { error: 'Too many requests. Please try again later.' },
-        {
-          status: 429,
-          headers: {
-            'Retry-After': Math.ceil((rateLimitResult.resetAt - Date.now()) / 1000).toString(),
-          },
-        }
+      return apiError(
+        'Too many requests. Please try again later.',
+        429,
+        undefined,
+        { 'Retry-After': Math.ceil((rateLimitResult.resetAt - Date.now()) / 1000).toString() }
       );
     }
 
@@ -158,9 +147,9 @@ export async function DELETE() {
       cancel_at_period_end: true,
     });
 
-    return NextResponse.json({ success: true, message: 'Subscription will cancel at end of billing period' });
+    return apiSuccess({ success: true, message: 'Subscription will cancel at end of billing period' });
   } catch (error) {
     console.error('Subscription DELETE error:', error);
-    return NextResponse.json({ error: 'Failed to cancel subscription' }, { status: 500 });
+    return apiError('Failed to cancel subscription', 500);
   }
 }

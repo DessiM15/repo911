@@ -1,8 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { stripe, LEAD_PRICES } from '@/lib/stripe';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { sendLeadClaimedToConsumer, sendLeadClaimedToAttorney } from '@/lib/emails';
 import { captureServerException, captureServerMessage } from '@/lib/error-tracking/server-tracker';
+import { apiSuccess, apiError } from '@/lib/api-response';
 import type { QualificationTier } from '@/types';
 import Stripe from 'stripe';
 
@@ -11,7 +12,7 @@ export async function POST(request: NextRequest) {
   const sig = request.headers.get('stripe-signature');
 
   if (!sig) {
-    return NextResponse.json({ error: 'No signature' }, { status: 400 });
+    return apiError('No signature', 400);
   }
 
   let event;
@@ -27,7 +28,7 @@ export async function POST(request: NextRequest) {
       tags: ['stripe', 'webhook', 'signature'],
       request: { url: request.url, method: request.method },
     });
-    return NextResponse.json({ error: 'Invalid signature' }, { status: 400 });
+    return apiError('Invalid signature', 400);
   }
 
   const supabase = createAdminClient();
@@ -332,5 +333,5 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  return NextResponse.json({ received: true });
+  return apiSuccess({ received: true });
 }

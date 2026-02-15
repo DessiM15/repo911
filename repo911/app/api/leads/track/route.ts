@@ -1,6 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { rateLimit } from '@/lib/rate-limit';
+import { leadTrackSchema } from '@/lib/validations/consumer';
+import { apiSuccess, apiError } from '@/lib/api-response';
 
 export async function POST(request: NextRequest) {
   try {
@@ -11,44 +13,22 @@ export async function POST(request: NextRequest) {
       'unknown';
     const rateLimitResult = rateLimit(`lead_track:${ip}`, { limit: 10, windowSeconds: 900 });
     if (!rateLimitResult.success) {
-      return NextResponse.json(
-        { error: 'Too many requests. Please try again later.' },
-        {
-          status: 429,
-          headers: {
-            'Retry-After': Math.ceil((rateLimitResult.resetAt - Date.now()) / 1000).toString(),
-          },
-        }
+      return apiError(
+        'Too many requests. Please try again later.',
+        429,
+        undefined,
+        { 'Retry-After': Math.ceil((rateLimitResult.resetAt - Date.now()) / 1000).toString() }
       );
     }
 
     const body = await request.json();
-    const { email, leadId } = body;
 
-    if (!email || !leadId) {
-      return NextResponse.json(
-        { error: 'Email and case ID are required.' },
-        { status: 400 }
-      );
+    const parsed = leadTrackSchema.safeParse(body);
+    if (!parsed.success) {
+      return apiError('Validation failed', 400, parsed.error.flatten());
     }
 
-    // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return NextResponse.json(
-        { error: 'Please enter a valid email address.' },
-        { status: 400 }
-      );
-    }
-
-    // Validate UUID format for lead ID
-    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-    if (!uuidRegex.test(leadId)) {
-      return NextResponse.json(
-        { error: 'Invalid case ID format.' },
-        { status: 400 }
-      );
-    }
+    const { email, leadId } = parsed.data;
 
     const supabase = createAdminClient();
 
@@ -61,10 +41,7 @@ export async function POST(request: NextRequest) {
 
     if (leadError || !lead) {
       // Don't reveal whether ID exists — generic message
-      return NextResponse.json(
-        { error: 'No case found matching that email and case ID combination.' },
-        { status: 404 }
-      );
+      return apiError('No case found matching that email and case ID combination.', 404);
     }
 
     // Return safe info only — no attorney details exposed
@@ -79,7 +56,7 @@ export async function POST(request: NextRequest) {
       closed: 'Case Closed',
     };
 
-    return NextResponse.json({
+    return apiSuccess({
       id: lead.id,
       status: lead.status,
       statusLabel: statusLabels[lead.status] || lead.status,
@@ -90,9 +67,6 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error('Lead tracking error:', error);
-    return NextResponse.json(
-      { error: 'An unexpected error occurred. Please try again.' },
-      { status: 500 }
-    );
+    return apiError('An unexpected error occurred. Please try again.', 500);
   }
 }

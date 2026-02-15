@@ -1,5 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { attorneyProfileUpdateSchema } from '@/lib/validations/attorney';
+import { apiSuccess, apiError } from '@/lib/api-response';
 
 export async function GET() {
   try {
@@ -7,7 +9,7 @@ export async function GET() {
 
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return apiError('Unauthorized', 401);
     }
 
     const { data: attorney, error } = await supabase
@@ -17,13 +19,13 @@ export async function GET() {
       .single();
 
     if (error || !attorney) {
-      return NextResponse.json({ error: 'Attorney not found' }, { status: 404 });
+      return apiError('Attorney not found', 404);
     }
 
-    return NextResponse.json({ attorney });
+    return apiSuccess({ attorney });
   } catch (error) {
     console.error('Profile GET error:', error);
-    return NextResponse.json({ error: 'An unexpected error occurred' }, { status: 500 });
+    return apiError('An unexpected error occurred', 500);
   }
 }
 
@@ -33,22 +35,17 @@ export async function PATCH(request: NextRequest) {
 
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return apiError('Unauthorized', 401);
     }
 
     const body = await request.json();
-    const allowedFields = [
-      'phone', 'firm_name', 'website',
-      'preferred_states', 'preferred_case_types',
-      'email_notifications', 'sms_notifications',
-    ];
 
-    const updates: Record<string, unknown> = {};
-    for (const field of allowedFields) {
-      if (field in body) {
-        updates[field] = body[field];
-      }
+    const parsed = attorneyProfileUpdateSchema.safeParse(body);
+    if (!parsed.success) {
+      return apiError('Validation failed', 400, parsed.error.flatten());
     }
+
+    const updates = parsed.data;
 
     const { error } = await supabase
       .from('attorneys')
@@ -57,12 +54,12 @@ export async function PATCH(request: NextRequest) {
 
     if (error) {
       console.error('Profile update error:', error);
-      return NextResponse.json({ error: 'Failed to update profile' }, { status: 500 });
+      return apiError('Failed to update profile', 500);
     }
 
-    return NextResponse.json({ success: true });
+    return apiSuccess({ success: true });
   } catch (error) {
     console.error('Profile PATCH error:', error);
-    return NextResponse.json({ error: 'An unexpected error occurred' }, { status: 500 });
+    return apiError('An unexpected error occurred', 500);
   }
 }

@@ -1,5 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { pipelineUpdateSchema } from '@/lib/validations/admin';
+import { apiSuccess, apiError } from '@/lib/api-response';
 
 export async function GET(request: NextRequest) {
   try {
@@ -7,7 +9,7 @@ export async function GET(request: NextRequest) {
 
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return apiError('Unauthorized', 401);
     }
 
     const { data: admin } = await supabase
@@ -17,7 +19,7 @@ export async function GET(request: NextRequest) {
       .single();
 
     if (!admin) {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+      return apiError('Forbidden', 403);
     }
 
     const { searchParams } = request.nextUrl;
@@ -31,13 +33,13 @@ export async function GET(request: NextRequest) {
       .order('created_at', { ascending: false })
       .range(offset, offset + limit - 1);
 
-    return NextResponse.json({
+    return apiSuccess({
       leads: leads || [],
       pagination: { page, limit, total: count || 0, totalPages: Math.ceil((count || 0) / limit) },
     });
   } catch (error) {
     console.error('Pipeline error:', error);
-    return NextResponse.json({ error: 'An unexpected error occurred' }, { status: 500 });
+    return apiError('An unexpected error occurred', 500);
   }
 }
 
@@ -47,7 +49,7 @@ export async function PATCH(request: NextRequest) {
 
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return apiError('Unauthorized', 401);
     }
 
     const { data: admin } = await supabase
@@ -57,19 +59,17 @@ export async function PATCH(request: NextRequest) {
       .single();
 
     if (!admin) {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+      return apiError('Forbidden', 403);
     }
 
-    const { lead_id, status } = await request.json();
+    const body = await request.json();
 
-    if (!lead_id || !status) {
-      return NextResponse.json({ error: 'Missing lead_id or status' }, { status: 400 });
+    const parsed = pipelineUpdateSchema.safeParse(body);
+    if (!parsed.success) {
+      return apiError('Validation failed', 400, parsed.error.flatten());
     }
 
-    const validStatuses = ['pending', 'qualified_hot', 'qualified_warm', 'qualified_cold', 'claimed', 'disqualified', 'closed'];
-    if (!validStatuses.includes(status)) {
-      return NextResponse.json({ error: 'Invalid status' }, { status: 400 });
-    }
+    const { lead_id, status } = parsed.data;
 
     // Fetch old status before update
     const { data: oldLead } = await supabase
@@ -84,7 +84,7 @@ export async function PATCH(request: NextRequest) {
       .eq('id', lead_id);
 
     if (error) {
-      return NextResponse.json({ error: 'Failed to update status' }, { status: 500 });
+      return apiError('Failed to update status', 500);
     }
 
     // Log status_change activity (fire-and-forget)
@@ -107,9 +107,9 @@ export async function PATCH(request: NextRequest) {
         });
     }
 
-    return NextResponse.json({ success: true });
+    return apiSuccess({ success: true });
   } catch (error) {
     console.error('Pipeline update error:', error);
-    return NextResponse.json({ error: 'An unexpected error occurred' }, { status: 500 });
+    return apiError('An unexpected error occurred', 500);
   }
 }

@@ -1,8 +1,10 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { stripe, isStripeConfigured } from '@/lib/stripe';
 import { sendAttorneyRegistrationAlert } from '@/lib/emails';
 import { rateLimit } from '@/lib/rate-limit';
+import { attorneyRegistrationSchema } from '@/lib/validations/attorney-registration';
+import { apiSuccess, apiError } from '@/lib/api-response';
 
 export async function POST(request: NextRequest) {
   try {
@@ -13,27 +15,29 @@ export async function POST(request: NextRequest) {
       'unknown';
     const rateLimitResult = rateLimit(`attorney_register:${ip}`, { limit: 5, windowSeconds: 3600 });
     if (!rateLimitResult.success) {
-      return NextResponse.json(
-        { error: 'Too many registration attempts. Please try again later.' },
-        {
-          status: 429,
-          headers: {
-            'Retry-After': Math.ceil((rateLimitResult.resetAt - Date.now()) / 1000).toString(),
-          },
-        }
+      return apiError(
+        'Too many registration attempts. Please try again later.',
+        429,
+        undefined,
+        { 'Retry-After': Math.ceil((rateLimitResult.resetAt - Date.now()) / 1000).toString() }
       );
     }
 
     const body = await request.json();
+
+    // Validate input
+    const parsed = attorneyRegistrationSchema.safeParse(body);
+    if (!parsed.success) {
+      return apiError('Validation failed', 400, parsed.error.flatten());
+    }
+
     const {
       first_name, last_name, email, password, phone,
       firm_name, bar_number, bar_state, licensed_states,
-      preferred_case_types, website, electronic_signature,
-    } = body;
+      preferred_case_types, website,
+    } = parsed.data;
 
-    if (!first_name || !last_name || !email || !password || !phone || !bar_number || !bar_state) {
-      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
-    }
+    const electronic_signature = body.electronic_signature;
 
     const supabase = createAdminClient();
 
@@ -47,10 +51,10 @@ export async function POST(request: NextRequest) {
 
     if (authError) {
       if (authError.message.includes('already registered')) {
-        return NextResponse.json({ error: 'An account with this email already exists.' }, { status: 409 });
+        return apiError('An account with this email already exists.', 409);
       }
       console.error('Auth error:', authError);
-      return NextResponse.json({ error: 'Failed to create account.' }, { status: 500 });
+      return apiError('Failed to create account.', 500);
     }
 
     // 2. Create Stripe Customer (skip if Stripe not configured)
@@ -107,7 +111,7 @@ export async function POST(request: NextRequest) {
       console.error('Attorney insert error:', attorneyError);
       // Clean up auth user if attorney record fails
       await supabase.auth.admin.deleteUser(authData.user.id);
-      return NextResponse.json({ error: 'Failed to create attorney profile.' }, { status: 500 });
+      return apiError('Failed to create attorney profile.', 500);
     }
 
     // 5. Create CRM contact for attorney
@@ -147,9 +151,9 @@ export async function POST(request: NextRequest) {
       firmName: firm_name || null,
     }).catch(() => { /* non-critical */ });
 
-    return NextResponse.json({ id: attorney.id, status: 'pending' });
+    return apiSuccess({ id: attorney.id, status: 'pending' });
   } catch (error) {
     console.error('Attorney registration error:', error);
-    return NextResponse.json({ error: 'An unexpected error occurred.' }, { status: 500 });
+    return apiError('An unexpected error occurred.', 500);
   }
 }

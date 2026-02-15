@@ -1,8 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import crypto from 'crypto';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { scrubPII } from '@/lib/error-tracking/scrubber';
 import { rateLimit } from '@/lib/rate-limit';
+import { apiSuccess, apiError } from '@/lib/api-response';
 
 export async function POST(request: NextRequest) {
   const clientIp =
@@ -13,7 +14,7 @@ export async function POST(request: NextRequest) {
   // Rate limit: 30 error reports per IP per minute
   const rateLimitResult = rateLimit(`error_track:${clientIp}`, { limit: 30, windowSeconds: 60 });
   if (!rateLimitResult.success) {
-    return NextResponse.json({ error: 'Rate limited' }, { status: 429 });
+    return apiError('Rate limited', 429);
   }
 
   try {
@@ -55,7 +56,7 @@ export async function POST(request: NextRequest) {
         .single();
 
       if (insertError || !newError) {
-        return NextResponse.json({ error: 'Failed to track' }, { status: 500 });
+        return apiError('Failed to track', 500);
       }
       errorId = newError.id;
     }
@@ -82,10 +83,10 @@ export async function POST(request: NextRequest) {
       device_type: browser.device || null,
     });
 
-    return NextResponse.json({ success: true, errorId });
+    return apiSuccess({ success: true, errorId });
   } catch (error) {
     console.error('Error tracking API failed:', error);
-    return NextResponse.json({ error: 'Failed to track error' }, { status: 500 });
+    return apiError('Failed to track error', 500);
   }
 }
 
