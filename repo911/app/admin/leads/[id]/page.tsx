@@ -6,6 +6,7 @@ import Link from 'next/link';
 import {
   MapPin, Calendar, Car, Shield, AlertTriangle,
   FileText, Camera, Users, DollarSign, User, Phone, Mail,
+  Megaphone,
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -336,6 +337,23 @@ export default function AdminLeadDetailPage() {
           </div>
         </div>
       </div>
+
+      {/* Lead Source / UTM */}
+      {(lead.utm_source || lead.utm_medium || lead.utm_campaign || lead.utm_content || lead.utm_term || lead.referrer) && (
+        <div className="bg-white rounded-xl border border-gray-200 p-6">
+          <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+            <Megaphone className="h-5 w-5 text-indigo-500" /> Lead Source
+          </h3>
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-2 text-sm">
+            {lead.utm_source && <div><span className="text-gray-500">Source:</span> <span className="font-medium">{lead.utm_source}</span></div>}
+            {lead.utm_medium && <div><span className="text-gray-500">Medium:</span> <span className="font-medium">{lead.utm_medium}</span></div>}
+            {lead.utm_campaign && <div><span className="text-gray-500">Campaign:</span> <span className="font-medium">{lead.utm_campaign}</span></div>}
+            {lead.utm_content && <div><span className="text-gray-500">Content:</span> <span className="font-medium">{lead.utm_content}</span></div>}
+            {lead.utm_term && <div><span className="text-gray-500">Term:</span> <span className="font-medium">{lead.utm_term}</span></div>}
+            {lead.referrer && <div className="sm:col-span-2 md:col-span-3"><span className="text-gray-500">Referrer:</span> <span className="font-medium text-xs break-all">{lead.referrer}</span></div>}
+          </div>
+        </div>
+      )}
 
       {/* Metadata */}
       <div className="bg-gray-50 rounded-xl border border-gray-200 p-5 text-xs text-gray-500">

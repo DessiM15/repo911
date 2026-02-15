@@ -76,7 +76,7 @@ export async function PATCH(
 
     const { data: admin } = await supabase
       .from('admins')
-      .select('id')
+      .select('id, email')
       .eq('supabase_auth_id', user.id)
       .single();
 
@@ -130,6 +130,31 @@ export async function PATCH(
 
     if (error) {
       return NextResponse.json({ error: 'Failed to update lead' }, { status: 500 });
+    }
+
+    // Insert audit log entry (fire-and-forget)
+    if (oldLead) {
+      const oldValues: Record<string, unknown> = {};
+      const newValues: Record<string, unknown> = {};
+      for (const field of Object.keys(updates)) {
+        if (field === 'updated_at') continue;
+        if (updates[field] !== (oldLead as Record<string, unknown>)[field]) {
+          oldValues[field] = (oldLead as Record<string, unknown>)[field];
+          newValues[field] = updates[field];
+        }
+      }
+      if (Object.keys(newValues).length > 0) {
+        supabase.from('admin_audit_log').insert({
+          admin_id: admin.id,
+          admin_email: admin.email,
+          action: 'update_lead',
+          entity_type: 'lead',
+          entity_id: id,
+          old_values: oldValues,
+          new_values: newValues,
+          ip_address: request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || request.headers.get('x-real-ip') || null,
+        }).then(() => {});
+      }
     }
 
     // Log status_change activities (fire-and-forget)

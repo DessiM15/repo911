@@ -18,6 +18,7 @@ import {
   ShieldCheck,
   Bell,
   Bug,
+  ClipboardList,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { createClient } from '@/lib/supabase/client';
@@ -33,6 +34,7 @@ const navItems = [
   { href: '/admin/transactions', label: 'Transactions', icon: Receipt },
   { href: '/admin/fee-tracking', label: 'Case Tracking', icon: DollarSign },
   { href: '/admin/errors', label: 'Error Tracking', icon: Bug },
+  { href: '/admin/audit-log', label: 'Audit Log', icon: ClipboardList },
   { href: '/admin/settings', label: 'Settings', icon: Settings },
 ];
 

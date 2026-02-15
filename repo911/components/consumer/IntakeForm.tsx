@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
@@ -76,8 +76,17 @@ const STEP_FIELDS: Record<number, string[]> = {
   10: ['electronic_signature', 'consent_accurate_info', 'consent_not_legal_advice', 'consent_contact', 'consent_privacy_policy'],
 };
 
+interface UtmParams {
+  utm_source?: string;
+  utm_medium?: string;
+  utm_campaign?: string;
+  utm_content?: string;
+  utm_term?: string;
+}
+
 export function IntakeForm() {
   const router = useRouter();
+  const utmRef = useRef<UtmParams>({});
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [step, setStep] = useState(0);
@@ -106,6 +115,15 @@ export function IntakeForm() {
       consent_privacy_policy: false,
     },
   });
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const keys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'] as const;
+    for (const key of keys) {
+      const val = params.get(key);
+      if (val) utmRef.current[key] = val;
+    }
+  }, []);
 
   const watchBehindOnPayments = watch('behind_on_payments');
   const watchVerballyObjected = watch('verbally_objected');
@@ -178,7 +196,7 @@ export function IntakeForm() {
       const response = await fetch('/api/leads', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
+        body: JSON.stringify({ ...data, ...utmRef.current }),
       });
 
       const result = await response.json();

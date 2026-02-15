@@ -79,7 +79,7 @@ export async function PATCH(
 
     const { data: admin } = await supabase
       .from('admins')
-      .select('id')
+      .select('id, email')
       .eq('supabase_auth_id', user.id)
       .single();
 
@@ -100,10 +100,10 @@ export async function PATCH(
       return NextResponse.json({ error: 'No valid fields to update' }, { status: 400 });
     }
 
-    // Fetch old status before update
+    // Fetch old values before update
     const { data: oldAttorney } = await supabase
       .from('attorneys')
-      .select('status')
+      .select('status, is_verified')
       .eq('id', id)
       .single();
 
@@ -116,6 +116,31 @@ export async function PATCH(
 
     if (error) {
       return NextResponse.json({ error: 'Failed to update attorney' }, { status: 500 });
+    }
+
+    // Insert audit log entry (fire-and-forget)
+    if (oldAttorney) {
+      const oldValues: Record<string, unknown> = {};
+      const newValues: Record<string, unknown> = {};
+      for (const field of Object.keys(updates)) {
+        if (field === 'updated_at') continue;
+        if (updates[field] !== (oldAttorney as Record<string, unknown>)[field]) {
+          oldValues[field] = (oldAttorney as Record<string, unknown>)[field];
+          newValues[field] = updates[field];
+        }
+      }
+      if (Object.keys(newValues).length > 0) {
+        supabase.from('admin_audit_log').insert({
+          admin_id: admin.id,
+          admin_email: admin.email,
+          action: 'update_attorney',
+          entity_type: 'attorney',
+          entity_id: id,
+          old_values: oldValues,
+          new_values: newValues,
+          ip_address: request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || request.headers.get('x-real-ip') || null,
+        }).then(() => {});
+      }
     }
 
     // Log status_change activity (fire-and-forget)

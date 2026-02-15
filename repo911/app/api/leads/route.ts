@@ -64,6 +64,14 @@ export async function POST(request: NextRequest) {
       request.headers.get('x-real-ip') ||
       'unknown';
     const user_agent = request.headers.get('user-agent') || 'unknown';
+    const referrer = request.headers.get('referer') || null;
+
+    // UTM parameters (optional, not validated by Zod)
+    const utm_source = body.utm_source || null;
+    const utm_medium = body.utm_medium || null;
+    const utm_campaign = body.utm_campaign || null;
+    const utm_content = body.utm_content || null;
+    const utm_term = body.utm_term || null;
 
     // Store in Supabase using admin client (bypasses RLS for insert)
     const supabase = createAdminClient();
@@ -151,6 +159,13 @@ export async function POST(request: NextRequest) {
         // Metadata
         ip_address,
         user_agent,
+        // UTM / Marketing Attribution
+        utm_source,
+        utm_medium,
+        utm_campaign,
+        utm_content,
+        utm_term,
+        referrer,
       })
       .select('id, qualification_tier, qualification_score')
       .single();

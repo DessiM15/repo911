@@ -180,6 +180,14 @@ export interface Lead {
   // Metadata
   ip_address: string | null;
   user_agent: string | null;
+
+  // UTM / Marketing Attribution
+  utm_source: string | null;
+  utm_medium: string | null;
+  utm_campaign: string | null;
+  utm_content: string | null;
+  utm_term: string | null;
+  referrer: string | null;
 }
 
 export interface UploadedFile {
@@ -514,4 +522,19 @@ export interface AlertRule {
   time_window: number;
   notification_channels: { email?: string[]; };
   last_triggered: string | null;
+}
+
+// ---------- Admin Audit Log ----------
+
+export interface AuditLogEntry {
+  id: string;
+  created_at: string;
+  admin_id: string;
+  admin_email: string;
+  action: string;
+  entity_type: string;
+  entity_id: string | null;
+  old_values: Record<string, unknown> | null;
+  new_values: Record<string, unknown> | null;
+  ip_address: string | null;
 }
