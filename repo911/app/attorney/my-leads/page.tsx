@@ -2,12 +2,51 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { FileText, MapPin, Calendar, Phone, Mail } from 'lucide-react';
+import { FileText, MapPin, Calendar, Phone, Mail, Download } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { SkeletonCard } from '@/components/ui/skeleton';
 import { formatDate, formatPhone } from '@/lib/utils';
 import type { Lead } from '@/types';
+
+function exportLeadsCsv(leads: Lead[]) {
+  const headers = ['Name', 'Email', 'Phone', 'Address', 'City', 'State', 'Zip', 'Vehicle', 'Lender', 'Repo Date', 'Repo State', 'Tier', 'Score', 'Claimed Date'];
+
+  const escapeCell = (val: string | null | undefined) => {
+    if (val == null) return '';
+    const s = String(val);
+    if (s.includes(',') || s.includes('"') || s.includes('\n')) {
+      return `"${s.replace(/"/g, '""')}"`;
+    }
+    return s;
+  };
+
+  const rows = leads.map((l) => [
+    escapeCell(`${l.first_name} ${l.last_name}`),
+    escapeCell(l.email),
+    escapeCell(l.phone),
+    escapeCell(l.street_address),
+    escapeCell(l.city),
+    escapeCell(l.state),
+    escapeCell(l.zip_code),
+    escapeCell([l.vehicle_year, l.vehicle_make, l.vehicle_model].filter(Boolean).join(' ')),
+    escapeCell(l.lender_name),
+    escapeCell(l.repo_date),
+    escapeCell(l.repo_state),
+    escapeCell(l.qualification_tier?.toUpperCase()),
+    escapeCell(String(l.qualification_score)),
+    escapeCell(l.claimed_at),
+  ].join(','));
+
+  const csv = [headers.join(','), ...rows].join('\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `repo911-leads-${new Date().toISOString().slice(0, 10)}.csv`;
+  link.click();
+  URL.revokeObjectURL(url);
+}
 
 export default function MyLeadsPage() {
   const [leads, setLeads] = useState<Lead[]>([]);
@@ -35,9 +74,17 @@ export default function MyLeadsPage() {
 
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">My Leads</h1>
-        <p className="text-sm text-gray-500 mt-1">All leads you have claimed with full contact information</p>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">My Leads</h1>
+          <p className="text-sm text-gray-500 mt-1">All leads you have claimed with full contact information</p>
+        </div>
+        {leads.length > 0 && (
+          <Button variant="outline" size="sm" onClick={() => exportLeadsCsv(leads)}>
+            <Download className="h-4 w-4 mr-1.5" />
+            Export CSV
+          </Button>
+        )}
       </div>
 
       {error && (

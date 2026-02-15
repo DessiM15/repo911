@@ -6,6 +6,7 @@ import Link from 'next/link';
 import {
   ArrowLeft, MapPin, Calendar, Car, Shield, AlertTriangle,
   FileText, Camera, Users, Lock, DollarSign, CheckCircle,
+  Download, FileImage, File,
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -13,6 +14,13 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { formatDate, formatCurrency } from '@/lib/utils';
 import { LEAD_PRICES } from '@/lib/lead-prices';
 import type { QualificationTier } from '@/types';
+
+interface EvidenceFile {
+  name: string;
+  type: string;
+  size: number;
+  url: string | null;
+}
 
 function getTierPrice(tier: QualificationTier | null): number {
   switch (tier) {
@@ -43,6 +51,8 @@ export default function LeadDetailPage() {
   const [claiming, setClaiming] = useState(false);
   const [error, setError] = useState('');
   const [isSubscribed, setIsSubscribed] = useState(false);
+  const [evidenceFiles, setEvidenceFiles] = useState<EvidenceFile[]>([]);
+  const [evidenceLoading, setEvidenceLoading] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
@@ -76,6 +86,26 @@ export default function LeadDetailPage() {
     }
     if (id) fetchData();
   }, [id]);
+
+  // Fetch evidence files if attorney has full access
+  useEffect(() => {
+    async function fetchEvidence() {
+      if (!fullAccess || !lead?.uploaded_files || lead.uploaded_files.length === 0) return;
+      setEvidenceLoading(true);
+      try {
+        const res = await fetch(`/api/attorney/evidence?lead_id=${id}`);
+        if (res.ok) {
+          const data = await res.json();
+          setEvidenceFiles(data.files || []);
+        }
+      } catch {
+        // silently fail
+      } finally {
+        setEvidenceLoading(false);
+      }
+    }
+    fetchEvidence();
+  }, [fullAccess, lead, id]);
 
   async function handleClaim() {
     setClaiming(true);
@@ -299,6 +329,63 @@ export default function LeadDetailPage() {
               </p>
               <p className="text-sm text-gray-600 leading-relaxed">
                 {fullAccess ? lead.narrative : lead.narrative_preview}
+              </p>
+            </div>
+          )}
+
+          {/* Evidence files for claimed leads */}
+          {fullAccess && lead.uploaded_files && lead.uploaded_files.length > 0 && (
+            <div className="mt-4 pt-4 border-t border-gray-200">
+              <p className="text-sm font-medium text-gray-900 mb-2 flex items-center gap-1">
+                <Download className="h-4 w-4" /> Uploaded Files ({lead.uploaded_files.length})
+              </p>
+              {evidenceLoading ? (
+                <div className="space-y-2">
+                  {Array.from({ length: lead.uploaded_files.length }).map((_: unknown, i: number) => (
+                    <Skeleton key={i} className="h-10 w-full" />
+                  ))}
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  {evidenceFiles.map((file, i) => {
+                    const isImage = file.type?.startsWith('image/');
+                    return (
+                      <div key={i} className="flex items-center gap-3 bg-gray-50 rounded-lg p-2.5">
+                        {isImage ? (
+                          <FileImage className="h-5 w-5 text-blue-500 shrink-0" />
+                        ) : (
+                          <File className="h-5 w-5 text-gray-400 shrink-0" />
+                        )}
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm text-gray-700 truncate">{file.name}</p>
+                          <p className="text-xs text-gray-400">
+                            {file.size ? `${(file.size / 1024).toFixed(0)} KB` : ''}
+                          </p>
+                        </div>
+                        {file.url && (
+                          <a
+                            href={file.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs text-[#3474BA] hover:underline font-medium shrink-0"
+                          >
+                            Download
+                          </a>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* File count indicator for unclaimed leads */}
+          {!fullAccess && lead.uploaded_files && lead.uploaded_files.length > 0 && (
+            <div className="mt-4 pt-4 border-t border-gray-200">
+              <p className="text-sm text-gray-500 flex items-center gap-1.5">
+                <Camera className="h-4 w-4" />
+                {lead.uploaded_files.length} evidence file{lead.uploaded_files.length > 1 ? 's' : ''} available after claiming
               </p>
             </div>
           )}

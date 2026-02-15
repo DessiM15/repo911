@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { MapPin, Calendar, Car, Camera, DollarSign } from 'lucide-react';
+import { MapPin, Calendar, Car, Camera, DollarSign, Eye } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { formatDate, formatCurrency } from '@/lib/utils';
@@ -11,6 +11,7 @@ import type { MarketplaceLead, QualificationTier } from '@/types';
 interface LeadCardProps {
   lead: MarketplaceLead;
   isSubscribed?: boolean;
+  onPreview?: (lead: MarketplaceLead) => void;
 }
 
 function getTierBadgeVariant(tier: QualificationTier | null): 'hot' | 'warm' | 'cold' | 'default' {
@@ -31,7 +32,7 @@ function getTierPrice(tier: QualificationTier | null): number {
   }
 }
 
-export function LeadCard({ lead, isSubscribed }: LeadCardProps) {
+export function LeadCard({ lead, isSubscribed, onPreview }: LeadCardProps) {
   const price = getTierPrice(lead.qualification_tier);
 
   return (
@@ -89,11 +90,19 @@ export function LeadCard({ lead, isSubscribed }: LeadCardProps) {
         <p className="text-xs text-gray-500 mb-3">Lender: {lead.lender_name}</p>
       )}
 
-      <Link href={`/attorney/leads/${lead.id}`}>
-        <Button variant="attorney" size="sm" className="w-full">
-          View Details
-        </Button>
-      </Link>
+      <div className="flex gap-2">
+        {onPreview && (
+          <Button variant="outline" size="sm" className="flex-1" onClick={() => onPreview(lead)}>
+            <Eye className="h-3.5 w-3.5 mr-1" />
+            Preview
+          </Button>
+        )}
+        <Link href={`/attorney/leads/${lead.id}`} className="flex-1">
+          <Button variant="attorney" size="sm" className="w-full">
+            View Details
+          </Button>
+        </Link>
+      </div>
     </div>
   );
 }

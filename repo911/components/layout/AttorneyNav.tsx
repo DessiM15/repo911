@@ -157,6 +157,13 @@ export function AttorneyNav() {
             ))
           )}
         </div>
+        <Link
+          href="/attorney/notifications"
+          onClick={() => setBellOpen(false)}
+          className="block text-center text-xs text-[#3474BA] hover:underline px-4 py-2.5 border-t border-gray-100"
+        >
+          View all notifications
+        </Link>
       </div>
     );
   }

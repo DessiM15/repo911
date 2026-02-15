@@ -1,11 +1,26 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { ShoppingCart, AlertCircle } from 'lucide-react';
+import Link from 'next/link';
+import { ShoppingCart, AlertCircle, MapPin, Calendar, Car, Camera, DollarSign } from 'lucide-react';
 import { MarketplaceFilters } from '@/components/attorney/MarketplaceFilters';
 import { LeadCard } from '@/components/attorney/LeadCard';
 import { SkeletonCard } from '@/components/ui/skeleton';
-import type { MarketplaceLead } from '@/types';
+import { Modal } from '@/components/ui/modal';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { formatDate, formatCurrency } from '@/lib/utils';
+import { LEAD_PRICES } from '@/lib/lead-prices';
+import type { MarketplaceLead, QualificationTier } from '@/types';
+
+function getTierPrice(tier: QualificationTier | null): number {
+  switch (tier) {
+    case 'hot': return LEAD_PRICES.hot;
+    case 'warm': return LEAD_PRICES.warm;
+    case 'cold': return LEAD_PRICES.cold;
+    default: return 0;
+  }
+}
 
 export default function MarketplacePage() {
   const [leads, setLeads] = useState<MarketplaceLead[]>([]);
@@ -15,6 +30,7 @@ export default function MarketplacePage() {
   const [state, setState] = useState('');
   const [sort, setSort] = useState('newest');
   const [isSubscribed, setIsSubscribed] = useState(false);
+  const [previewLead, setPreviewLead] = useState<MarketplaceLead | null>(null);
 
   // Fetch subscription status once on mount
   useEffect(() => {
@@ -103,10 +119,122 @@ export default function MarketplacePage() {
       ) : (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {leads.map((lead) => (
-            <LeadCard key={lead.id} lead={lead} isSubscribed={isSubscribed} />
+            <LeadCard key={lead.id} lead={lead} isSubscribed={isSubscribed} onPreview={setPreviewLead} />
           ))}
         </div>
       )}
+
+      {/* Lead Preview Modal */}
+      <Modal
+        open={!!previewLead}
+        onClose={() => setPreviewLead(null)}
+        title="Lead Preview"
+        size="xl"
+      >
+        {previewLead && (
+          <div className="space-y-4">
+            {/* Tier & Score */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Badge variant={previewLead.qualification_tier === 'hot' ? 'hot' : previewLead.qualification_tier === 'warm' ? 'warm' : 'cold'}>
+                  {previewLead.qualification_tier?.toUpperCase()} LEAD
+                </Badge>
+                <span className="text-sm text-gray-500">Score: {previewLead.qualification_score}</span>
+              </div>
+              {isSubscribed ? (
+                <Badge variant="success" className="text-xs">Included</Badge>
+              ) : (
+                <span className="text-lg font-bold text-[#1B2A4A]">{formatCurrency(getTierPrice(previewLead.qualification_tier))}</span>
+              )}
+            </div>
+
+            {/* Violation tags */}
+            <div className="flex flex-wrap gap-1.5">
+              {previewLead.violation_types.map((v) => (
+                <span key={v} className="text-xs bg-amber-50 text-amber-700 border border-amber-200 px-2 py-0.5 rounded-full">
+                  {v}
+                </span>
+              ))}
+            </div>
+
+            {/* Details grid */}
+            <div className="grid grid-cols-2 gap-3 text-sm">
+              <div className="flex items-center gap-2 text-gray-600">
+                <MapPin className="h-4 w-4 text-gray-400" />
+                <span>{previewLead.repo_state}</span>
+              </div>
+              <div className="flex items-center gap-2 text-gray-600">
+                <Calendar className="h-4 w-4 text-gray-400" />
+                <span>{previewLead.repo_date ? formatDate(previewLead.repo_date) : 'N/A'}</span>
+              </div>
+              <div className="flex items-center gap-2 text-gray-600">
+                <Car className="h-4 w-4 text-gray-400" />
+                <span>{[previewLead.vehicle_year, previewLead.vehicle_make, previewLead.vehicle_model].filter(Boolean).join(' ') || 'N/A'}</span>
+              </div>
+              <div className="flex items-center gap-2 text-gray-600">
+                <DollarSign className="h-4 w-4 text-gray-400" />
+                <span>{previewLead.estimated_value_range}</span>
+              </div>
+            </div>
+
+            {previewLead.lender_name && (
+              <p className="text-sm text-gray-500">Lender: {previewLead.lender_name}</p>
+            )}
+
+            {previewLead.has_evidence && (
+              <div className="flex items-center gap-1.5 text-sm text-green-600">
+                <Camera className="h-4 w-4" />
+                Evidence available
+              </div>
+            )}
+
+            {/* Narrative preview */}
+            {previewLead.narrative_preview && (
+              <div className="bg-gray-50 rounded-lg p-3">
+                <p className="text-xs font-medium text-gray-500 mb-1">Narrative Preview</p>
+                <p className="text-sm text-gray-700 leading-relaxed">{previewLead.narrative_preview}</p>
+              </div>
+            )}
+
+            {/* Qualification Breakdown */}
+            {previewLead.qualification_breakdown && (
+              <div className="bg-gray-50 rounded-lg p-3">
+                <p className="text-xs font-medium text-gray-500 mb-2">Qualification Breakdown</p>
+                <div className="grid grid-cols-2 gap-1.5">
+                  {Object.entries(previewLead.qualification_breakdown)
+                    .filter(([key]) => key !== 'details' && key !== 'penalties')
+                    .map(([key, value]) => (
+                      <div key={key} className="flex items-center justify-between text-sm">
+                        <span className="text-gray-600 capitalize">{key.replace(/_/g, ' ')}</span>
+                        <span className={`font-medium ${(value as number) > 0 ? 'text-green-600' : 'text-gray-400'}`}>
+                          +{value as number}
+                        </span>
+                      </div>
+                    ))}
+                  {previewLead.qualification_breakdown.penalties !== 0 && (
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-gray-600">Penalties</span>
+                      <span className="font-medium text-red-500">{previewLead.qualification_breakdown.penalties}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Actions */}
+            <div className="flex gap-3 pt-2 border-t border-gray-100">
+              <Link href={`/attorney/leads/${previewLead.id}`} className="flex-1">
+                <Button variant="attorney" className="w-full">
+                  View Full Details
+                </Button>
+              </Link>
+              <Button variant="outline" onClick={() => setPreviewLead(null)}>
+                Close
+              </Button>
+            </div>
+          </div>
+        )}
+      </Modal>
     </div>
   );
 }
