@@ -108,15 +108,15 @@ export default function PipelinePage() {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <Link href="/admin/crm" className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700">
+          <Link href="/admin/crm" className="flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">
             <ArrowLeft className="h-4 w-4" /> Back to Contacts
           </Link>
-          <h1 className="text-2xl font-bold text-gray-900">Pipeline</h1>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Pipeline</h1>
         </div>
-        <span className="text-sm text-gray-500">{leads.length} leads</span>
+        <span className="text-sm text-gray-500 dark:text-gray-400">{leads.length} leads</span>
       </div>
 
-      <p className="text-sm text-gray-500">Drag and drop leads between columns to update their status.</p>
+      <p className="text-sm text-gray-500 dark:text-gray-400">Drag and drop leads between columns to update their status.</p>
 
       <div className="flex gap-4 overflow-x-auto pb-4">
         {PIPELINE_COLUMNS.map((column) => {
@@ -126,8 +126,8 @@ export default function PipelinePage() {
           return (
             <div
               key={column.id}
-              className={`flex-shrink-0 w-64 bg-gray-50 rounded-xl border-2 transition-colors ${
-                isOver ? 'border-[#1B2A4A] bg-blue-50' : 'border-gray-200'
+              className={`flex-shrink-0 w-64 bg-gray-50 dark:bg-slate-900 rounded-xl border-2 transition-colors ${
+                isOver ? 'border-[#1B2A4A] bg-blue-50 dark:bg-blue-950' : 'border-gray-200 dark:border-slate-700'
               }`}
               onDragOver={(e) => {
                 e.preventDefault();
@@ -140,12 +140,12 @@ export default function PipelinePage() {
               }}
             >
               {/* Column Header */}
-              <div className="px-3 py-2.5 border-b border-gray-200 flex items-center justify-between">
+              <div className="px-3 py-2.5 border-b border-gray-200 dark:border-slate-700 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <div className={`w-2.5 h-2.5 rounded-full ${column.color}`} />
-                  <span className="text-sm font-semibold text-gray-900">{column.label}</span>
+                  <span className="text-sm font-semibold text-gray-900 dark:text-gray-100">{column.label}</span>
                 </div>
-                <span className="text-xs text-gray-500 bg-gray-200 px-1.5 py-0.5 rounded-full">
+                <span className="text-xs text-gray-500 dark:text-gray-400 bg-gray-200 dark:bg-slate-700 px-1.5 py-0.5 rounded-full">
                   {columnLeads.length}
                 </span>
               </div>
@@ -161,15 +161,15 @@ export default function PipelinePage() {
                       setDraggedId(null);
                       setDragOverColumn(null);
                     }}
-                    className={`bg-white rounded-lg border border-gray-200 p-3 cursor-grab active:cursor-grabbing hover:shadow-sm transition-shadow ${
+                    className={`bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 p-3 cursor-grab active:cursor-grabbing hover:shadow-sm transition-shadow ${
                       draggedId === lead.id ? 'opacity-50' : ''
                     }`}
                   >
                     <div className="flex items-start justify-between gap-1">
-                      <Link href={`/admin/leads/${lead.id}`} className="text-sm font-medium text-gray-900 hover:text-[#1B2A4A] hover:underline leading-tight">
+                      <Link href={`/admin/leads/${lead.id}`} className="text-sm font-medium text-gray-900 dark:text-gray-100 hover:text-[#1B2A4A] dark:hover:text-blue-300 hover:underline leading-tight">
                         {lead.first_name} {lead.last_name}
                       </Link>
-                      <GripVertical className="h-4 w-4 text-gray-300 flex-shrink-0" />
+                      <GripVertical className="h-4 w-4 text-gray-300 dark:text-gray-600 flex-shrink-0" />
                     </div>
                     <div className="flex items-center gap-2 mt-1.5">
                       {lead.qualification_tier && (
@@ -178,15 +178,15 @@ export default function PipelinePage() {
                         </Badge>
                       )}
                       {lead.repo_state && (
-                        <span className="text-[10px] text-gray-500">{lead.repo_state}</span>
+                        <span className="text-[10px] text-gray-500 dark:text-gray-400">{lead.repo_state}</span>
                       )}
                     </div>
-                    <p className="text-[10px] text-gray-400 mt-1">{formatDate(lead.created_at)}</p>
+                    <p className="text-[10px] text-gray-400 dark:text-gray-500 mt-1">{formatDate(lead.created_at)}</p>
                   </div>
                 ))}
 
                 {columnLeads.length === 0 && (
-                  <div className="flex items-center justify-center h-20 text-xs text-gray-400">
+                  <div className="flex items-center justify-center h-20 text-xs text-gray-400 dark:text-gray-500">
                     Drop leads here
                   </div>
                 )}

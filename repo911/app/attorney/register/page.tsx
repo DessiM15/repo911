@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Scale, UserPlus } from 'lucide-react';
+import { toast } from 'sonner';
 import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -34,7 +35,6 @@ function RefCodeReader({ onCode }: { onCode: (code: string) => void }) {
 export default function AttorneyRegisterPage() {
   const router = useRouter();
   const [step, setStep] = useState<'register' | 'agreement'>('register');
-  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState<AttorneyRegistrationData | null>(null);
   const [refCode, setRefCode] = useState('');
@@ -56,13 +56,11 @@ export default function AttorneyRegisterPage() {
   function onRegistrationSubmit(data: AttorneyRegistrationData) {
     setFormData(data);
     setStep('agreement');
-    setError('');
   }
 
   async function onAgreementSign(signature: string) {
     if (!formData) return;
     setLoading(true);
-    setError('');
 
     try {
       const res = await fetch('/api/attorney/register', {
@@ -77,27 +75,27 @@ export default function AttorneyRegisterPage() {
 
       const result = await res.json();
       if (!res.ok) {
-        setError(result.error || 'Registration failed. Please try again.');
+        toast.error(result.error || 'Registration failed. Please try again.');
         return;
       }
 
       router.push('/attorney/dashboard');
     } catch {
-      setError('An unexpected error occurred. Please try again.');
+      toast.error('An unexpected error occurred. Please try again.');
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-4 py-12">
+    <div className="min-h-screen bg-gray-50 dark:bg-slate-900 flex flex-col items-center justify-center px-4 py-12">
       <Suspense>
         <RefCodeReader onCode={(code) => setRefCode((prev) => prev || code)} />
       </Suspense>
       <div className="w-full max-w-2xl">
         {/* Referral indicator */}
         {refCode && (
-          <div className="mb-4 bg-green-50 border border-green-200 rounded-lg p-3 text-sm text-green-700 flex items-center gap-2">
+          <div className="mb-4 bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 rounded-lg p-3 text-sm text-green-700 dark:text-green-400 flex items-center gap-2">
             <UserPlus className="h-4 w-4 shrink-0" />
             Referred by a colleague (code: <strong>{refCode}</strong>)
           </div>
@@ -110,8 +108,8 @@ export default function AttorneyRegisterPage() {
               Repo<span className="text-[#2ECC71]">911</span>
             </span>
           </Link>
-          <h1 className="text-2xl font-bold text-gray-900">Attorney Registration</h1>
-          <p className="text-gray-600 mt-1">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Attorney Registration</h1>
+          <p className="text-gray-600 dark:text-gray-400 mt-1">
             {step === 'register'
               ? 'Create your account to access the lead marketplace.'
               : 'Review and sign the lead purchase agreement to complete registration.'}
@@ -126,22 +124,16 @@ export default function AttorneyRegisterPage() {
             </span>
             Account Details
           </div>
-          <div className="w-8 h-px bg-gray-300" />
-          <div className={`flex items-center gap-2 text-sm font-medium ${step === 'agreement' ? 'text-[#1B2A4A]' : 'text-gray-400'}`}>
-            <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${step === 'agreement' ? 'bg-[#1B2A4A] text-white' : 'bg-gray-200 text-gray-500'}`}>
+          <div className="w-8 h-px bg-gray-300 dark:bg-slate-600" />
+          <div className={`flex items-center gap-2 text-sm font-medium ${step === 'agreement' ? 'text-[#1B2A4A] dark:text-gray-100' : 'text-gray-400 dark:text-gray-500'}`}>
+            <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${step === 'agreement' ? 'bg-[#1B2A4A] text-white' : 'bg-gray-200 dark:bg-slate-700 text-gray-500 dark:text-gray-400'}`}>
               2
             </span>
             Lead Purchase Agreement
           </div>
         </div>
 
-        {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg p-4 mb-6">
-            {error}
-          </div>
-        )}
-
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 sm:p-8">
+        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 shadow-sm p-6 sm:p-8">
           {step === 'register' ? (
             <form onSubmit={handleSubmit(onRegistrationSubmit)} className="space-y-6">
               {/* Name */}
@@ -186,14 +178,14 @@ export default function AttorneyRegisterPage() {
 
               {/* Licensed States */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   States Where Licensed <span className="text-red-500">*</span>
                 </label>
                 <Controller
                   control={control}
                   name="licensed_states"
                   render={({ field }) => (
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-48 overflow-y-auto border border-gray-200 rounded-lg p-3">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-48 overflow-y-auto border border-gray-200 dark:border-slate-700 rounded-lg p-3">
                       {US_STATES.map((state) => (
                         <label key={state.value} className="flex items-center gap-2 text-sm cursor-pointer">
                           <input
@@ -222,7 +214,7 @@ export default function AttorneyRegisterPage() {
 
               {/* Practice Areas */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Practice Areas of Interest <span className="text-red-500">*</span>
                 </label>
                 <Controller
@@ -271,7 +263,7 @@ export default function AttorneyRegisterPage() {
           )}
         </div>
 
-        <p className="text-center text-sm text-gray-500 mt-6">
+        <p className="text-center text-sm text-gray-500 dark:text-gray-400 mt-6">
           Already have an account?{' '}
           <Link href="/attorney/login" className="text-[#1B2A4A] font-medium hover:underline">
             Sign in

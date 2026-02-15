@@ -11,18 +11,18 @@ export function Table({ className, ...props }: HTMLAttributes<HTMLTableElement>)
 
 export function TableHeader({ className, ...props }: HTMLAttributes<HTMLTableSectionElement>) {
   return (
-    <thead className={cn('bg-gray-50 border-b border-gray-200', className)} {...props} />
+    <thead className={cn('bg-gray-50 dark:bg-slate-900 border-b border-gray-200 dark:border-slate-700', className)} {...props} />
   );
 }
 
 export function TableBody({ className, ...props }: HTMLAttributes<HTMLTableSectionElement>) {
-  return <tbody className={cn('divide-y divide-gray-100', className)} {...props} />;
+  return <tbody className={cn('divide-y divide-gray-100 dark:divide-slate-700', className)} {...props} />;
 }
 
 export function TableRow({ className, ...props }: HTMLAttributes<HTMLTableRowElement>) {
   return (
     <tr
-      className={cn('hover:bg-gray-50 transition-colors', className)}
+      className={cn('hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors', className)}
       {...props}
     />
   );
@@ -33,7 +33,7 @@ export function TableHead({ className, ...props }: ThHTMLAttributes<HTMLTableCel
     <th
       scope="col"
       className={cn(
-        'px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider',
+        'px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider',
         className
       )}
       {...props}
@@ -43,6 +43,6 @@ export function TableHead({ className, ...props }: ThHTMLAttributes<HTMLTableCel
 
 export function TableCell({ className, ...props }: TdHTMLAttributes<HTMLTableCellElement>) {
   return (
-    <td className={cn('px-4 py-3 text-gray-700', className)} {...props} />
+    <td className={cn('px-4 py-3 text-gray-700 dark:text-gray-300', className)} {...props} />
   );
 }

@@ -76,8 +76,8 @@ export default function MyLeadsPage() {
     <div>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">My Leads</h1>
-          <p className="text-sm text-gray-500 mt-1">All leads you have claimed with full contact information</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">My Leads</h1>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">All leads you have claimed with full contact information</p>
         </div>
         {leads.length > 0 && (
           <Button variant="outline" size="sm" onClick={() => exportLeadsCsv(leads)}>
@@ -88,7 +88,7 @@ export default function MyLeadsPage() {
       </div>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg p-4 mb-6">
+        <div className="bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 rounded-lg p-4 mb-6">
           {error}
         </div>
       )}
@@ -98,10 +98,10 @@ export default function MyLeadsPage() {
           {Array.from({ length: 4 }).map((_, i) => <SkeletonCard key={i} />)}
         </div>
       ) : leads.length === 0 ? (
-        <div className="bg-white rounded-xl border border-gray-200 p-12 text-center">
+        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-12 text-center">
           <FileText className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-1">No Claimed Leads</h3>
-          <p className="text-gray-500 text-sm mb-4">You haven&apos;t claimed any leads yet.</p>
+          <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-1">No Claimed Leads</h3>
+          <p className="text-gray-500 dark:text-gray-400 text-sm mb-4">You haven&apos;t claimed any leads yet.</p>
           <Link href="/attorney/marketplace">
             <Button variant="attorney">Browse Marketplace</Button>
           </Link>
@@ -109,37 +109,37 @@ export default function MyLeadsPage() {
       ) : (
         <div className="space-y-4">
           {leads.map((lead) => (
-            <div key={lead.id} className="bg-white rounded-xl border border-gray-200 p-5">
+            <div key={lead.id} className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-5">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-3">
                 <div className="flex items-center gap-2">
                   <Badge variant={lead.qualification_tier === 'hot' ? 'hot' : lead.qualification_tier === 'warm' ? 'warm' : 'cold'}>
                     {lead.qualification_tier?.toUpperCase()}
                   </Badge>
-                  <span className="font-semibold text-gray-900">{lead.first_name} {lead.last_name}</span>
+                  <span className="font-semibold text-gray-900 dark:text-gray-100">{lead.first_name} {lead.last_name}</span>
                 </div>
-                <div className="flex items-center gap-2 text-sm text-gray-500">
+                <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
                   <Calendar className="h-4 w-4" />
                   Claimed {lead.claimed_at ? formatDate(lead.claimed_at) : 'N/A'}
                 </div>
               </div>
 
-              <div className="grid sm:grid-cols-3 gap-2 text-sm text-gray-600 mb-3">
+              <div className="grid sm:grid-cols-3 gap-2 text-sm text-gray-600 dark:text-gray-400 mb-3">
                 <div className="flex items-center gap-1.5">
-                  <Phone className="h-3.5 w-3.5 text-gray-400" />
+                  <Phone className="h-3.5 w-3.5 text-gray-400 dark:text-gray-500" />
                   {formatPhone(lead.phone)}
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <Mail className="h-3.5 w-3.5 text-gray-400" />
+                  <Mail className="h-3.5 w-3.5 text-gray-400 dark:text-gray-500" />
                   {lead.email}
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <MapPin className="h-3.5 w-3.5 text-gray-400" />
+                  <MapPin className="h-3.5 w-3.5 text-gray-400 dark:text-gray-500" />
                   {lead.city}, {lead.state}
                 </div>
               </div>
 
               <div className="flex items-center justify-between">
-                <span className="text-xs text-gray-400">
+                <span className="text-xs text-gray-400 dark:text-gray-500">
                   {[lead.vehicle_year, lead.vehicle_make, lead.vehicle_model].filter(Boolean).join(' ')} &bull; {lead.repo_state}
                 </span>
                 <Link href={`/attorney/my-leads/${lead.id}`}>

@@ -36,7 +36,7 @@ export function LeadCard({ lead, isSubscribed, onPreview }: LeadCardProps) {
   const price = getTierPrice(lead.qualification_tier);
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-5 hover:shadow-md transition-shadow">
+    <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-5 hover:shadow-md transition-shadow">
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-2">
           <Badge variant={getTierBadgeVariant(lead.qualification_tier)}>
@@ -53,14 +53,14 @@ export function LeadCard({ lead, isSubscribed, onPreview }: LeadCardProps) {
       {/* Violation tags */}
       <div className="flex flex-wrap gap-1.5 mb-3">
         {lead.violation_types.map((v) => (
-          <span key={v} className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded-full">
+          <span key={v} className="text-xs bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-300 px-2 py-0.5 rounded-full">
             {v}
           </span>
         ))}
       </div>
 
       {/* Details grid */}
-      <div className="grid grid-cols-2 gap-2 text-sm text-gray-600 mb-3">
+      <div className="grid grid-cols-2 gap-2 text-sm text-gray-600 dark:text-gray-400 mb-3">
         <div className="flex items-center gap-1.5">
           <MapPin className="h-3.5 w-3.5 text-gray-400" />
           {lead.repo_state}
@@ -87,7 +87,7 @@ export function LeadCard({ lead, isSubscribed, onPreview }: LeadCardProps) {
       )}
 
       {lead.lender_name && (
-        <p className="text-xs text-gray-500 mb-3">Lender: {lead.lender_name}</p>
+        <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">Lender: {lead.lender_name}</p>
       )}
 
       <div className="flex gap-2">

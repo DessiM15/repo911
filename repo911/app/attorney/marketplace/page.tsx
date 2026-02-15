@@ -80,8 +80,8 @@ export default function MarketplacePage() {
     <div>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Lead Marketplace</h1>
-          <p className="text-sm text-gray-500 mt-1">Browse and claim qualified leads</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Lead Marketplace</h1>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Browse and claim qualified leads</p>
         </div>
         <MarketplaceFilters
           tier={tier}
@@ -94,7 +94,7 @@ export default function MarketplacePage() {
       </div>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg p-4 mb-6 flex items-center gap-2">
+        <div className="bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 rounded-lg p-4 mb-6 flex items-center gap-2">
           <AlertCircle className="h-5 w-5 flex-shrink-0" />
           {error}
         </div>
@@ -107,10 +107,10 @@ export default function MarketplacePage() {
           ))}
         </div>
       ) : leads.length === 0 ? (
-        <div className="bg-white rounded-xl border border-gray-200 p-12 text-center">
+        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-12 text-center">
           <ShoppingCart className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-1">No Leads Available</h3>
-          <p className="text-gray-500 text-sm">
+          <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-1">No Leads Available</h3>
+          <p className="text-gray-500 dark:text-gray-400 text-sm">
             {tier || state
               ? 'No leads match your current filters. Try adjusting your criteria.'
               : 'No qualified leads are available right now. Check back soon!'}
@@ -139,7 +139,7 @@ export default function MarketplacePage() {
                 <Badge variant={previewLead.qualification_tier === 'hot' ? 'hot' : previewLead.qualification_tier === 'warm' ? 'warm' : 'cold'}>
                   {previewLead.qualification_tier?.toUpperCase()} LEAD
                 </Badge>
-                <span className="text-sm text-gray-500">Score: {previewLead.qualification_score}</span>
+                <span className="text-sm text-gray-500 dark:text-gray-400">Score: {previewLead.qualification_score}</span>
               </div>
               {isSubscribed ? (
                 <Badge variant="success" className="text-xs">Included</Badge>
@@ -151,7 +151,7 @@ export default function MarketplacePage() {
             {/* Violation tags */}
             <div className="flex flex-wrap gap-1.5">
               {previewLead.violation_types.map((v) => (
-                <span key={v} className="text-xs bg-amber-50 text-amber-700 border border-amber-200 px-2 py-0.5 rounded-full">
+                <span key={v} className="text-xs bg-amber-50 dark:bg-amber-950 text-amber-700 border border-amber-200 px-2 py-0.5 rounded-full">
                   {v}
                 </span>
               ))}
@@ -159,26 +159,26 @@ export default function MarketplacePage() {
 
             {/* Details grid */}
             <div className="grid grid-cols-2 gap-3 text-sm">
-              <div className="flex items-center gap-2 text-gray-600">
-                <MapPin className="h-4 w-4 text-gray-400" />
+              <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
+                <MapPin className="h-4 w-4 text-gray-400 dark:text-gray-500" />
                 <span>{previewLead.repo_state}</span>
               </div>
-              <div className="flex items-center gap-2 text-gray-600">
-                <Calendar className="h-4 w-4 text-gray-400" />
+              <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
+                <Calendar className="h-4 w-4 text-gray-400 dark:text-gray-500" />
                 <span>{previewLead.repo_date ? formatDate(previewLead.repo_date) : 'N/A'}</span>
               </div>
-              <div className="flex items-center gap-2 text-gray-600">
-                <Car className="h-4 w-4 text-gray-400" />
+              <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
+                <Car className="h-4 w-4 text-gray-400 dark:text-gray-500" />
                 <span>{[previewLead.vehicle_year, previewLead.vehicle_make, previewLead.vehicle_model].filter(Boolean).join(' ') || 'N/A'}</span>
               </div>
-              <div className="flex items-center gap-2 text-gray-600">
-                <DollarSign className="h-4 w-4 text-gray-400" />
+              <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
+                <DollarSign className="h-4 w-4 text-gray-400 dark:text-gray-500" />
                 <span>{previewLead.estimated_value_range}</span>
               </div>
             </div>
 
             {previewLead.lender_name && (
-              <p className="text-sm text-gray-500">Lender: {previewLead.lender_name}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Lender: {previewLead.lender_name}</p>
             )}
 
             {previewLead.has_evidence && (
@@ -190,30 +190,30 @@ export default function MarketplacePage() {
 
             {/* Narrative preview */}
             {previewLead.narrative_preview && (
-              <div className="bg-gray-50 rounded-lg p-3">
-                <p className="text-xs font-medium text-gray-500 mb-1">Narrative Preview</p>
-                <p className="text-sm text-gray-700 leading-relaxed">{previewLead.narrative_preview}</p>
+              <div className="bg-gray-50 dark:bg-slate-900 rounded-lg p-3">
+                <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Narrative Preview</p>
+                <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">{previewLead.narrative_preview}</p>
               </div>
             )}
 
             {/* Qualification Breakdown */}
             {previewLead.qualification_breakdown && (
-              <div className="bg-gray-50 rounded-lg p-3">
-                <p className="text-xs font-medium text-gray-500 mb-2">Qualification Breakdown</p>
+              <div className="bg-gray-50 dark:bg-slate-900 rounded-lg p-3">
+                <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2">Qualification Breakdown</p>
                 <div className="grid grid-cols-2 gap-1.5">
                   {Object.entries(previewLead.qualification_breakdown)
                     .filter(([key]) => key !== 'details' && key !== 'penalties')
                     .map(([key, value]) => (
                       <div key={key} className="flex items-center justify-between text-sm">
-                        <span className="text-gray-600 capitalize">{key.replace(/_/g, ' ')}</span>
-                        <span className={`font-medium ${(value as number) > 0 ? 'text-green-600' : 'text-gray-400'}`}>
+                        <span className="text-gray-600 dark:text-gray-400 capitalize">{key.replace(/_/g, ' ')}</span>
+                        <span className={`font-medium ${(value as number) > 0 ? 'text-green-600' : 'text-gray-400 dark:text-gray-500'}`}>
                           +{value as number}
                         </span>
                       </div>
                     ))}
                   {previewLead.qualification_breakdown.penalties !== 0 && (
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-600">Penalties</span>
+                      <span className="text-gray-600 dark:text-gray-400">Penalties</span>
                       <span className="font-medium text-red-500">{previewLead.qualification_breakdown.penalties}</span>
                     </div>
                   )}
@@ -222,7 +222,7 @@ export default function MarketplacePage() {
             )}
 
             {/* Actions */}
-            <div className="flex gap-3 pt-2 border-t border-gray-100">
+            <div className="flex gap-3 pt-2 border-t border-gray-100 dark:border-slate-700">
               <Link href={`/attorney/leads/${previewLead.id}`} className="flex-1">
                 <Button variant="attorney" className="w-full">
                   View Full Details

@@ -3,6 +3,7 @@ import { intakeFormSchema } from '@/lib/validations/intake-form';
 import { qualifyLead } from '@/lib/qualification-engine';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { sendLeadSubmissionConfirmation, sendHotLeadAlert, sendWarmLeadAlert } from '@/lib/emails';
+import { sendNewLeadSms } from '@/lib/sms';
 import { rateLimit } from '@/lib/rate-limit';
 import { apiSuccess, apiError } from '@/lib/api-response';
 import type { LeadSubmission } from '@/types';
@@ -229,28 +230,38 @@ export async function POST(request: NextRequest) {
         // Find active attorneys who cover this state
         const { data: matchingAttorneys } = await supabase
           .from('attorneys')
-          .select('id, first_name, email, preferred_states, email_notifications')
-          .eq('status', 'active')
-          .eq('email_notifications', true);
+          .select('id, first_name, email, phone, preferred_states, email_notifications, sms_notifications')
+          .eq('status', 'active');
 
         const attorneys = (matchingAttorneys || []).filter(
           (a) => !a.preferred_states || a.preferred_states.length === 0 || a.preferred_states.includes(data.repo_state)
         );
 
         for (const atty of attorneys) {
-          if (qualification.tier === 'hot') {
-            sendHotLeadAlert({
-              to: atty.email,
-              attorneyName: atty.first_name,
-              state: data.repo_state,
-              violationTypes,
-            }).catch(() => { /* non-critical */ });
-          } else {
-            sendWarmLeadAlert({
-              to: atty.email,
-              attorneyName: atty.first_name,
-              state: data.repo_state,
-            }).catch(() => { /* non-critical */ });
+          // Email notifications
+          if (atty.email_notifications) {
+            if (qualification.tier === 'hot') {
+              sendHotLeadAlert({
+                to: atty.email,
+                attorneyName: atty.first_name,
+                state: data.repo_state,
+                violationTypes,
+              }).catch(() => { /* non-critical */ });
+            } else {
+              sendWarmLeadAlert({
+                to: atty.email,
+                attorneyName: atty.first_name,
+                state: data.repo_state,
+              }).catch(() => { /* non-critical */ });
+            }
+          }
+
+          // SMS notifications (fire-and-forget)
+          if (atty.sms_notifications && atty.phone) {
+            sendNewLeadSms(
+              { sms_notifications: true, phone: atty.phone },
+              { qualification_tier: qualification.tier, repo_state: data.repo_state }
+            ).catch(() => { /* non-critical */ });
           }
         }
       }

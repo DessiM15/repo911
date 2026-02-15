@@ -15,7 +15,7 @@ function getTierContent(tier: string | null) {
       return {
         icon: CheckCircle,
         iconColor: 'text-green-500',
-        bgColor: 'bg-green-50 border-green-200',
+        bgColor: 'bg-green-50 dark:bg-green-950 border-green-200',
         title: 'Great News — You Likely Have a Strong Case!',
         description:
           'Based on the information you provided, your situation shows strong indicators of legal violations. An attorney from our network will be reaching out to you shortly to discuss your case.',
@@ -29,7 +29,7 @@ function getTierContent(tier: string | null) {
       return {
         icon: CheckCircle,
         iconColor: 'text-[#3474BA]',
-        bgColor: 'bg-blue-50 border-blue-200',
+        bgColor: 'bg-blue-50 dark:bg-blue-950 border-blue-200 dark:border-blue-800',
         title: 'Your Case Shows Promise!',
         description:
           'Based on the information you provided, your situation shows potential legal violations that an attorney should review. We are working to connect you with a licensed attorney in your state.',
@@ -43,7 +43,7 @@ function getTierContent(tier: string | null) {
       return {
         icon: Clock,
         iconColor: 'text-[#3474BA]',
-        bgColor: 'bg-blue-50 border-blue-200',
+        bgColor: 'bg-blue-50 dark:bg-blue-950 border-blue-200 dark:border-blue-800',
         title: 'Your Case Has Been Submitted for Review',
         description:
           'Thank you for sharing your experience. While the initial indicators are less clear, an attorney may still find violations that warrant legal action. We will be in touch if an attorney is interested in reviewing your case further.',
@@ -57,7 +57,7 @@ function getTierContent(tier: string | null) {
       return {
         icon: Info,
         iconColor: 'text-gray-400',
-        bgColor: 'bg-gray-50 border-gray-200',
+        bgColor: 'bg-gray-50 dark:bg-slate-900 border-gray-200 dark:border-slate-700',
         title: 'Thank You for Your Submission',
         description:
           'Based on the information you provided, your situation may not meet the typical criteria for a wrongful repossession claim. However, every case is different, and we recommend consulting with a local attorney for a personalized review of your situation.',
@@ -83,30 +83,30 @@ export default async function ConfirmationPage({
     <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
       <div className="text-center mb-8">
         <Icon className={`h-16 w-16 mx-auto mb-4 ${content.iconColor}`} />
-        <h1 className="text-3xl sm:text-4xl font-bold text-gray-900">{content.title}</h1>
-        <p className="mt-4 text-lg text-gray-600 leading-relaxed">{content.description}</p>
+        <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-gray-100">{content.title}</h1>
+        <p className="mt-4 text-lg text-gray-600 dark:text-gray-400 leading-relaxed">{content.description}</p>
       </div>
 
       <div className={`rounded-xl border p-6 mb-8 ${content.bgColor}`}>
-        <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+        <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center gap-2">
           <Phone className="h-5 w-5" />
           What Happens Next
         </h2>
         <ul className="space-y-3">
           {content.nextSteps.map((step, i) => (
             <li key={i} className="flex items-start gap-3">
-              <span className="flex-shrink-0 w-6 h-6 rounded-full bg-white flex items-center justify-center text-sm font-semibold text-gray-700">
+              <span className="flex-shrink-0 w-6 h-6 rounded-full bg-white dark:bg-slate-800 flex items-center justify-center text-sm font-semibold text-gray-700 dark:text-gray-300">
                 {i + 1}
               </span>
-              <span className="text-gray-700">{step}</span>
+              <span className="text-gray-700 dark:text-gray-300">{step}</span>
             </li>
           ))}
         </ul>
       </div>
 
-      <div className="bg-gray-50 rounded-xl border border-gray-200 p-6 mb-8">
-        <h3 className="font-semibold text-gray-900 mb-2">Important Reminders</h3>
-        <ul className="text-sm text-gray-600 space-y-2">
+      <div className="bg-gray-50 dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-slate-700 p-6 mb-8">
+        <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Important Reminders</h3>
+        <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-2">
           <li>- Do not sign anything from your lender or repo company without consulting an attorney.</li>
           <li>- Keep records of all communication with your lender, repo company, and debt collectors.</li>
           <li>- If you receive a deficiency balance notice, do not pay it without legal advice.</li>
@@ -116,17 +116,17 @@ export default async function ConfirmationPage({
 
       {id && (
         <div className="bg-[#F5A623]/10 rounded-xl border-2 border-[#F5A623] p-6 mb-8 shadow-sm">
-          <h3 className="text-lg font-semibold text-gray-900 mb-2 flex items-center gap-2">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2 flex items-center gap-2">
             <Upload className="h-5 w-5 text-[#F5A623]" />
             Upload Your Evidence
           </h3>
-          <p className="text-sm text-gray-600 mb-4">
+          <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
             Strengthen your case by uploading photos, videos, or documents related to your repossession.
             You can upload up to 5 files (images or PDFs, 10MB each).
           </p>
-          <div className="bg-white rounded-lg px-4 py-3 mb-4">
-            <p className="text-xs text-gray-500 mb-1">Your Case ID (save this)</p>
-            <p className="font-mono text-sm text-gray-900 select-all break-all">{id}</p>
+          <div className="bg-white dark:bg-slate-800 rounded-lg px-4 py-3 mb-4">
+            <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Your Case ID (save this)</p>
+            <p className="font-mono text-sm text-gray-900 dark:text-gray-100 select-all break-all">{id}</p>
           </div>
           <Link href={`/track?id=${id}`}>
             <Button variant="consumer" size="lg" className="w-full">
@@ -148,7 +148,7 @@ export default async function ConfirmationPage({
         </Link>
       </div>
 
-      <p className="text-xs text-gray-500 text-center mt-8">
+      <p className="text-xs text-gray-500 dark:text-gray-400 text-center mt-8">
         This is not legal advice. Submitting this form does not create an attorney-client relationship.
         Results vary based on individual circumstances and applicable law.
       </p>

@@ -34,8 +34,8 @@ function getTierPrice(tier: QualificationTier | null): number {
 function BoolIndicator({ value, label }: { value: boolean; label: string }) {
   return (
     <div className="flex items-center gap-2 text-sm">
-      <span className={value ? 'text-red-500' : 'text-gray-300'}>{value ? '\u2713' : '\u2717'}</span>
-      <span className={value ? 'text-gray-900' : 'text-gray-400'}>{label}</span>
+      <span className={value ? 'text-red-500' : 'text-gray-300 dark:text-gray-600'}>{value ? '\u2713' : '\u2717'}</span>
+      <span className={value ? 'text-gray-900 dark:text-gray-100' : 'text-gray-400 dark:text-gray-500'}>{label}</span>
     </div>
   );
 }
@@ -163,25 +163,25 @@ export default function LeadDetailPage() {
 
   return (
     <div className="max-w-4xl mx-auto">
-      <button onClick={() => router.back()} className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 mb-4">
+      <button onClick={() => router.back()} className="flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 mb-4">
         <ArrowLeft className="h-4 w-4" /> Back
       </button>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg p-4 mb-4">{error}</div>
+        <div className="bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 rounded-lg p-4 mb-4">{error}</div>
       )}
 
       {/* Header */}
-      <div className="bg-white rounded-xl border border-gray-200 p-6 mb-4">
+      <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-6 mb-4">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 mb-2">
               <Badge variant={lead.qualification_tier === 'hot' ? 'hot' : lead.qualification_tier === 'warm' ? 'warm' : 'cold'}>
                 {lead.qualification_tier?.toUpperCase()} LEAD
               </Badge>
-              <span className="text-sm text-gray-500">Score: {lead.qualification_score}</span>
+              <span className="text-sm text-gray-500 dark:text-gray-400">Score: {lead.qualification_score}</span>
             </div>
-            <div className="flex flex-wrap items-center gap-3 text-sm text-gray-600">
+            <div className="flex flex-wrap items-center gap-3 text-sm text-gray-600 dark:text-gray-400">
               <span className="flex items-center gap-1"><MapPin className="h-4 w-4" />{lead.repo_state}</span>
               <span className="flex items-center gap-1"><Calendar className="h-4 w-4" />{lead.repo_date ? formatDate(lead.repo_date) : 'N/A'}</span>
               <span className="flex items-center gap-1"><Car className="h-4 w-4" />{[lead.vehicle_year, lead.vehicle_make, lead.vehicle_model].filter(Boolean).join(' ')}</span>
@@ -212,32 +212,32 @@ export default function LeadDetailPage() {
 
       {/* Full Contact Info (only if claimed) */}
       {fullAccess && (
-        <div className="bg-green-50 border border-green-200 rounded-xl p-6 mb-4">
-          <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+        <div className="bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 rounded-xl p-6 mb-4">
+          <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-3 flex items-center gap-2">
             <Users className="h-5 w-5" /> Consumer Contact Information
           </h3>
           <div className="grid sm:grid-cols-2 gap-3 text-sm">
-            <div><span className="text-gray-500">Name:</span> <span className="font-medium">{lead.first_name} {lead.last_name}</span></div>
-            <div><span className="text-gray-500">Email:</span> <span className="font-medium">{lead.email}</span></div>
-            <div><span className="text-gray-500">Phone:</span> <span className="font-medium">{lead.phone}</span></div>
-            <div><span className="text-gray-500">Address:</span> <span className="font-medium">{lead.street_address}, {lead.city}, {lead.state} {lead.zip_code}</span></div>
-            <div><span className="text-gray-500">Preferred Contact:</span> <span className="font-medium">{lead.preferred_contact}</span></div>
-            <div><span className="text-gray-500">Best Time:</span> <span className="font-medium">{lead.best_time_to_contact || 'Anytime'}</span></div>
+            <div><span className="text-gray-500 dark:text-gray-400">Name:</span> <span className="font-medium">{lead.first_name} {lead.last_name}</span></div>
+            <div><span className="text-gray-500 dark:text-gray-400">Email:</span> <span className="font-medium">{lead.email}</span></div>
+            <div><span className="text-gray-500 dark:text-gray-400">Phone:</span> <span className="font-medium">{lead.phone}</span></div>
+            <div><span className="text-gray-500 dark:text-gray-400">Address:</span> <span className="font-medium">{lead.street_address}, {lead.city}, {lead.state} {lead.zip_code}</span></div>
+            <div><span className="text-gray-500 dark:text-gray-400">Preferred Contact:</span> <span className="font-medium">{lead.preferred_contact}</span></div>
+            <div><span className="text-gray-500 dark:text-gray-400">Best Time:</span> <span className="font-medium">{lead.best_time_to_contact || 'Anytime'}</span></div>
           </div>
         </div>
       )}
 
       {!fullAccess && (
-        <div className="bg-gray-50 border border-gray-200 rounded-xl p-6 mb-4 text-center">
-          <Lock className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-          <p className="text-sm text-gray-500">Consumer contact information is revealed after claiming this lead.</p>
+        <div className="bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl p-6 mb-4 text-center">
+          <Lock className="h-8 w-8 text-gray-400 dark:text-gray-500 mx-auto mb-2" />
+          <p className="text-sm text-gray-500 dark:text-gray-400">Consumer contact information is revealed after claiming this lead.</p>
         </div>
       )}
 
       <div className="grid md:grid-cols-2 gap-4">
         {/* Violation Indicators */}
-        <div className="bg-white rounded-xl border border-gray-200 p-6">
-          <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-6">
+          <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-3 flex items-center gap-2">
             <AlertTriangle className="h-5 w-5 text-amber-500" /> Violation Indicators
           </h3>
           <div className="flex flex-wrap gap-2 mb-4">
@@ -259,8 +259,8 @@ export default function LeadDetailPage() {
         </div>
 
         {/* Qualification Breakdown */}
-        <div className="bg-white rounded-xl border border-gray-200 p-6">
-          <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-6">
+          <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-3 flex items-center gap-2">
             <DollarSign className="h-5 w-5 text-green-500" /> Case Assessment
           </h3>
           {lead.qualification_breakdown && (
@@ -269,52 +269,52 @@ export default function LeadDetailPage() {
                 .filter(([key]) => key !== 'details' && key !== 'penalties')
                 .map(([key, value]) => (
                   <div key={key} className="flex items-center justify-between text-sm">
-                    <span className="text-gray-600 capitalize">{key.replace(/_/g, ' ')}</span>
-                    <span className={`font-medium ${(value as number) > 0 ? 'text-green-600' : 'text-gray-400'}`}>
+                    <span className="text-gray-600 dark:text-gray-400 capitalize">{key.replace(/_/g, ' ')}</span>
+                    <span className={`font-medium ${(value as number) > 0 ? 'text-green-600' : 'text-gray-400 dark:text-gray-500'}`}>
                       +{value as number}
                     </span>
                   </div>
                 ))}
               {lead.qualification_breakdown.penalties !== 0 && (
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-600">Penalties</span>
+                  <span className="text-gray-600 dark:text-gray-400">Penalties</span>
                   <span className="font-medium text-red-500">{lead.qualification_breakdown.penalties}</span>
                 </div>
               )}
-              <div className="pt-2 border-t border-gray-200 flex items-center justify-between">
-                <span className="font-medium text-gray-900">Total Score</span>
+              <div className="pt-2 border-t border-gray-200 dark:border-slate-700 flex items-center justify-between">
+                <span className="font-medium text-gray-900 dark:text-gray-100">Total Score</span>
                 <span className="font-bold text-lg text-[#1B2A4A]">{lead.qualification_score}</span>
               </div>
               {lead.estimated_value_range && (
-                <p className="text-sm text-gray-500">Estimated value: {lead.estimated_value_range}</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Estimated value: {lead.estimated_value_range}</p>
               )}
             </div>
           )}
         </div>
 
         {/* Additional Details */}
-        <div className="bg-white rounded-xl border border-gray-200 p-6">
-          <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-6">
+          <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-3 flex items-center gap-2">
             <Shield className="h-5 w-5 text-blue-500" /> Additional Details
           </h3>
           <div className="space-y-2 text-sm">
-            <div className="flex justify-between"><span className="text-gray-500">Lender</span><span>{lead.lender_name || 'N/A'}</span></div>
-            <div className="flex justify-between"><span className="text-gray-500">Lease/Finance</span><span className="capitalize">{lead.lease_or_finance?.replace('_', ' ') || 'N/A'}</span></div>
-            <div className="flex justify-between"><span className="text-gray-500">Behind on Payments</span><span className="capitalize">{lead.behind_on_payments?.replace('_', ' ') || 'N/A'}</span></div>
-            <div className="flex justify-between"><span className="text-gray-500">Written Notice Received</span><span className="capitalize">{lead.received_written_notice?.replace('_', ' ') || 'N/A'}</span></div>
-            <div className="flex justify-between"><span className="text-gray-500">Notice of Sale</span><span className="capitalize">{lead.received_notice_of_sale?.replace('_', ' ') || 'N/A'}</span></div>
-            <div className="flex justify-between"><span className="text-gray-500">Military Service</span><span>{lead.military_service ? 'Yes' : 'No'}</span></div>
-            {lead.active_duty_at_repo && <div className="flex justify-between"><span className="text-gray-500">Active Duty at Repo</span><span className="text-red-600 font-medium">Yes</span></div>}
-            <div className="flex justify-between"><span className="text-gray-500">Debt Collector Contact</span><span>{lead.debt_collector_contact ? 'Yes' : 'No'}</span></div>
+            <div className="flex justify-between"><span className="text-gray-500 dark:text-gray-400">Lender</span><span>{lead.lender_name || 'N/A'}</span></div>
+            <div className="flex justify-between"><span className="text-gray-500 dark:text-gray-400">Lease/Finance</span><span className="capitalize">{lead.lease_or_finance?.replace('_', ' ') || 'N/A'}</span></div>
+            <div className="flex justify-between"><span className="text-gray-500 dark:text-gray-400">Behind on Payments</span><span className="capitalize">{lead.behind_on_payments?.replace('_', ' ') || 'N/A'}</span></div>
+            <div className="flex justify-between"><span className="text-gray-500 dark:text-gray-400">Written Notice Received</span><span className="capitalize">{lead.received_written_notice?.replace('_', ' ') || 'N/A'}</span></div>
+            <div className="flex justify-between"><span className="text-gray-500 dark:text-gray-400">Notice of Sale</span><span className="capitalize">{lead.received_notice_of_sale?.replace('_', ' ') || 'N/A'}</span></div>
+            <div className="flex justify-between"><span className="text-gray-500 dark:text-gray-400">Military Service</span><span>{lead.military_service ? 'Yes' : 'No'}</span></div>
+            {lead.active_duty_at_repo && <div className="flex justify-between"><span className="text-gray-500 dark:text-gray-400">Active Duty at Repo</span><span className="text-red-600 font-medium">Yes</span></div>}
+            <div className="flex justify-between"><span className="text-gray-500 dark:text-gray-400">Debt Collector Contact</span><span>{lead.debt_collector_contact ? 'Yes' : 'No'}</span></div>
             {lead.fdcpa_violations?.length > 0 && (
-              <div className="flex justify-between"><span className="text-gray-500">FDCPA Violations</span><span>{lead.fdcpa_violations.length}</span></div>
+              <div className="flex justify-between"><span className="text-gray-500 dark:text-gray-400">FDCPA Violations</span><span>{lead.fdcpa_violations.length}</span></div>
             )}
           </div>
         </div>
 
         {/* Evidence */}
-        <div className="bg-white rounded-xl border border-gray-200 p-6">
-          <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-6">
+          <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-3 flex items-center gap-2">
             <Camera className="h-5 w-5 text-purple-500" /> Evidence
           </h3>
           <div className="space-y-2">
@@ -323,11 +323,11 @@ export default function LeadDetailPage() {
             <BoolIndicator value={lead.has_witnesses} label="Witnesses" />
           </div>
           {(fullAccess ? lead.narrative : lead.narrative_preview) && (
-            <div className="mt-4 pt-4 border-t border-gray-200">
-              <p className="text-sm font-medium text-gray-900 mb-1 flex items-center gap-1">
+            <div className="mt-4 pt-4 border-t border-gray-200 dark:border-slate-700">
+              <p className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-1 flex items-center gap-1">
                 <FileText className="h-4 w-4" /> Narrative
               </p>
-              <p className="text-sm text-gray-600 leading-relaxed">
+              <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
                 {fullAccess ? lead.narrative : lead.narrative_preview}
               </p>
             </div>
@@ -335,8 +335,8 @@ export default function LeadDetailPage() {
 
           {/* Evidence files for claimed leads */}
           {fullAccess && lead.uploaded_files && lead.uploaded_files.length > 0 && (
-            <div className="mt-4 pt-4 border-t border-gray-200">
-              <p className="text-sm font-medium text-gray-900 mb-2 flex items-center gap-1">
+            <div className="mt-4 pt-4 border-t border-gray-200 dark:border-slate-700">
+              <p className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-2 flex items-center gap-1">
                 <Download className="h-4 w-4" /> Uploaded Files ({lead.uploaded_files.length})
               </p>
               {evidenceLoading ? (
@@ -350,15 +350,15 @@ export default function LeadDetailPage() {
                   {evidenceFiles.map((file, i) => {
                     const isImage = file.type?.startsWith('image/');
                     return (
-                      <div key={i} className="flex items-center gap-3 bg-gray-50 rounded-lg p-2.5">
+                      <div key={i} className="flex items-center gap-3 bg-gray-50 dark:bg-slate-900 rounded-lg p-2.5">
                         {isImage ? (
                           <FileImage className="h-5 w-5 text-blue-500 shrink-0" />
                         ) : (
-                          <File className="h-5 w-5 text-gray-400 shrink-0" />
+                          <File className="h-5 w-5 text-gray-400 dark:text-gray-500 shrink-0" />
                         )}
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm text-gray-700 truncate">{file.name}</p>
-                          <p className="text-xs text-gray-400">
+                          <p className="text-sm text-gray-700 dark:text-gray-300 truncate">{file.name}</p>
+                          <p className="text-xs text-gray-400 dark:text-gray-500">
                             {file.size ? `${(file.size / 1024).toFixed(0)} KB` : ''}
                           </p>
                         </div>
@@ -382,8 +382,8 @@ export default function LeadDetailPage() {
 
           {/* File count indicator for unclaimed leads */}
           {!fullAccess && lead.uploaded_files && lead.uploaded_files.length > 0 && (
-            <div className="mt-4 pt-4 border-t border-gray-200">
-              <p className="text-sm text-gray-500 flex items-center gap-1.5">
+            <div className="mt-4 pt-4 border-t border-gray-200 dark:border-slate-700">
+              <p className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-1.5">
                 <Camera className="h-4 w-4" />
                 {lead.uploaded_files.length} evidence file{lead.uploaded_files.length > 1 ? 's' : ''} available after claiming
               </p>

@@ -86,8 +86,8 @@ export function MessageThread({ email, leadId }: MessageThreadProps) {
   }
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
-      <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+    <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-6 shadow-sm">
+      <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center gap-2">
         <MessageSquare className="h-5 w-5 text-[#3474BA]" />
         Messages with Your Attorney
       </h2>
@@ -112,8 +112,8 @@ export function MessageThread({ email, leadId }: MessageThreadProps) {
                   <div
                     className={`max-w-[80%] rounded-lg px-4 py-2.5 ${
                       msg.sender_type === 'consumer'
-                        ? 'bg-blue-50 text-gray-900'
-                        : 'bg-gray-50 text-gray-900'
+                        ? 'bg-blue-50 dark:bg-blue-950 text-gray-900 dark:text-gray-100'
+                        : 'bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-gray-100'
                     }`}
                   >
                     <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
@@ -133,7 +133,7 @@ export function MessageThread({ email, leadId }: MessageThreadProps) {
               placeholder="Type a message..."
               rows={2}
               maxLength={2000}
-              className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[#3474BA]"
+              className="flex-1 px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm resize-none bg-white dark:bg-slate-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#3474BA]"
               onKeyDown={(e) => {
                 if (e.key === 'Enter' && !e.shiftKey) {
                   e.preventDefault();

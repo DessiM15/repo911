@@ -123,13 +123,13 @@ export default function AdminLeadsPage() {
   return (
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <h1 className="text-2xl font-bold text-gray-900">All Leads</h1>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">All Leads</h1>
         <div className="flex items-center gap-3">
-          <span className="text-sm text-gray-500">{total} total leads</span>
+          <span className="text-sm text-gray-500 dark:text-gray-400">{total} total leads</span>
           <button
             onClick={exportCSV}
             disabled={leads.length === 0}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1.5 text-sm border border-gray-300 dark:border-slate-600 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 dark:text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             <Download className="h-4 w-4" />
             Export CSV
@@ -138,13 +138,13 @@ export default function AdminLeadsPage() {
       </div>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg p-4 mb-6">
+        <div className="bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 rounded-lg p-4 mb-6">
           {error}
         </div>
       )}
 
       {/* Filters */}
-      <div className="bg-white rounded-xl border border-gray-200 p-4">
+      <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-4">
         <div className="flex flex-col sm:flex-row gap-3">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" aria-hidden="true" />
@@ -154,14 +154,14 @@ export default function AdminLeadsPage() {
               aria-label="Search leads"
               value={search}
               onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1B2A4A] focus:border-transparent"
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm dark:bg-slate-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#1B2A4A] focus:border-transparent"
             />
           </div>
           <select
             value={statusFilter}
             onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
             aria-label="Filter by status"
-            className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1B2A4A]"
+            className="px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm dark:bg-slate-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#1B2A4A]"
           >
             {STATUS_OPTIONS.map((o) => (
               <option key={o.value} value={o.value}>{o.label}</option>
@@ -171,7 +171,7 @@ export default function AdminLeadsPage() {
             value={tierFilter}
             onChange={(e) => { setTierFilter(e.target.value); setPage(1); }}
             aria-label="Filter by tier"
-            className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1B2A4A]"
+            className="px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm dark:bg-slate-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#1B2A4A]"
           >
             {TIER_OPTIONS.map((o) => (
               <option key={o.value} value={o.value}>{o.label}</option>
@@ -181,7 +181,7 @@ export default function AdminLeadsPage() {
             value={stateFilter}
             onChange={(e) => { setStateFilter(e.target.value); setPage(1); }}
             aria-label="Filter by state"
-            className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1B2A4A]"
+            className="px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm dark:bg-slate-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#1B2A4A]"
           >
             <option value="">All States</option>
             {US_STATES.map((s) => (
@@ -192,7 +192,7 @@ export default function AdminLeadsPage() {
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+      <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 overflow-hidden">
         {loading ? (
           <div className="p-6 space-y-3">
             {Array.from({ length: 10 }).map((_, i) => (
@@ -200,8 +200,8 @@ export default function AdminLeadsPage() {
             ))}
           </div>
         ) : leads.length === 0 ? (
-          <div className="p-12 text-center text-gray-500">
-            <Filter className="h-8 w-8 mx-auto mb-2 text-gray-300" />
+          <div className="p-12 text-center text-gray-500 dark:text-gray-400">
+            <Filter className="h-8 w-8 mx-auto mb-2 text-gray-300 dark:text-gray-600" />
             <p>No leads found matching your filters.</p>
           </div>
         ) : (
@@ -246,7 +246,7 @@ export default function AdminLeadsPage() {
                     <Link href={`/admin/leads/${lead.id}`} className="font-medium text-[#1B2A4A] hover:underline">
                       {lead.first_name} {lead.last_name}
                     </Link>
-                    <p className="text-xs text-gray-500">{lead.email}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">{lead.email}</p>
                   </TableCell>
                   <TableCell>
                     <Badge variant={getStatusBadgeVariant(lead.status)}>
@@ -279,8 +279,8 @@ export default function AdminLeadsPage() {
 
         {/* Pagination */}
         {totalPages > 1 && (
-          <nav aria-label="Pagination" className="flex items-center justify-between px-4 py-3 border-t border-gray-200">
-            <p className="text-sm text-gray-500">
+          <nav aria-label="Pagination" className="flex items-center justify-between px-4 py-3 border-t border-gray-200 dark:border-slate-700">
+            <p className="text-sm text-gray-500 dark:text-gray-400">
               Page {page} of {totalPages}
             </p>
             <div className="flex gap-2">
@@ -288,7 +288,7 @@ export default function AdminLeadsPage() {
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
                 disabled={page === 1}
                 aria-label="Previous page"
-                className="p-1.5 rounded-lg border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="p-1.5 rounded-lg border border-gray-300 dark:border-slate-600 hover:bg-gray-50 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <ChevronLeft className="h-4 w-4" />
               </button>
@@ -296,7 +296,7 @@ export default function AdminLeadsPage() {
                 onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                 disabled={page === totalPages}
                 aria-label="Next page"
-                className="p-1.5 rounded-lg border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="p-1.5 rounded-lg border border-gray-300 dark:border-slate-600 hover:bg-gray-50 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <ChevronRight className="h-4 w-4" />
               </button>

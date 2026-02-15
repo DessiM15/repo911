@@ -71,7 +71,7 @@ export default function AuditLogPage() {
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2">
           <ClipboardList className="h-6 w-6" />
           Audit Log
         </h1>
@@ -84,7 +84,7 @@ export default function AuditLogPage() {
               setLoading(true);
               setEntityFilter(e.target.value);
             }}
-            className="px-3 py-1.5 border border-gray-300 rounded-lg text-sm"
+            className="px-3 py-1.5 border border-gray-300 dark:border-slate-600 rounded-lg text-sm dark:bg-slate-800 dark:text-gray-100"
           >
             <option value="">All entities</option>
             <option value="lead">Leads</option>
@@ -94,28 +94,28 @@ export default function AuditLogPage() {
       </div>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg p-4 text-sm">
+        <div className="bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 rounded-lg p-4 text-sm">
           {error}
         </div>
       )}
 
-      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+      <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-gray-200 bg-gray-50">
-                <th className="text-left px-4 py-3 font-medium text-gray-600">Timestamp</th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600">Admin</th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600">Action</th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600">Entity</th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600">Old Values</th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600">New Values</th>
+              <tr className="border-b border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-900">
+                <th className="text-left px-4 py-3 font-medium text-gray-600 dark:text-gray-400">Timestamp</th>
+                <th className="text-left px-4 py-3 font-medium text-gray-600 dark:text-gray-400">Admin</th>
+                <th className="text-left px-4 py-3 font-medium text-gray-600 dark:text-gray-400">Action</th>
+                <th className="text-left px-4 py-3 font-medium text-gray-600 dark:text-gray-400">Entity</th>
+                <th className="text-left px-4 py-3 font-medium text-gray-600 dark:text-gray-400">Old Values</th>
+                <th className="text-left px-4 py-3 font-medium text-gray-600 dark:text-gray-400">New Values</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-gray-100 dark:divide-slate-700">
               {entries.length === 0 && (
                 <tr>
-                  <td colSpan={6} className="px-4 py-8 text-center text-gray-400">
+                  <td colSpan={6} className="px-4 py-8 text-center text-gray-400 dark:text-gray-500">
                     No audit log entries found.
                   </td>
                 </tr>
@@ -123,28 +123,28 @@ export default function AuditLogPage() {
               {entries.map((entry) => {
                 const link = entityLink(entry);
                 return (
-                  <tr key={entry.id} className="hover:bg-gray-50">
-                    <td className="px-4 py-3 text-xs text-gray-500 whitespace-nowrap">
+                  <tr key={entry.id} className="hover:bg-gray-50 dark:hover:bg-slate-700">
+                    <td className="px-4 py-3 text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap">
                       {formatDate(entry.created_at)}
                     </td>
-                    <td className="px-4 py-3 text-gray-700">{entry.admin_email}</td>
+                    <td className="px-4 py-3 text-gray-700 dark:text-gray-300">{entry.admin_email}</td>
                     <td className="px-4 py-3">
-                      <span className="inline-block px-2 py-0.5 bg-blue-50 text-blue-700 rounded text-xs font-medium">
+                      <span className="inline-block px-2 py-0.5 bg-blue-50 dark:bg-blue-950 text-blue-700 dark:text-blue-300 rounded text-xs font-medium">
                         {entry.action}
                       </span>
                     </td>
                     <td className="px-4 py-3">
-                      <span className="capitalize text-gray-600">{entry.entity_type}</span>
+                      <span className="capitalize text-gray-600 dark:text-gray-400">{entry.entity_type}</span>
                       {link ? (
                         <Link href={link} className="ml-1 text-[#3474BA] hover:underline text-xs">
                           View
                         </Link>
                       ) : null}
                     </td>
-                    <td className="px-4 py-3 text-xs text-gray-500 max-w-[200px] truncate">
+                    <td className="px-4 py-3 text-xs text-gray-500 dark:text-gray-400 max-w-[200px] truncate">
                       {formatValues(entry.old_values) || '—'}
                     </td>
-                    <td className="px-4 py-3 text-xs text-gray-500 max-w-[200px] truncate">
+                    <td className="px-4 py-3 text-xs text-gray-500 dark:text-gray-400 max-w-[200px] truncate">
                       {formatValues(entry.new_values) || '—'}
                     </td>
                   </tr>

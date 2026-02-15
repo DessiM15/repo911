@@ -116,8 +116,8 @@ export function AdminSidebar() {
       </aside>
 
       {/* Desktop Top Bar */}
-      <div className="hidden lg:flex lg:ml-64 h-16 bg-white border-b border-gray-200 items-center justify-end px-6 sticky top-0 z-30">
-        <button aria-label="Notifications" className="relative p-2 text-gray-400 hover:text-gray-600 transition-colors">
+      <div className="hidden lg:flex lg:ml-64 h-16 bg-white dark:bg-slate-800 border-b border-gray-200 dark:border-slate-700 items-center justify-end px-6 sticky top-0 z-30">
+        <button aria-label="Notifications" className="relative p-2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
           <Bell className="h-5 w-5" />
           <span className="absolute top-1 right-1 h-2 w-2 bg-red-500 rounded-full" />
         </button>

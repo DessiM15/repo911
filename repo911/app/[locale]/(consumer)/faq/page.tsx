@@ -120,8 +120,8 @@ export default function FAQPage() {
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
       <div className="text-center mb-10">
-        <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Frequently Asked Questions</h1>
-        <p className="text-lg text-gray-600">
+        <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">Frequently Asked Questions</h1>
+        <p className="text-lg text-gray-600 dark:text-gray-400">
           Find answers to common questions about wrongful repossession and how Repo911 can help.
         </p>
       </div>
@@ -129,14 +129,14 @@ export default function FAQPage() {
       <div className="space-y-10">
         {faqs.map((section) => (
           <div key={section.category}>
-            <h2 className="text-xl font-bold text-gray-900 mb-4 pb-2 border-b border-gray-200">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4 pb-2 border-b border-gray-200 dark:border-slate-700">
               {section.category}
             </h2>
             <div className="space-y-6">
               {section.questions.map((faq) => (
                 <div key={faq.q}>
-                  <h3 className="text-base font-semibold text-gray-900 mb-2">{faq.q}</h3>
-                  <p className="text-gray-600 leading-relaxed">{faq.a}</p>
+                  <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-2">{faq.q}</h3>
+                  <p className="text-gray-600 dark:text-gray-400 leading-relaxed">{faq.a}</p>
                 </div>
               ))}
             </div>
@@ -145,9 +145,9 @@ export default function FAQPage() {
       </div>
 
       {/* CTA */}
-      <div className="mt-12 text-center bg-blue-50 rounded-xl border border-blue-100 p-8">
-        <h2 className="text-xl font-bold text-gray-900 mb-2">Still Have Questions?</h2>
-        <p className="text-gray-600 mb-6">
+      <div className="mt-12 text-center bg-blue-50 dark:bg-blue-950 rounded-xl border border-blue-100 dark:border-blue-800 p-8">
+        <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">Still Have Questions?</h2>
+        <p className="text-gray-600 dark:text-gray-400 mb-6">
           The best way to find out if you have a case is to submit our free intake form. It only takes 5 minutes.
         </p>
         <Link href="/claim">
@@ -157,7 +157,7 @@ export default function FAQPage() {
         </Link>
       </div>
 
-      <div className="mt-8 text-sm text-gray-500 text-center">
+      <div className="mt-8 text-sm text-gray-500 dark:text-gray-400 text-center">
         <p>
           For other questions, contact us at{' '}
           <a href="mailto:support@repo911.com" className="text-[#3474BA] underline">support@repo911.com</a>.

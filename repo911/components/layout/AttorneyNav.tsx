@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { cn, formatDate } from '@/lib/utils';
 import { createClient } from '@/lib/supabase/client';
+import { ThemeToggle } from './ThemeToggle';
 
 const navItems = [
   { href: '/attorney/dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -117,9 +118,9 @@ export function AttorneyNav() {
 
   function NotificationDropdown() {
     return (
-      <div role="menu" aria-label="Notifications" className="absolute right-0 top-full mt-2 w-[calc(100vw-2rem)] sm:w-80 max-w-sm bg-white rounded-xl border border-gray-200 shadow-lg overflow-hidden z-50">
-        <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
-          <h3 className="text-sm font-semibold text-gray-900">Notifications</h3>
+      <div role="menu" aria-label="Notifications" className="absolute right-0 top-full mt-2 w-[calc(100vw-2rem)] sm:w-80 max-w-sm bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 shadow-lg overflow-hidden z-50">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 dark:border-slate-700">
+          <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100">Notifications</h3>
           {unreadCount > 0 && (
             <button
               onClick={handleMarkAllRead}
@@ -132,7 +133,7 @@ export function AttorneyNav() {
         </div>
         <div className="max-h-80 overflow-y-auto">
           {notifications.length === 0 ? (
-            <div className="p-6 text-center text-sm text-gray-400">
+            <div className="p-6 text-center text-sm text-gray-400 dark:text-gray-500">
               No notifications yet.
             </div>
           ) : (
@@ -141,7 +142,7 @@ export function AttorneyNav() {
                 key={n.id}
                 onClick={() => handleNotificationClick(n)}
                 className={cn(
-                  'w-full text-left px-4 py-3 border-b border-gray-50 hover:bg-gray-50 transition-colors',
+                  'w-full text-left px-4 py-3 border-b border-gray-50 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors',
                   !n.read && 'bg-blue-50/50'
                 )}
               >
@@ -150,9 +151,9 @@ export function AttorneyNav() {
                     <span className="mt-1.5 h-2 w-2 rounded-full bg-[#3474BA] shrink-0" />
                   )}
                   <div className={cn(!n.read ? '' : 'ml-4')}>
-                    <p className="text-sm font-medium text-gray-900">{n.title}</p>
-                    <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">{n.message}</p>
-                    <p className="text-[10px] text-gray-400 mt-1">{formatDate(n.created_at)}</p>
+                    <p className="text-sm font-medium text-gray-900 dark:text-gray-100">{n.title}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 line-clamp-2">{n.message}</p>
+                    <p className="text-[10px] text-gray-400 dark:text-gray-500 mt-1">{formatDate(n.created_at)}</p>
                   </div>
                 </div>
               </button>
@@ -162,7 +163,7 @@ export function AttorneyNav() {
         <Link
           href="/attorney/notifications"
           onClick={() => setBellOpen(false)}
-          className="block text-center text-xs text-[#3474BA] hover:underline px-4 py-2.5 border-t border-gray-100"
+          className="block text-center text-xs text-[#3474BA] hover:underline px-4 py-2.5 border-t border-gray-100 dark:border-slate-700"
         >
           View all notifications
         </Link>
@@ -218,14 +219,15 @@ export function AttorneyNav() {
       </aside>
 
       {/* Top Bar (Desktop) */}
-      <div className="hidden lg:flex lg:ml-64 h-16 bg-white border-b border-gray-200 items-center justify-end px-6 sticky top-0 z-30">
+      <div className="hidden lg:flex lg:ml-64 h-16 bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-slate-700 items-center justify-end px-6 sticky top-0 z-30">
+        <ThemeToggle />
         <div ref={bellRef} className="relative">
           <button
             onClick={() => setBellOpen(!bellOpen)}
             aria-label="Notifications"
             aria-haspopup="true"
             aria-expanded={bellOpen}
-            className="relative p-2 text-gray-400 hover:text-gray-600 transition-colors"
+            className="relative p-2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
           >
             <Bell className="h-5 w-5" />
             {unreadCount > 0 && (

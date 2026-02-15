@@ -54,7 +54,7 @@ export function Modal({ open, onClose, title, description, children, className, 
         aria-modal="true"
         aria-labelledby={title ? 'modal-title' : undefined}
         className={cn(
-          'relative z-50 bg-white rounded-xl shadow-xl mx-4 max-h-[90vh] overflow-y-auto',
+          'relative z-50 bg-white dark:bg-slate-800 rounded-xl shadow-xl mx-4 max-h-[90vh] overflow-y-auto',
           {
             'max-w-sm w-full': size === 'sm',
             'max-w-md w-full': size === 'md',
@@ -65,18 +65,18 @@ export function Modal({ open, onClose, title, description, children, className, 
         )}
       >
         {(title || description) && (
-          <div className="px-6 py-4 border-b border-gray-100">
+          <div className="px-6 py-4 border-b border-gray-100 dark:border-slate-700">
             <div className="flex items-center justify-between">
-              {title && <h2 id="modal-title" className="text-lg font-semibold text-gray-900">{title}</h2>}
+              {title && <h2 id="modal-title" className="text-lg font-semibold text-gray-900 dark:text-gray-100">{title}</h2>}
               <button
                 onClick={onClose}
                 aria-label="Close"
-                className="text-gray-400 hover:text-gray-600 transition-colors p-1 rounded-md hover:bg-gray-100"
+                className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400 transition-colors p-1 rounded-md hover:bg-gray-100 dark:hover:bg-slate-700"
               >
                 <X className="h-5 w-5" />
               </button>
             </div>
-            {description && <p className="text-sm text-gray-500 mt-1">{description}</p>}
+            {description && <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{description}</p>}
           </div>
         )}
         <div className="px-6 py-4">{children}</div>

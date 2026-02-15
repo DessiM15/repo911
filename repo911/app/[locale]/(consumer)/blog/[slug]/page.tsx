@@ -54,7 +54,7 @@ export default async function BlogPostPage({ params }: Props) {
 
       <Link
         href="/blog"
-        className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-[#3474BA] mb-8"
+        className="inline-flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 hover:text-[#3474BA] mb-8"
       >
         <ArrowLeft className="h-4 w-4" />
         Back to Blog
@@ -62,11 +62,11 @@ export default async function BlogPostPage({ params }: Props) {
 
       <article>
         <header className="mb-8">
-          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 leading-tight">
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-gray-100 leading-tight">
             {post.title}
           </h1>
-          <p className="mt-3 text-lg text-gray-600">{post.description}</p>
-          <div className="mt-4 flex flex-wrap items-center gap-4 text-sm text-gray-400">
+          <p className="mt-3 text-lg text-gray-600 dark:text-gray-400">{post.description}</p>
+          <div className="mt-4 flex flex-wrap items-center gap-4 text-sm text-gray-400 dark:text-gray-500">
             <span className="flex items-center gap-1">
               <User className="h-4 w-4" />
               {post.author}
@@ -88,7 +88,7 @@ export default async function BlogPostPage({ params }: Props) {
             {post.tags.map((tag) => (
               <span
                 key={tag}
-                className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-[#3474BA]"
+                className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 dark:bg-blue-950 text-[#3474BA]"
               >
                 {tag}
               </span>
@@ -96,7 +96,7 @@ export default async function BlogPostPage({ params }: Props) {
           </div>
         </header>
 
-        <div className="prose prose-gray max-w-none prose-headings:text-gray-900 prose-a:text-[#3474BA] prose-strong:text-gray-900">
+        <div className="prose prose-gray dark:prose-invert max-w-none prose-headings:text-gray-900 dark:prose-headings:text-gray-100 prose-a:text-[#3474BA] prose-strong:text-gray-900 dark:prose-strong:text-gray-100">
           <MDXRemote source={post.content} />
         </div>
       </article>
@@ -112,7 +112,7 @@ export default async function BlogPostPage({ params }: Props) {
         </p>
         <Link
           href="/claim"
-          className="inline-block px-8 py-3 bg-white text-[#3474BA] font-semibold rounded-lg hover:bg-gray-100 transition-colors"
+          className="inline-block px-8 py-3 bg-white text-[#3474BA] font-semibold rounded-lg hover:bg-gray-100 dark:hover:bg-gray-200 transition-colors"
         >
           Start My Free Case Review
         </Link>

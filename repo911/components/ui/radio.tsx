@@ -35,7 +35,7 @@ export function RadioGroup({
   return (
     <div className={cn('w-full', className)}>
       {label && (
-        <p className="block text-sm font-medium text-gray-700 mb-2">
+        <p className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
           {label}
           {required && <span className="text-red-500 ml-1">*</span>}
         </p>
@@ -74,18 +74,18 @@ const RadioItem = forwardRef<HTMLInputElement, RadioItemProps>(
           id={inputId}
           type="radio"
           className={cn(
-            'mt-0.5 h-5 w-5 border-gray-300 text-[#3474BA]',
-            'focus:ring-2 focus:ring-[#3474BA] focus:ring-offset-1',
+            'mt-0.5 h-5 w-5 border-gray-300 dark:border-slate-600 text-[#3474BA]',
+            'focus:ring-2 focus:ring-[#3474BA] focus:ring-offset-1 dark:focus:ring-offset-slate-800',
             'disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer',
             className
           )}
           {...props}
         />
         <div>
-          <label htmlFor={inputId} className="text-sm font-medium text-gray-700 cursor-pointer">
+          <label htmlFor={inputId} className="text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer">
             {label}
           </label>
-          {description && <p className="text-sm text-gray-500 mt-0.5">{description}</p>}
+          {description && <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">{description}</p>}
         </div>
       </div>
     );

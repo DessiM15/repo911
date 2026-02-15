@@ -30,12 +30,12 @@ export function ProgressIndicator({ currentSection, completedSections, onSection
     <div className="mb-8">
       {/* Progress bar */}
       <div className="flex items-center justify-between mb-2">
-        <span className="text-sm font-medium text-gray-700">
+        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
           Step {currentSection + 1} of {SECTIONS.length}: {SECTIONS[currentSection]}
         </span>
         <span className="text-sm font-medium text-[#3474BA]">{progress}% complete</span>
       </div>
-      <div className="w-full bg-gray-200 rounded-full h-2.5">
+      <div className="w-full bg-gray-200 dark:bg-slate-700 rounded-full h-2.5">
         <div
           role="progressbar"
           aria-valuenow={progress}
@@ -71,7 +71,7 @@ export function ProgressIndicator({ currentSection, completedSections, onSection
                     ? 'bg-[#3474BA] text-white'
                     : isCurrent
                     ? 'bg-[#3474BA]/20 text-[#3474BA] ring-2 ring-[#3474BA]'
-                    : 'bg-gray-100 text-gray-400'
+                    : 'bg-gray-100 dark:bg-slate-700 text-gray-400 dark:text-gray-500'
                 )}
               >
                 {isCompleted ? <Check className="h-4 w-4" /> : index + 1}

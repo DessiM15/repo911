@@ -18,10 +18,10 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
             id={id}
             type="checkbox"
             className={cn(
-              'peer h-5 w-5 rounded border-gray-300 text-[#3474BA]',
-              'focus:ring-2 focus:ring-[#3474BA] focus:ring-offset-1',
+              'peer h-5 w-5 rounded border-gray-300 dark:border-slate-600 text-[#3474BA]',
+              'focus:ring-2 focus:ring-[#3474BA] focus:ring-offset-1 dark:focus:ring-offset-slate-800',
               'disabled:opacity-50 disabled:cursor-not-allowed',
-              'cursor-pointer appearance-none border-2 bg-white checked:bg-[#3474BA] checked:border-[#3474BA]',
+              'cursor-pointer appearance-none border-2 bg-white dark:bg-slate-800 checked:bg-[#3474BA] checked:border-[#3474BA]',
               'transition-colors',
               error && 'border-red-500',
               className
@@ -33,12 +33,12 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
         {(label || description) && (
           <div>
             {label && (
-              <label htmlFor={id} className="text-sm font-medium text-gray-700 cursor-pointer">
+              <label htmlFor={id} className="text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer">
                 {label}
                 {props.required && <span className="text-red-500 ml-1">*</span>}
               </label>
             )}
-            {description && <p className="text-sm text-gray-500 mt-0.5">{description}</p>}
+            {description && <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">{description}</p>}
             {error && <p className="text-sm text-red-500 mt-0.5">{error}</p>}
           </div>
         )}

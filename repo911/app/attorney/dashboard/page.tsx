@@ -100,12 +100,12 @@ export default function AttorneyDashboardPage() {
   return (
     <div>
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-        <p className="text-sm text-gray-500 mt-1">Welcome back. Here is your overview.</p>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Dashboard</h1>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Welcome back. Here is your overview.</p>
       </div>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg p-4 mb-6">
+        <div className="bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 rounded-lg p-4 mb-6">
           {error}
         </div>
       )}
@@ -115,12 +115,12 @@ export default function AttorneyDashboardPage() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-blue-50 rounded-lg">
+              <div className="p-2 bg-blue-50 dark:bg-blue-950 rounded-lg">
                 <ShoppingCart className="h-5 w-5 text-blue-600" />
               </div>
               <div>
-                <p className="text-sm text-gray-500">Available Leads</p>
-                <p className="text-2xl font-bold text-gray-900">{data?.available_leads ?? 0}</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Available Leads</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{data?.available_leads ?? 0}</p>
               </div>
             </div>
           </CardContent>
@@ -128,12 +128,12 @@ export default function AttorneyDashboardPage() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-green-50 rounded-lg">
+              <div className="p-2 bg-green-50 dark:bg-green-950 rounded-lg">
                 <FileText className="h-5 w-5 text-green-600" />
               </div>
               <div>
-                <p className="text-sm text-gray-500">My Claimed Leads</p>
-                <p className="text-2xl font-bold text-gray-900">{data?.claimed_leads ?? 0}</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">My Claimed Leads</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{data?.claimed_leads ?? 0}</p>
               </div>
             </div>
           </CardContent>
@@ -141,12 +141,12 @@ export default function AttorneyDashboardPage() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-purple-50 rounded-lg">
+              <div className="p-2 bg-purple-50 dark:bg-purple-950 rounded-lg">
                 <DollarSign className="h-5 w-5 text-purple-600" />
               </div>
               <div>
-                <p className="text-sm text-gray-500">Total Invested</p>
-                <p className="text-2xl font-bold text-gray-900">{formatCurrency(data?.total_spent ?? 0)}</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Total Invested</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{formatCurrency(data?.total_spent ?? 0)}</p>
               </div>
             </div>
           </CardContent>
@@ -158,8 +158,8 @@ export default function AttorneyDashboardPage() {
                 <CalendarDays className="h-5 w-5 text-orange-600" />
               </div>
               <div>
-                <p className="text-sm text-gray-500">This Month</p>
-                <p className="text-2xl font-bold text-gray-900">{formatCurrency(data?.this_month_spent ?? 0)}</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">This Month</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{formatCurrency(data?.this_month_spent ?? 0)}</p>
               </div>
             </div>
           </CardContent>
@@ -171,8 +171,8 @@ export default function AttorneyDashboardPage() {
                 <Calculator className="h-5 w-5 text-teal-600" />
               </div>
               <div>
-                <p className="text-sm text-gray-500">Avg per Lead</p>
-                <p className="text-2xl font-bold text-gray-900">{formatCurrency(data?.avg_cost_per_lead ?? 0)}</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Avg per Lead</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{formatCurrency(data?.avg_cost_per_lead ?? 0)}</p>
               </div>
             </div>
           </CardContent>
@@ -184,8 +184,8 @@ export default function AttorneyDashboardPage() {
                 <Scale className="h-5 w-5 text-emerald-600" />
               </div>
               <div>
-                <p className="text-sm text-gray-500">Cases Settled</p>
-                <p className="text-2xl font-bold text-gray-900">{(data?.case_outcomes?.settled ?? 0) + (data?.case_outcomes?.paid ?? 0)}</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Cases Settled</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{(data?.case_outcomes?.settled ?? 0) + (data?.case_outcomes?.paid ?? 0)}</p>
               </div>
             </div>
           </CardContent>
@@ -196,30 +196,30 @@ export default function AttorneyDashboardPage() {
       <div className="grid md:grid-cols-2 gap-4 mb-6">
         <Card>
           <CardContent className="p-6">
-            <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
+            <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center gap-2">
               <TrendingUp className="h-5 w-5" /> Leads by Tier
             </h3>
             <div className="space-y-3">
-              <div className="flex items-center justify-between p-3 rounded-lg bg-gray-50">
+              <div className="flex items-center justify-between p-3 rounded-lg bg-gray-50 dark:bg-slate-900">
                 <div className="flex items-center gap-2">
                   <Flame className="h-4 w-4 text-red-500" />
                   <Badge variant="hot">HOT</Badge>
                 </div>
-                <span className="text-lg font-semibold text-gray-900">{data?.leads_by_tier?.hot ?? 0}</span>
+                <span className="text-lg font-semibold text-gray-900 dark:text-gray-100">{data?.leads_by_tier?.hot ?? 0}</span>
               </div>
-              <div className="flex items-center justify-between p-3 rounded-lg bg-gray-50">
+              <div className="flex items-center justify-between p-3 rounded-lg bg-gray-50 dark:bg-slate-900">
                 <div className="flex items-center gap-2">
                   <Thermometer className="h-4 w-4 text-yellow-500" />
                   <Badge variant="warm">WARM</Badge>
                 </div>
-                <span className="text-lg font-semibold text-gray-900">{data?.leads_by_tier?.warm ?? 0}</span>
+                <span className="text-lg font-semibold text-gray-900 dark:text-gray-100">{data?.leads_by_tier?.warm ?? 0}</span>
               </div>
-              <div className="flex items-center justify-between p-3 rounded-lg bg-gray-50">
+              <div className="flex items-center justify-between p-3 rounded-lg bg-gray-50 dark:bg-slate-900">
                 <div className="flex items-center gap-2">
                   <Snowflake className="h-4 w-4 text-blue-500" />
                   <Badge variant="cold">COLD</Badge>
                 </div>
-                <span className="text-lg font-semibold text-gray-900">{data?.leads_by_tier?.cold ?? 0}</span>
+                <span className="text-lg font-semibold text-gray-900 dark:text-gray-100">{data?.leads_by_tier?.cold ?? 0}</span>
               </div>
             </div>
           </CardContent>
@@ -227,22 +227,22 @@ export default function AttorneyDashboardPage() {
 
         <Card>
           <CardContent className="p-6">
-            <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
+            <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center gap-2">
               <Scale className="h-5 w-5" /> Case Outcomes
             </h3>
             {data?.case_outcomes ? (
               <div className="space-y-3">
                 {Object.entries(data.case_outcomes).map(([status, count]) => (
-                  <div key={status} className="flex items-center justify-between p-3 rounded-lg bg-gray-50">
+                  <div key={status} className="flex items-center justify-between p-3 rounded-lg bg-gray-50 dark:bg-slate-900">
                     <Badge variant={getCaseStatusVariant(status)}>
                       {caseStatusLabels[status] || status}
                     </Badge>
-                    <span className="text-lg font-semibold text-gray-900">{count}</span>
+                    <span className="text-lg font-semibold text-gray-900 dark:text-gray-100">{count}</span>
                   </div>
                 ))}
               </div>
             ) : (
-              <p className="text-sm text-gray-500 text-center py-4">No case data yet.</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-4">No case data yet.</p>
             )}
           </CardContent>
         </Card>
@@ -252,7 +252,7 @@ export default function AttorneyDashboardPage() {
         {/* Quick Actions */}
         <Card>
           <CardContent className="p-6">
-            <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
+            <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center gap-2">
               <TrendingUp className="h-5 w-5" /> Quick Actions
             </h3>
             <div className="space-y-3">
@@ -278,28 +278,28 @@ export default function AttorneyDashboardPage() {
         {/* Recent Claimed Leads */}
         <Card>
           <CardContent className="p-6">
-            <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
+            <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center gap-2">
               <Clock className="h-5 w-5" /> Recently Claimed
             </h3>
             {data?.recent_leads && data.recent_leads.length > 0 ? (
               <div className="space-y-3">
                 {data.recent_leads.map((lead) => (
                   <Link key={lead.id} href={`/attorney/my-leads/${lead.id}`} className="block">
-                    <div className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                    <div className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors">
                       <div className="flex items-center gap-2">
                         <Badge variant={lead.qualification_tier === 'hot' ? 'hot' : lead.qualification_tier === 'warm' ? 'warm' : 'cold'}>
                           {lead.qualification_tier?.toUpperCase()}
                         </Badge>
-                        <span className="text-sm font-medium text-gray-900">{lead.first_name} {lead.last_name}</span>
-                        <span className="text-xs text-gray-400">{lead.repo_state}</span>
+                        <span className="text-sm font-medium text-gray-900 dark:text-gray-100">{lead.first_name} {lead.last_name}</span>
+                        <span className="text-xs text-gray-400 dark:text-gray-500">{lead.repo_state}</span>
                       </div>
-                      <span className="text-xs text-gray-400">{formatDate(lead.claimed_at)}</span>
+                      <span className="text-xs text-gray-400 dark:text-gray-500">{formatDate(lead.claimed_at)}</span>
                     </div>
                   </Link>
                 ))}
               </div>
             ) : (
-              <p className="text-sm text-gray-500 text-center py-4">No leads claimed yet.</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-4">No leads claimed yet.</p>
             )}
           </CardContent>
         </Card>

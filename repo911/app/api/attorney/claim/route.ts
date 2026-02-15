@@ -4,6 +4,7 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { stripe, isStripeConfigured, LEAD_PRICES } from '@/lib/stripe';
 import { isSubscriptionActive } from '@/lib/subscription';
 import { sendLeadClaimedToConsumer, sendLeadClaimedToAttorney } from '@/lib/emails';
+import { sendLeadClaimedSms } from '@/lib/sms';
 import { captureServerException } from '@/lib/error-tracking/server-tracker';
 import { rateLimit } from '@/lib/rate-limit';
 import { attorneyClaimSchema } from '@/lib/validations/attorney';
@@ -35,7 +36,7 @@ export async function POST(request: NextRequest) {
 
     const { data: attorney } = await supabase
       .from('attorneys')
-      .select('id, stripe_customer_id, status, subscription_plan, subscription_status, first_name, email, referral_credits')
+      .select('id, stripe_customer_id, status, subscription_plan, subscription_status, first_name, email, phone, referral_credits, sms_notifications')
       .eq('supabase_auth_id', user.id)
       .single();
 
@@ -151,6 +152,12 @@ export async function POST(request: NextRequest) {
         amount: 0,
       }).catch(() => { /* non-critical */ });
 
+      // SMS (fire-and-forget)
+      sendLeadClaimedSms(
+        { sms_notifications: attorney.sms_notifications, phone: attorney.phone },
+        { id: lead.id, qualification_tier: tier || 'cold' }
+      ).catch(() => { /* non-critical */ });
+
       return apiSuccess({
         success: true,
         redirect_url: `${process.env.NEXT_PUBLIC_APP_URL}/attorney/my-leads?claimed=${lead.id}`,
@@ -230,6 +237,12 @@ export async function POST(request: NextRequest) {
         tier: tier || 'cold',
         amount: 0,
       }).catch(() => { /* non-critical */ });
+
+      // SMS (fire-and-forget)
+      sendLeadClaimedSms(
+        { sms_notifications: attorney.sms_notifications, phone: attorney.phone },
+        { id: lead.id, qualification_tier: tier || 'cold' }
+      ).catch(() => { /* non-critical */ });
 
       // CRM activity
       const { data: crmContact } = await adminSupabase

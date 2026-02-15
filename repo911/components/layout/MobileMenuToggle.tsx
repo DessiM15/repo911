@@ -17,7 +17,7 @@ export function MobileMenuToggle({ navLinks }: { navLinks: NavLink[] }) {
     <>
       {/* Mobile Menu Button */}
       <button
-        className="md:hidden p-2 text-gray-600 hover:text-gray-900"
+        className="md:hidden p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100"
         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
         aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
       >
@@ -26,13 +26,13 @@ export function MobileMenuToggle({ navLinks }: { navLinks: NavLink[] }) {
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden absolute top-16 left-0 right-0 border-t border-gray-100 bg-white z-40">
+        <div className="md:hidden absolute top-16 left-0 right-0 border-t border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-900 z-40">
           <div className="px-4 py-4 space-y-3">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="block px-3 py-2 text-base font-medium text-gray-600 hover:text-[#3474BA] hover:bg-gray-50 rounded-lg"
+                className="block px-3 py-2 text-base font-medium text-gray-600 dark:text-gray-300 hover:text-[#3474BA] hover:bg-gray-50 dark:hover:bg-slate-800 rounded-lg"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 {link.label}

@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -19,6 +21,21 @@
   /* Shared */
   --border: #e5e7eb;
   --muted: #6b7280;
+}
+
+.dark {
+  --background: #0f172a;
+  --foreground: #e2e8f0;
+  --consumer-primary: #5b9bd5;
+  --consumer-primary-hover: #4a8bc4;
+  --consumer-accent: #F5A623;
+  --consumer-accent-hover: #E09612;
+  --attorney-navy: #0f172a;
+  --attorney-navy-light: #1e293b;
+  --attorney-green: #34d399;
+  --attorney-green-hover: #10b981;
+  --border: #334155;
+  --muted: #94a3b8;
 }
 
 @theme inline {

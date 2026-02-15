@@ -12,13 +12,13 @@ export function Breadcrumb({ items, className }: { items: BreadcrumbItem[]; clas
     <nav aria-label="Breadcrumb" className={cn('flex items-center gap-1 text-sm', className)}>
       {items.map((item, i) => (
         <span key={i} className="flex items-center gap-1">
-          {i > 0 && <ChevronRight className="h-3.5 w-3.5 text-gray-400" />}
+          {i > 0 && <ChevronRight className="h-3.5 w-3.5 text-gray-400 dark:text-gray-500" />}
           {item.href ? (
-            <Link href={item.href} className="text-gray-500 hover:text-gray-700">
+            <Link href={item.href} className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
               {item.label}
             </Link>
           ) : (
-            <span className="text-gray-900 font-medium">{item.label}</span>
+            <span className="text-gray-900 dark:text-gray-100 font-medium">{item.label}</span>
           )}
         </span>
       ))}

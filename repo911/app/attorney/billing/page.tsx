@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { CreditCard, DollarSign, Receipt, Calendar, Crown, AlertCircle, CheckCircle, XCircle } from 'lucide-react';
+import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
@@ -20,7 +21,6 @@ interface SubscriptionInfo {
 export default function BillingPage() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
   const [stats, setStats] = useState({ total_spent: 0, total_leads: 0, this_month: 0 });
   const [subscription, setSubscription] = useState<SubscriptionInfo | null>(null);
   const [subLoading, setSubLoading] = useState(true);
@@ -31,14 +31,14 @@ export default function BillingPage() {
       try {
         const res = await fetch('/api/attorney/billing');
         if (!res.ok) {
-          setError('Failed to load data. Please try again.');
+          toast.error('Failed to load billing data.');
           return;
         }
         const data = await res.json();
         setTransactions(data.transactions || []);
         setStats(data.stats || { total_spent: 0, total_leads: 0, this_month: 0 });
       } catch {
-        setError('Failed to load data. Please try again.');
+        toast.error('Failed to load billing data.');
       } finally {
         setLoading(false);
       }
@@ -64,19 +64,18 @@ export default function BillingPage() {
 
   async function handleUpgrade() {
     setActionLoading(true);
-    setError('');
     try {
       const res = await fetch('/api/attorney/subscription', { method: 'POST' });
       const data = await res.json();
       if (!res.ok) {
-        setError(data.error || 'Failed to start checkout');
+        toast.error(data.error || 'Failed to start checkout');
         return;
       }
       if (data.checkout_url) {
         window.location.href = data.checkout_url;
       }
     } catch {
-      setError('Failed to start subscription checkout.');
+      toast.error('Failed to start subscription checkout.');
     } finally {
       setActionLoading(false);
     }
@@ -87,18 +86,18 @@ export default function BillingPage() {
       return;
     }
     setActionLoading(true);
-    setError('');
     try {
       const res = await fetch('/api/attorney/subscription', { method: 'DELETE' });
       const data = await res.json();
       if (!res.ok) {
-        setError(data.error || 'Failed to cancel subscription');
+        toast.error(data.error || 'Failed to cancel subscription');
         return;
       }
       // Refresh subscription state
       setSubscription(prev => prev ? { ...prev, subscription_cancel_at_period_end: true } : prev);
+      toast.success('Subscription cancelled. Access continues until the end of your billing period.');
     } catch {
-      setError('Failed to cancel subscription.');
+      toast.error('Failed to cancel subscription.');
     } finally {
       setActionLoading(false);
     }
@@ -110,16 +109,9 @@ export default function BillingPage() {
   return (
     <div>
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Billing &amp; Payments</h1>
-        <p className="text-sm text-gray-500 mt-1">Manage your plan, view payment history and lead purchase receipts</p>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Billing &amp; Payments</h1>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Manage your plan, view payment history and lead purchase receipts</p>
       </div>
-
-      {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg p-4 mb-6 flex items-center gap-2">
-          <AlertCircle className="h-5 w-5 flex-shrink-0" />
-          {error}
-        </div>
-      )}
 
       {/* Your Plan */}
       {!subLoading && (
@@ -135,20 +127,20 @@ export default function BillingPage() {
                 <div className="flex items-center gap-3">
                   <CheckCircle className="h-6 w-6 text-green-500" />
                   <div>
-                    <p className="font-semibold text-gray-900 text-lg">Monthly Unlimited</p>
-                    <p className="text-sm text-gray-500">$2,000/month — Claim unlimited leads at no additional cost</p>
+                    <p className="font-semibold text-gray-900 dark:text-gray-100 text-lg">Monthly Unlimited</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">$2,000/month — Claim unlimited leads at no additional cost</p>
                   </div>
                   <Badge variant="success" className="ml-auto">Active</Badge>
                 </div>
 
                 {subscription?.subscription_current_period_end && (
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
                     {isCancelPending ? 'Access ends' : 'Renews'}: {formatDate(subscription.subscription_current_period_end)}
                   </p>
                 )}
 
                 {isCancelPending ? (
-                  <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+                  <div className="bg-amber-50 dark:bg-amber-950 border border-amber-200 dark:border-amber-800 rounded-lg p-4">
                     <div className="flex items-center gap-2 text-amber-700">
                       <AlertCircle className="h-5 w-5" />
                       <p className="text-sm font-medium">Your subscription will not renew. You have full access until the end of your current billing period.</p>
@@ -171,8 +163,8 @@ export default function BillingPage() {
                 <div className="flex items-start gap-3">
                   <DollarSign className="h-6 w-6 text-gray-400 mt-0.5" />
                   <div>
-                    <p className="font-semibold text-gray-900 text-lg">Per-Lead Pricing</p>
-                    <p className="text-sm text-gray-500">You currently pay per lead: Hot $1,000 / Warm $600 / Cold $300</p>
+                    <p className="font-semibold text-gray-900 dark:text-gray-100 text-lg">Per-Lead Pricing</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">You currently pay per lead: Hot $1,000 / Warm $600 / Cold $300</p>
                   </div>
                 </div>
 
@@ -202,12 +194,12 @@ export default function BillingPage() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-blue-50 rounded-lg">
+              <div className="p-2 bg-blue-50 dark:bg-blue-950 rounded-lg">
                 <DollarSign className="h-5 w-5 text-blue-600" />
               </div>
               <div>
-                <p className="text-sm text-gray-500">Total Spent</p>
-                <p className="text-xl font-bold text-gray-900">{formatCurrency(stats.total_spent)}</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Total Spent</p>
+                <p className="text-xl font-bold text-gray-900 dark:text-gray-100">{formatCurrency(stats.total_spent)}</p>
               </div>
             </div>
           </CardContent>
@@ -215,12 +207,12 @@ export default function BillingPage() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-green-50 rounded-lg">
+              <div className="p-2 bg-green-50 dark:bg-green-950 rounded-lg">
                 <Receipt className="h-5 w-5 text-green-600" />
               </div>
               <div>
-                <p className="text-sm text-gray-500">Total Leads Purchased</p>
-                <p className="text-xl font-bold text-gray-900">{stats.total_leads}</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Total Leads Purchased</p>
+                <p className="text-xl font-bold text-gray-900 dark:text-gray-100">{stats.total_leads}</p>
               </div>
             </div>
           </CardContent>
@@ -228,12 +220,12 @@ export default function BillingPage() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-purple-50 rounded-lg">
+              <div className="p-2 bg-purple-50 dark:bg-purple-950 rounded-lg">
                 <Calendar className="h-5 w-5 text-purple-600" />
               </div>
               <div>
-                <p className="text-sm text-gray-500">This Month</p>
-                <p className="text-xl font-bold text-gray-900">{formatCurrency(stats.this_month)}</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">This Month</p>
+                <p className="text-xl font-bold text-gray-900 dark:text-gray-100">{formatCurrency(stats.this_month)}</p>
               </div>
             </div>
           </CardContent>
@@ -251,7 +243,7 @@ export default function BillingPage() {
           {loading ? (
             <SkeletonTable />
           ) : transactions.length === 0 ? (
-            <div className="text-center py-8 text-gray-500">
+            <div className="text-center py-8 text-gray-500 dark:text-gray-400">
               <Receipt className="h-10 w-10 mx-auto mb-2 text-gray-300" />
               <p>No transactions yet. Claim a lead to get started.</p>
             </div>

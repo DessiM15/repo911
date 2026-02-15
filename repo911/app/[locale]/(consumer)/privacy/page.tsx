@@ -11,12 +11,12 @@ export default function PrivacyPage() {
     <>
     <EnglishOnlyNotice />
     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-      <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 text-center mb-8">Privacy Policy</h1>
-      <p className="text-sm text-gray-500 text-center mb-8">Last updated: February 2026</p>
+      <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-gray-100 text-center mb-8">Privacy Policy</h1>
+      <p className="text-sm text-gray-500 dark:text-gray-400 text-center mb-8">Last updated: February 2026</p>
 
-      <div className="prose prose-gray max-w-none space-y-6 text-gray-700 leading-relaxed">
+      <div className="prose prose-gray max-w-none space-y-6 text-gray-700 dark:text-gray-300 leading-relaxed">
         <section>
-          <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-3">1. Information We Collect</h2>
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mt-8 mb-3">1. Information We Collect</h2>
           <p>When you use Repo911, we collect the following types of information:</p>
           <ul className="list-disc pl-6 space-y-1 mt-2">
             <li><strong>Personal Information:</strong> Name, email address, phone number, mailing address, and other contact details you provide through our intake form.</li>
@@ -28,7 +28,7 @@ export default function PrivacyPage() {
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-3">2. How We Use Your Information</h2>
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mt-8 mb-3">2. How We Use Your Information</h2>
           <p>We use the information we collect to:</p>
           <ul className="list-disc pl-6 space-y-1 mt-2">
             <li>Evaluate your repossession case using our qualification system</li>
@@ -41,7 +41,7 @@ export default function PrivacyPage() {
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-3">3. Information Sharing</h2>
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mt-8 mb-3">3. Information Sharing</h2>
           <p>We share your information only in the following circumstances:</p>
           <ul className="list-disc pl-6 space-y-1 mt-2">
             <li><strong>With Licensed Attorneys:</strong> When an attorney claims your lead through our marketplace, they receive your contact information and case details to evaluate and potentially represent you. You consent to this sharing when submitting the intake form.</li>
@@ -52,12 +52,12 @@ export default function PrivacyPage() {
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-3">4. Data Retention</h2>
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mt-8 mb-3">4. Data Retention</h2>
           <p>We retain your information for as long as necessary to provide our services and fulfill the purposes described in this policy. Lead data is retained for a minimum of 3 years to support ongoing legal matters. You may request deletion of your data at any time (see Your Rights below).</p>
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-3">5. Your Rights</h2>
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mt-8 mb-3">5. Your Rights</h2>
           <p>You have the right to:</p>
           <ul className="list-disc pl-6 space-y-1 mt-2">
             <li><strong>Access:</strong> Request a copy of the personal data we hold about you</li>
@@ -69,27 +69,27 @@ export default function PrivacyPage() {
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-3">6. Data Security</h2>
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mt-8 mb-3">6. Data Security</h2>
           <p>We implement industry-standard security measures to protect your information, including encryption in transit (TLS/SSL), encrypted database storage, access controls, and regular security audits. However, no method of transmission over the internet is 100% secure.</p>
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-3">7. Cookies</h2>
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mt-8 mb-3">7. Cookies</h2>
           <p>We use essential cookies for website functionality and authentication. We may also use analytics cookies to understand how visitors interact with our site. You can control cookie preferences through your browser settings.</p>
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-3">8. California Consumer Privacy Act (CCPA)</h2>
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mt-8 mb-3">8. California Consumer Privacy Act (CCPA)</h2>
           <p>If you are a California resident, you have additional rights under the CCPA, including the right to know what personal information is collected, the right to request deletion, and the right to opt-out of the sale of personal information. We do not sell personal information. To exercise your CCPA rights, contact us at privacy@repo911.com.</p>
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-3">9. Changes to This Policy</h2>
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mt-8 mb-3">9. Changes to This Policy</h2>
           <p>We may update this Privacy Policy from time to time. We will notify you of material changes by posting the updated policy on this page with a revised date.</p>
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-3">10. Contact Us</h2>
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mt-8 mb-3">10. Contact Us</h2>
           <p>For privacy-related questions or requests, contact us at:</p>
           <p className="mt-2">Email: privacy@repo911.com</p>
         </section>

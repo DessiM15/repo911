@@ -25,15 +25,15 @@ export function FeeAgreement({ onSign, loading }: FeeAgreementProps) {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-xl font-bold text-gray-900 mb-2">Attorney Lead Purchase Agreement</h2>
-        <p className="text-sm text-gray-600">
+        <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">Attorney Lead Purchase Agreement</h2>
+        <p className="text-sm text-gray-600 dark:text-gray-400">
           Please read the following agreement carefully. You must scroll to the bottom and sign to continue.
         </p>
       </div>
 
       <div
         onScroll={handleScroll}
-        className="h-80 overflow-y-auto border border-gray-300 rounded-lg p-6 bg-white text-sm text-gray-700 leading-relaxed space-y-4"
+        className="h-80 overflow-y-auto border border-gray-300 dark:border-slate-600 rounded-lg p-6 bg-white dark:bg-slate-800 text-sm text-gray-700 dark:text-gray-300 leading-relaxed space-y-4"
       >
         <p className="font-bold text-center text-gray-900 text-base">
           REPO911

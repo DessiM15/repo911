@@ -6,9 +6,9 @@ export default function AttorneyNotFound() {
   return (
     <div className="flex items-center justify-center min-h-[60vh] px-4">
       <div className="text-center max-w-md">
-        <FileQuestion className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-        <h2 className="text-xl font-bold text-gray-900 mb-2">Page Not Found</h2>
-        <p className="text-gray-500 mb-6 text-sm">
+        <FileQuestion className="h-12 w-12 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
+        <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">Page Not Found</h2>
+        <p className="text-gray-500 dark:text-gray-400 mb-6 text-sm">
           The page you&apos;re looking for doesn&apos;t exist in the attorney portal.
         </p>
         <Link href="/attorney/dashboard">

@@ -83,9 +83,9 @@ export default function CRMPage() {
   return (
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <h1 className="text-2xl font-bold text-gray-900">CRM Contacts</h1>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">CRM Contacts</h1>
         <div className="flex items-center gap-3">
-          <span className="text-sm text-gray-500">{total} contacts</span>
+          <span className="text-sm text-gray-500 dark:text-gray-400">{total} contacts</span>
           <Link href="/admin/crm/pipeline" className="px-3 py-1.5 bg-[#1B2A4A] text-white text-sm rounded-lg hover:bg-[#2A3D66] transition-colors">
             Pipeline View
           </Link>
@@ -93,12 +93,12 @@ export default function CRMPage() {
       </div>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg p-4 mb-6">
+        <div className="bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 rounded-lg p-4 mb-6">
           {error}
         </div>
       )}
 
-      <div className="bg-white rounded-xl border border-gray-200 p-4">
+      <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-4">
         <div className="flex flex-col sm:flex-row gap-3">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" aria-hidden="true" />
@@ -108,14 +108,14 @@ export default function CRMPage() {
               aria-label="Search contacts"
               value={search}
               onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1B2A4A] focus:border-transparent"
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm dark:bg-slate-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#1B2A4A] focus:border-transparent"
             />
           </div>
           <select
             value={typeFilter}
             onChange={(e) => { setTypeFilter(e.target.value); setPage(1); }}
             aria-label="Filter by type"
-            className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1B2A4A]"
+            className="px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm dark:bg-slate-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#1B2A4A]"
           >
             {TYPE_OPTIONS.map((o) => (
               <option key={o.value} value={o.value}>{o.label}</option>
@@ -125,7 +125,7 @@ export default function CRMPage() {
             value={stageFilter}
             onChange={(e) => { setStageFilter(e.target.value); setPage(1); }}
             aria-label="Filter by stage"
-            className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1B2A4A]"
+            className="px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm dark:bg-slate-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#1B2A4A]"
           >
             {STAGE_OPTIONS.map((o) => (
               <option key={o.value} value={o.value}>{o.label}</option>
@@ -139,13 +139,13 @@ export default function CRMPage() {
               aria-label="Filter by tag"
               value={tagFilter}
               onChange={(e) => { setTagFilter(e.target.value); setPage(1); }}
-              className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1B2A4A] focus:border-transparent"
+              className="pl-10 pr-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm dark:bg-slate-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#1B2A4A] focus:border-transparent"
             />
           </div>
         </div>
       </div>
 
-      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+      <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 overflow-hidden">
         {loading ? (
           <div className="p-6 space-y-3">
             {Array.from({ length: 10 }).map((_, i) => (
@@ -153,8 +153,8 @@ export default function CRMPage() {
             ))}
           </div>
         ) : contacts.length === 0 ? (
-          <div className="p-12 text-center text-gray-500">
-            <Contact className="h-8 w-8 mx-auto mb-2 text-gray-300" />
+          <div className="p-12 text-center text-gray-500 dark:text-gray-400">
+            <Contact className="h-8 w-8 mx-auto mb-2 text-gray-300 dark:text-gray-600" />
             <p>No contacts found.</p>
           </div>
         ) : (
@@ -194,18 +194,18 @@ export default function CRMPage() {
                   <TableCell>
                     <div className="flex flex-wrap gap-1">
                       {(contact.tags || []).slice(0, 3).map((tag: string) => (
-                        <span key={tag} className="text-[10px] bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded">
+                        <span key={tag} className="text-[10px] bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-400 px-1.5 py-0.5 rounded">
                           {tag}
                         </span>
                       ))}
                       {(contact.tags || []).length > 3 && (
-                        <span className="text-[10px] text-gray-400">+{contact.tags!.length - 3}</span>
+                        <span className="text-[10px] text-gray-400 dark:text-gray-500">+{contact.tags!.length - 3}</span>
                       )}
                     </div>
                   </TableCell>
                   <TableCell className="text-sm">
                     {contact.next_follow_up ? (
-                      <span className={new Date(contact.next_follow_up) < new Date() ? 'text-red-500 font-medium' : 'text-gray-600'}>
+                      <span className={new Date(contact.next_follow_up) < new Date() ? 'text-red-500 font-medium' : 'text-gray-600 dark:text-gray-400'}>
                         {formatDate(contact.next_follow_up)}
                       </span>
                     ) : '—'}
@@ -218,8 +218,8 @@ export default function CRMPage() {
         )}
 
         {totalPages > 1 && (
-          <nav aria-label="Pagination" className="flex items-center justify-between px-4 py-3 border-t border-gray-200">
-            <p className="text-sm text-gray-500">
+          <nav aria-label="Pagination" className="flex items-center justify-between px-4 py-3 border-t border-gray-200 dark:border-slate-700">
+            <p className="text-sm text-gray-500 dark:text-gray-400">
               Page {page} of {totalPages}
             </p>
             <div className="flex gap-2">
@@ -227,7 +227,7 @@ export default function CRMPage() {
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
                 disabled={page === 1}
                 aria-label="Previous page"
-                className="p-1.5 rounded-lg border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="p-1.5 rounded-lg border border-gray-300 dark:border-slate-600 hover:bg-gray-50 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <ChevronLeft className="h-4 w-4" />
               </button>
@@ -235,7 +235,7 @@ export default function CRMPage() {
                 onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                 disabled={page === totalPages}
                 aria-label="Next page"
-                className="p-1.5 rounded-lg border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="p-1.5 rounded-lg border border-gray-300 dark:border-slate-600 hover:bg-gray-50 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <ChevronRight className="h-4 w-4" />
               </button>

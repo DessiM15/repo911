@@ -57,7 +57,7 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-gray-50 dark:bg-slate-900 flex items-center justify-center px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-2 mb-4">
@@ -66,17 +66,17 @@ export default function AdminLoginPage() {
               Repo<span className="text-[#2ECC71]">911</span>
             </span>
           </div>
-          <h1 className="text-xl font-semibold text-gray-900">Admin Portal</h1>
-          <p className="text-sm text-gray-500 mt-1">Sign in to access the admin dashboard</p>
+          <h1 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Admin Portal</h1>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Sign in to access the admin dashboard</p>
         </div>
 
-        <form onSubmit={handleLogin} className="bg-white rounded-xl border border-gray-200 p-8 space-y-4">
+        <form onSubmit={handleLogin} className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-8 space-y-4">
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg p-3 text-sm">{error}</div>
+            <div className="bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 rounded-lg p-3 text-sm">{error}</div>
           )}
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label>
             <Input
               type="email"
               value={email}
@@ -87,7 +87,7 @@ export default function AdminLoginPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Password</label>
             <Input
               type="password"
               value={password}
@@ -101,7 +101,7 @@ export default function AdminLoginPage() {
             Sign In
           </Button>
           <p className="text-right">
-            <Link href="/admin/forgot-password" className="text-sm text-gray-500 hover:text-[#1B2A4A] hover:underline">
+            <Link href="/admin/forgot-password" className="text-sm text-gray-500 dark:text-gray-400 hover:text-[#1B2A4A] dark:hover:text-blue-300 hover:underline">
               Forgot password?
             </Link>
           </p>

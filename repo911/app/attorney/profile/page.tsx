@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { User, Bell, Shield, Save } from 'lucide-react';
+import { toast } from 'sonner';
 import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -22,8 +23,6 @@ export default function ProfilePage() {
   const [attorney, setAttorney] = useState<Attorney | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [message, setMessage] = useState('');
-  const [error, setError] = useState('');
 
   // Editable fields
   const [phone, setPhone] = useState('');
@@ -39,7 +38,7 @@ export default function ProfilePage() {
       try {
         const res = await fetch('/api/attorney/profile');
         if (!res.ok) {
-          setError('Failed to load data. Please try again.');
+          toast.error('Failed to load data. Please try again.');
           return;
         }
         const data = await res.json();
@@ -55,7 +54,7 @@ export default function ProfilePage() {
           setSmsNotifications(a.sms_notifications);
         }
       } catch {
-        setError('Failed to load data. Please try again.');
+        toast.error('Failed to load data. Please try again.');
       } finally {
         setLoading(false);
       }
@@ -65,7 +64,6 @@ export default function ProfilePage() {
 
   async function handleSave() {
     setSaving(true);
-    setMessage('');
     try {
       const res = await fetch('/api/attorney/profile', {
         method: 'PATCH',
@@ -82,12 +80,12 @@ export default function ProfilePage() {
       });
 
       if (res.ok) {
-        setMessage('Profile updated successfully.');
+        toast.success('Profile updated successfully.');
       } else {
-        setMessage('Failed to update profile.');
+        toast.error('Failed to update profile.');
       }
     } catch {
-      setMessage('An error occurred.');
+      toast.error('An error occurred.');
     } finally {
       setSaving(false);
     }
@@ -103,27 +101,15 @@ export default function ProfilePage() {
   }
 
   if (!attorney) {
-    return <p className="text-gray-500">Profile not found.</p>;
+    return <p className="text-gray-500 dark:text-gray-400">Profile not found.</p>;
   }
 
   return (
     <div className="max-w-3xl mx-auto">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Profile &amp; Settings</h1>
-        <p className="text-sm text-gray-500 mt-1">Manage your account details and preferences</p>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Profile &amp; Settings</h1>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Manage your account details and preferences</p>
       </div>
-
-      {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg p-4 mb-6">
-          {error}
-        </div>
-      )}
-
-      {message && (
-        <div className={`rounded-lg p-4 mb-4 ${message.includes('success') ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-red-50 text-red-700 border border-red-200'}`}>
-          {message}
-        </div>
-      )}
 
       {/* Account Info (read-only) */}
       <Card className="mb-4">
@@ -134,14 +120,14 @@ export default function ProfilePage() {
         </CardHeader>
         <CardContent>
           <div className="grid sm:grid-cols-2 gap-4 text-sm">
-            <div><span className="text-gray-500">Name</span><p className="font-medium">{attorney.first_name} {attorney.last_name}</p></div>
-            <div><span className="text-gray-500">Email</span><p className="font-medium">{attorney.email}</p></div>
-            <div><span className="text-gray-500">Bar Number</span><p className="font-medium">{attorney.bar_number}</p></div>
-            <div><span className="text-gray-500">Bar State</span><p className="font-medium">{attorney.bar_state}</p></div>
-            <div><span className="text-gray-500">Licensed States</span><p className="font-medium">{attorney.licensed_states?.join(', ')}</p></div>
-            <div><span className="text-gray-500">Lead Purchase Agreement</span><p className="font-medium text-green-600">{attorney.fee_agreement_signed ? 'Signed' : 'Not signed'}</p></div>
-            <div><span className="text-gray-500">Account Status</span><p className="font-medium capitalize">{attorney.status}</p></div>
-            <div><span className="text-gray-500">Verified</span><p className="font-medium">{attorney.is_verified ? 'Yes' : 'Pending'}</p></div>
+            <div><span className="text-gray-500 dark:text-gray-400">Name</span><p className="font-medium">{attorney.first_name} {attorney.last_name}</p></div>
+            <div><span className="text-gray-500 dark:text-gray-400">Email</span><p className="font-medium">{attorney.email}</p></div>
+            <div><span className="text-gray-500 dark:text-gray-400">Bar Number</span><p className="font-medium">{attorney.bar_number}</p></div>
+            <div><span className="text-gray-500 dark:text-gray-400">Bar State</span><p className="font-medium">{attorney.bar_state}</p></div>
+            <div><span className="text-gray-500 dark:text-gray-400">Licensed States</span><p className="font-medium">{attorney.licensed_states?.join(', ')}</p></div>
+            <div><span className="text-gray-500 dark:text-gray-400">Lead Purchase Agreement</span><p className="font-medium text-green-600">{attorney.fee_agreement_signed ? 'Signed' : 'Not signed'}</p></div>
+            <div><span className="text-gray-500 dark:text-gray-400">Account Status</span><p className="font-medium capitalize">{attorney.status}</p></div>
+            <div><span className="text-gray-500 dark:text-gray-400">Verified</span><p className="font-medium">{attorney.is_verified ? 'Yes' : 'Pending'}</p></div>
           </div>
         </CardContent>
       </Card>
@@ -161,8 +147,8 @@ export default function ProfilePage() {
           <Input label="Website" value={website} onChange={(e) => setWebsite(e.target.value)} placeholder="https://yourfirm.com" />
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Preferred States for Leads</label>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 max-h-40 overflow-y-auto border border-gray-200 rounded-lg p-3">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Preferred States for Leads</label>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 max-h-40 overflow-y-auto border border-gray-200 dark:border-slate-700 rounded-lg p-3">
               {US_STATES.map((state) => (
                 <label key={state.value} className="flex items-center gap-2 text-sm cursor-pointer">
                   <input
@@ -184,7 +170,7 @@ export default function ProfilePage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Practice Areas</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Practice Areas</label>
             <div className="space-y-2">
               {PRACTICE_AREAS.map((area) => (
                 <Checkbox
@@ -223,11 +209,10 @@ export default function ProfilePage() {
           />
           <Checkbox
             id="sms_notifications"
-            label="SMS Notifications (Coming Soon)"
-            description="Text alerts for hot leads are not yet available"
+            label="SMS Notifications"
+            description="Receive text alerts when new leads match your criteria"
             checked={smsNotifications}
             onChange={(e) => setSmsNotifications(e.target.checked)}
-            disabled
           />
         </CardContent>
       </Card>

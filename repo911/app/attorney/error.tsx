@@ -21,8 +21,8 @@ export default function AttorneyError({
     <div className="flex items-center justify-center min-h-[60vh] px-4">
       <div className="text-center max-w-md">
         <AlertTriangle className="h-12 w-12 text-amber-500 mx-auto mb-4" />
-        <h2 className="text-xl font-bold text-gray-900 mb-2">Something Went Wrong</h2>
-        <p className="text-gray-500 mb-6 text-sm">
+        <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">Something Went Wrong</h2>
+        <p className="text-gray-500 dark:text-gray-400 mb-6 text-sm">
           We encountered an error loading this page. Please try again or contact support if the problem persists.
         </p>
         <Button variant="primary" onClick={reset} className="bg-[#1B2A4A] hover:bg-[#2A3D66]">

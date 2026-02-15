@@ -228,20 +228,20 @@ export default function CRMContactDetailPage() {
       ]} />
 
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg p-3 text-sm">{error}</div>
+        <div className="bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 rounded-lg p-3 text-sm">{error}</div>
       )}
 
       {/* Header */}
-      <div className="bg-white rounded-xl border border-gray-200 p-6">
+      <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 mb-2">
-              <h1 className="text-xl font-bold text-gray-900">{contact.first_name} {contact.last_name}</h1>
+              <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">{contact.first_name} {contact.last_name}</h1>
               <Badge variant={contact.contact_type === 'attorney' ? 'info' : 'default'}>
                 {contact.contact_type}
               </Badge>
             </div>
-            <div className="flex flex-wrap items-center gap-3 text-sm text-gray-600">
+            <div className="flex flex-wrap items-center gap-3 text-sm text-gray-600 dark:text-gray-400">
               {contact.email && <span className="flex items-center gap-1"><Mail className="h-4 w-4" />{contact.email}</span>}
               {contact.phone && <span className="flex items-center gap-1"><Phone className="h-4 w-4" />{contact.phone}</span>}
               {contact.state && <span className="flex items-center gap-1"><MapPin className="h-4 w-4" />{contact.city ? `${contact.city}, ` : ''}{contact.state}</span>}
@@ -262,12 +262,12 @@ export default function CRMContactDetailPage() {
         </div>
 
         {/* Stage + Tags */}
-        <div className="mt-4 pt-4 border-t border-gray-200 flex flex-wrap items-center gap-3">
-          <label className="text-sm font-medium text-gray-700">Stage:</label>
+        <div className="mt-4 pt-4 border-t border-gray-200 dark:border-slate-700 flex flex-wrap items-center gap-3">
+          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Stage:</label>
           <select
             value={stageEdit}
             onChange={(e) => setStageEdit(e.target.value)}
-            className="px-3 py-1.5 border border-gray-300 rounded-lg text-sm"
+            className="px-3 py-1.5 border border-gray-300 dark:border-slate-600 rounded-lg text-sm dark:bg-slate-800 dark:text-gray-100"
           >
             {STAGES.map((s) => (
               <option key={s} value={s}>{s.charAt(0).toUpperCase() + s.slice(1)}</option>
@@ -282,11 +282,11 @@ export default function CRMContactDetailPage() {
         </div>
 
         {/* Tags */}
-        <div className="mt-4 pt-4 border-t border-gray-200">
+        <div className="mt-4 pt-4 border-t border-gray-200 dark:border-slate-700">
           <div className="flex flex-wrap items-center gap-2">
-            <Tag className="h-3.5 w-3.5 text-gray-400" />
+            <Tag className="h-3.5 w-3.5 text-gray-400 dark:text-gray-500" />
             {(contact.tags || []).map((tag: string) => (
-              <span key={tag} className="inline-flex items-center gap-1 text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">
+              <span key={tag} className="inline-flex items-center gap-1 text-xs bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-400 px-2 py-0.5 rounded-full">
                 {tag}
                 <button
                   onClick={() => handleRemoveTag(tag)}
@@ -305,7 +305,7 @@ export default function CRMContactDetailPage() {
                 value={newTag}
                 onChange={(e) => setNewTag(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleAddTag()}
-                className="w-24 px-2 py-0.5 border border-gray-300 rounded text-xs focus:outline-none focus:ring-1 focus:ring-[#1B2A4A]"
+                className="w-24 px-2 py-0.5 border border-gray-300 dark:border-slate-600 rounded text-xs dark:bg-slate-800 dark:text-gray-100 focus:outline-none focus:ring-1 focus:ring-[#1B2A4A]"
               />
               <button
                 onClick={handleAddTag}
@@ -321,12 +321,12 @@ export default function CRMContactDetailPage() {
         {/* Follow-up Date */}
         <div className="mt-3 flex flex-wrap items-center gap-2 text-sm">
           <Calendar className="h-4 w-4 text-gray-400" />
-          <span className="text-gray-500">Follow-up:</span>
+          <span className="text-gray-500 dark:text-gray-400">Follow-up:</span>
           <input
             type="date"
             value={followUp ? followUp.split('T')[0] : ''}
             onChange={(e) => setFollowUp(e.target.value)}
-            className="px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-[#1B2A4A]"
+            className="px-2 py-1 border border-gray-300 dark:border-slate-600 rounded text-sm dark:bg-slate-800 dark:text-gray-100 focus:outline-none focus:ring-1 focus:ring-[#1B2A4A]"
           />
           {followUp !== (contact.next_follow_up || '') && (
             <Button size="sm" variant="primary" onClick={handleFollowUpUpdate} loading={savingFollowUp}>
@@ -341,8 +341,8 @@ export default function CRMContactDetailPage() {
 
       <div className="grid lg:grid-cols-3 gap-4">
         {/* Activity Timeline */}
-        <div className="lg:col-span-2 bg-white rounded-xl border border-gray-200 p-6">
-          <h3 className="font-semibold text-gray-900 mb-4">Activity Timeline</h3>
+        <div className="lg:col-span-2 bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-6">
+          <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-4">Activity Timeline</h3>
 
           {/* Add Note */}
           <div className="mb-6 flex gap-2">
@@ -352,7 +352,7 @@ export default function CRMContactDetailPage() {
               value={newNote}
               onChange={(e) => setNewNote(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleAddNote()}
-              className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1B2A4A]"
+              className="flex-1 px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm dark:bg-slate-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#1B2A4A]"
             />
             <Button size="sm" variant="primary" onClick={handleAddNote} loading={addingNote} disabled={!newNote.trim()} aria-label="Add note">
               <Send className="h-4 w-4" />
@@ -362,7 +362,7 @@ export default function CRMContactDetailPage() {
           {/* Timeline */}
           <div className="space-y-4">
             {activities.length === 0 && (
-              <p className="text-sm text-gray-400 text-center py-4">No activity yet.</p>
+              <p className="text-sm text-gray-400 dark:text-gray-500 text-center py-4">No activity yet.</p>
             )}
             {activities.map((activity) => {
               const Icon = getActivityIcon(activity.activity_type);
@@ -374,13 +374,13 @@ export default function CRMContactDetailPage() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <span className="text-xs font-medium text-gray-500 capitalize">
+                      <span className="text-xs font-medium text-gray-500 dark:text-gray-400 capitalize">
                         {activity.activity_type.replace('_', ' ')}
                       </span>
-                      <span className="text-xs text-gray-400">{formatDate(activity.created_at)}</span>
+                      <span className="text-xs text-gray-400 dark:text-gray-500">{formatDate(activity.created_at)}</span>
                     </div>
                     {activity.description && (
-                      <p className="text-sm text-gray-700 mt-0.5">{activity.description}</p>
+                      <p className="text-sm text-gray-700 dark:text-gray-300 mt-0.5">{activity.description}</p>
                     )}
                   </div>
                 </div>
@@ -390,16 +390,16 @@ export default function CRMContactDetailPage() {
         </div>
 
         {/* Notes sidebar */}
-        <div className="bg-white rounded-xl border border-gray-200 p-6">
-          <h3 className="font-semibold text-gray-900 mb-4">Notes ({(contact.notes || []).length})</h3>
+        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-6">
+          <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-4">Notes ({(contact.notes || []).length})</h3>
           <div className="space-y-3">
             {(contact.notes || []).length === 0 && (
-              <p className="text-sm text-gray-400">No notes yet.</p>
+              <p className="text-sm text-gray-400 dark:text-gray-500">No notes yet.</p>
             )}
             {(contact.notes || []).slice().reverse().map((note: { timestamp: string; author: string; note_text: string }, i: number) => (
-              <div key={i} className="bg-gray-50 rounded-lg p-3">
-                <p className="text-sm text-gray-700">{note.note_text}</p>
-                <div className="flex items-center gap-2 mt-2 text-xs text-gray-400">
+              <div key={i} className="bg-gray-50 dark:bg-slate-900 rounded-lg p-3">
+                <p className="text-sm text-gray-700 dark:text-gray-300">{note.note_text}</p>
+                <div className="flex items-center gap-2 mt-2 text-xs text-gray-400 dark:text-gray-500">
                   <span>{note.author}</span>
                   <span>&middot;</span>
                   <span>{formatDate(note.timestamp)}</span>
@@ -409,13 +409,13 @@ export default function CRMContactDetailPage() {
           </div>
 
           {/* Contact Info Summary */}
-          <div className="mt-6 pt-4 border-t border-gray-200">
-            <h4 className="text-sm font-medium text-gray-900 mb-2">Details</h4>
-            <div className="space-y-1.5 text-xs text-gray-600">
-              <div className="flex justify-between"><span className="text-gray-400">Type</span><span className="capitalize">{contact.contact_type}</span></div>
-              <div className="flex justify-between"><span className="text-gray-400">Created</span><span>{formatDate(contact.created_at)}</span></div>
+          <div className="mt-6 pt-4 border-t border-gray-200 dark:border-slate-700">
+            <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">Details</h4>
+            <div className="space-y-1.5 text-xs text-gray-600 dark:text-gray-400">
+              <div className="flex justify-between"><span className="text-gray-400 dark:text-gray-500">Type</span><span className="capitalize">{contact.contact_type}</span></div>
+              <div className="flex justify-between"><span className="text-gray-400 dark:text-gray-500">Created</span><span>{formatDate(contact.created_at)}</span></div>
               {contact.last_contacted_at && (
-                <div className="flex justify-between"><span className="text-gray-400">Last Contacted</span><span>{formatDate(contact.last_contacted_at)}</span></div>
+                <div className="flex justify-between"><span className="text-gray-400 dark:text-gray-500">Last Contacted</span><span>{formatDate(contact.last_contacted_at)}</span></div>
               )}
             </div>
           </div>

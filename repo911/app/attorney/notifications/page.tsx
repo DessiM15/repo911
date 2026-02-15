@@ -72,8 +72,8 @@ export default function NotificationsPage() {
     <div className="max-w-3xl mx-auto">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Notifications</h1>
-          <p className="text-sm text-gray-500 mt-1">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Notifications</h1>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
             {unreadCount > 0 ? `${unreadCount} unread` : 'All caught up'}
           </p>
         </div>
@@ -86,7 +86,7 @@ export default function NotificationsPage() {
       </div>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg p-4 mb-6 flex items-center gap-2">
+        <div className="bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 rounded-lg p-4 mb-6 flex items-center gap-2">
           <AlertCircle className="h-5 w-5 flex-shrink-0" />
           {error}
         </div>
@@ -99,21 +99,21 @@ export default function NotificationsPage() {
           ))}
         </div>
       ) : notifications.length === 0 ? (
-        <div className="bg-white rounded-xl border border-gray-200 p-12 text-center">
+        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-12 text-center">
           <Bell className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-1">No Notifications</h3>
-          <p className="text-gray-500 text-sm">
+          <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-1">No Notifications</h3>
+          <p className="text-gray-500 dark:text-gray-400 text-sm">
             You&apos;ll be notified when new leads match your preferences or when important updates occur.
           </p>
         </div>
       ) : (
-        <div className="bg-white rounded-xl border border-gray-200 divide-y divide-gray-100 overflow-hidden">
+        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 divide-y divide-gray-100 dark:divide-slate-700 overflow-hidden">
           {notifications.map((n) => (
             <button
               key={n.id}
               onClick={() => handleNotificationClick(n)}
               className={cn(
-                'w-full text-left px-5 py-4 hover:bg-gray-50 transition-colors',
+                'w-full text-left px-5 py-4 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors',
                 !n.read && 'bg-blue-50/50'
               )}
             >
@@ -123,14 +123,14 @@ export default function NotificationsPage() {
                 )}
                 <div className={cn('flex-1 min-w-0', n.read && 'ml-[22px]')}>
                   <div className="flex items-start justify-between gap-4">
-                    <p className={cn('text-sm', !n.read ? 'font-semibold text-gray-900' : 'font-medium text-gray-700')}>
+                    <p className={cn('text-sm', !n.read ? 'font-semibold text-gray-900 dark:text-gray-100' : 'font-medium text-gray-700 dark:text-gray-300')}>
                       {n.title}
                     </p>
-                    <span className="text-xs text-gray-400 whitespace-nowrap shrink-0">
+                    <span className="text-xs text-gray-400 dark:text-gray-500 whitespace-nowrap shrink-0">
                       {formatDate(n.created_at)}
                     </span>
                   </div>
-                  <p className="text-sm text-gray-500 mt-0.5">{n.message}</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">{n.message}</p>
                 </div>
               </div>
             </button>

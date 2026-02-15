@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import { Geist } from 'next/font/google';
+import { Toaster } from 'sonner';
 import { LazyErrorTracking } from '@/components/LazyErrorTracking';
+import { ThemeProvider } from '@/components/layout/ThemeProvider';
 import './globals.css';
 
 const geistSans = Geist({
@@ -45,7 +47,10 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} antialiased`}
       >
-        <LazyErrorTracking>{children}</LazyErrorTracking>
+        <ThemeProvider>
+          <LazyErrorTracking>{children}</LazyErrorTracking>
+          <Toaster richColors position="top-right" />
+        </ThemeProvider>
       </body>
     </html>
   );

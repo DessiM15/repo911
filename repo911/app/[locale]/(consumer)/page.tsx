@@ -82,17 +82,17 @@ export default function HomePage() {
       />
 
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-[#3474BA]/5 via-white to-[#F5A623]/5 py-16 sm:py-24">
+      <section className="relative bg-gradient-to-br from-[#3474BA]/5 via-white to-[#F5A623]/5 dark:from-[#3474BA]/10 dark:via-slate-900 dark:to-[#F5A623]/10 py-16 sm:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-3xl sm:text-5xl lg:text-7xl font-bold text-gray-900 leading-tight">
+            <h1 className="text-3xl sm:text-5xl lg:text-7xl font-bold text-gray-900 dark:text-gray-100 leading-tight">
               Was Your Car{' '}
               <span className="text-[#3474BA]">Wrongfully Repossessed?</span>
             </h1>
-            <p className="mt-4 text-xl sm:text-2xl text-gray-900 font-semibold">
+            <p className="mt-4 text-xl sm:text-2xl text-gray-900 dark:text-gray-100 font-semibold">
               You May Be Owed $10,000–$100,000+
             </p>
-            <p className="mt-4 text-lg text-gray-600 leading-relaxed">
+            <p className="mt-4 text-lg text-gray-600 dark:text-gray-400 leading-relaxed">
               Even if you missed payments, the repo company may have broken the law.
               Find out in 5 minutes — it&apos;s 100% free.
             </p>
@@ -103,7 +103,7 @@ export default function HomePage() {
                 </Button>
               </Link>
             </div>
-            <div className="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-gray-500">
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-gray-500 dark:text-gray-400">
               <span className="flex items-center gap-1">
                 <Shield className="h-4 w-4 text-[#3474BA]" />
                 Free Case Review
@@ -146,11 +146,11 @@ export default function HomePage() {
       </section>
 
       {/* How It Works */}
-      <section className="py-16 sm:py-20 bg-white" style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 500px' }}>
+      <section className="py-16 sm:py-20 bg-white dark:bg-slate-800" style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 500px' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">How It Works</h2>
-            <p className="mt-3 text-lg text-gray-500">Three simple steps to find out if you have a case</p>
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-gray-100">How It Works</h2>
+            <p className="mt-3 text-lg text-gray-500 dark:text-gray-400">Three simple steps to find out if you have a case</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
@@ -178,7 +178,7 @@ export default function HomePage() {
             ].map((item) => (
               <div
                 key={item.step}
-                className="relative bg-gray-50 rounded-2xl p-8 text-center hover:shadow-md transition-shadow"
+                className="relative bg-gray-50 dark:bg-slate-900 rounded-2xl p-8 text-center hover:shadow-md transition-shadow"
               >
                 <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-[#3474BA]/10 text-[#3474BA] mb-4">
                   <item.icon className="h-7 w-7" />
@@ -186,8 +186,8 @@ export default function HomePage() {
                 <div className="absolute top-4 right-4 w-8 h-8 rounded-full bg-[#F5A623] text-gray-900 flex items-center justify-center text-sm font-bold">
                   {item.step}
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">{item.title}</h3>
-                <p className="text-gray-600 leading-relaxed">{item.description}</p>
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">{item.title}</h3>
+                <p className="text-gray-600 dark:text-gray-400 leading-relaxed">{item.description}</p>
               </div>
             ))}
           </div>
@@ -195,13 +195,13 @@ export default function HomePage() {
       </section>
 
       {/* Common Violations */}
-      <section className="py-16 sm:py-20 bg-gray-50" style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 600px' }}>
+      <section className="py-16 sm:py-20 bg-gray-50 dark:bg-slate-900" style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 600px' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-gray-100">
               Did Any of This Happen to You?
             </h2>
-            <p className="mt-3 text-lg text-gray-500">
+            <p className="mt-3 text-lg text-gray-500 dark:text-gray-400">
               These are common violations that may entitle you to compensation
             </p>
           </div>
@@ -241,14 +241,14 @@ export default function HomePage() {
               <Link
                 key={item.violation}
                 href="/claim"
-                className="block bg-white rounded-xl p-4 sm:p-6 border border-gray-200 hover:border-[#3474BA] hover:shadow-md transition-all group"
+                className="block bg-white dark:bg-slate-800 rounded-xl p-4 sm:p-6 border border-gray-200 dark:border-slate-700 hover:border-[#3474BA] hover:shadow-md transition-all group"
               >
                 <p className="text-[#3474BA] font-medium italic mb-3">{item.quote}</p>
-                <h3 className="text-lg font-semibold text-gray-900 mb-1 flex items-center gap-1">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-1 flex items-center gap-1">
                   {item.violation}
                   <ChevronRight className="h-4 w-4 text-[#F5A623] opacity-0 group-hover:opacity-100 transition-opacity" />
                 </h3>
-                <p className="text-sm text-gray-600">{item.description}</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">{item.description}</p>
               </Link>
             ))}
           </div>
@@ -265,10 +265,10 @@ export default function HomePage() {
               </div>
             </div>
             <div>
-              <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">
+              <h3 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
                 Time May Be Running Out on Your Claim
               </h3>
-              <p className="text-gray-700 leading-relaxed">
+              <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
                 Most states have a <strong>statute of limitations</strong> on wrongful repossession claims — typically 2-4 years from the date of repossession. Once this window closes, you may lose your right to compensation forever. The sooner you act, the stronger your case.
               </p>
               <Link href="/claim" className="inline-flex items-center gap-1 mt-3 text-[#2B5EA2] font-semibold hover:underline">
@@ -280,13 +280,13 @@ export default function HomePage() {
       </section>
 
       {/* Trust Section */}
-      <section className="py-16 sm:py-20 bg-white" style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 500px' }}>
+      <section className="py-16 sm:py-20 bg-white dark:bg-slate-800" style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 500px' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">
               Why Consumers Trust Repo911
             </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
               We connect you with experienced attorneys who specialize in wrongful repossession and consumer protection law.
             </p>
           </div>
@@ -295,48 +295,48 @@ export default function HomePage() {
               <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-[#3474BA]/10 text-[#3474BA] mb-4">
                 <Scale className="h-6 w-6" />
               </div>
-              <h3 className="font-semibold text-gray-900 mb-2">Licensed Attorneys Only</h3>
-              <p className="text-sm text-gray-600">Every attorney in our network is licensed and verified in their state.</p>
+              <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Licensed Attorneys Only</h3>
+              <p className="text-sm text-gray-600 dark:text-gray-400">Every attorney in our network is licensed and verified in their state.</p>
             </div>
             <div className="text-center p-6">
               <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-[#3474BA]/10 text-[#3474BA] mb-4">
                 <Lock className="h-6 w-6" />
               </div>
-              <h3 className="font-semibold text-gray-900 mb-2">Your Info Is Protected</h3>
-              <p className="text-sm text-gray-600">Your personal information is encrypted and only shared with your matched attorney.</p>
+              <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Your Info Is Protected</h3>
+              <p className="text-sm text-gray-600 dark:text-gray-400">Your personal information is encrypted and only shared with your matched attorney.</p>
             </div>
             <div className="text-center p-6">
               <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-[#3474BA]/10 text-[#3474BA] mb-4">
                 <Shield className="h-6 w-6" />
               </div>
-              <h3 className="font-semibold text-gray-900 mb-2">No Win, No Fee</h3>
-              <p className="text-sm text-gray-600">Attorneys typically work on contingency — you pay nothing unless you win your case.</p>
+              <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">No Win, No Fee</h3>
+              <p className="text-sm text-gray-600 dark:text-gray-400">Attorneys typically work on contingency — you pay nothing unless you win your case.</p>
             </div>
           </div>
-          <div className="flex flex-wrap items-center justify-center gap-8 text-gray-500 pt-8 border-t border-gray-100">
+          <div className="flex flex-wrap items-center justify-center gap-8 text-gray-500 dark:text-gray-400 pt-8 border-t border-gray-100 dark:border-slate-700">
             <div className="text-center">
               <p className="text-sm font-medium uppercase tracking-wider">Protected by</p>
-              <p className="text-lg font-bold text-gray-700 mt-1">UCC Article 9</p>
+              <p className="text-lg font-bold text-gray-700 dark:text-gray-300 mt-1">UCC Article 9</p>
             </div>
-            <div className="hidden sm:block h-8 w-px bg-gray-200" />
+            <div className="hidden sm:block h-8 w-px bg-gray-200 dark:bg-slate-700" />
             <div className="text-center">
               <p className="text-sm font-medium uppercase tracking-wider">Enforced by</p>
-              <p className="text-lg font-bold text-gray-700 mt-1">FDCPA</p>
+              <p className="text-lg font-bold text-gray-700 dark:text-gray-300 mt-1">FDCPA</p>
             </div>
-            <div className="hidden sm:block h-8 w-px bg-gray-200" />
+            <div className="hidden sm:block h-8 w-px bg-gray-200 dark:bg-slate-700" />
             <div className="text-center">
               <p className="text-sm font-medium uppercase tracking-wider">Military Protection</p>
-              <p className="text-lg font-bold text-gray-700 mt-1">SCRA</p>
+              <p className="text-lg font-bold text-gray-700 dark:text-gray-300 mt-1">SCRA</p>
             </div>
           </div>
         </div>
       </section>
 
       {/* FAQ Preview */}
-      <section className="py-16 sm:py-20 bg-gray-50" style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 500px' }}>
+      <section className="py-16 sm:py-20 bg-gray-50 dark:bg-slate-900" style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 500px' }}>
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10">
-            <h2 className="text-3xl font-bold text-gray-900">Frequently Asked Questions</h2>
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Frequently Asked Questions</h2>
           </div>
           <div className="space-y-4">
             {[
@@ -359,13 +359,13 @@ export default function HomePage() {
             ].map((item) => (
               <details
                 key={item.q}
-                className="group bg-white rounded-xl border border-gray-200 overflow-hidden"
+                className="group bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 overflow-hidden"
               >
-                <summary className="flex items-center justify-between cursor-pointer px-6 py-4 text-gray-900 font-medium hover:bg-gray-50">
+                <summary className="flex items-center justify-between cursor-pointer px-6 py-4 text-gray-900 dark:text-gray-100 font-medium hover:bg-gray-50 dark:hover:bg-slate-700">
                   {item.q}
-                  <ChevronRight className="h-5 w-5 text-gray-400 transition-transform group-open:rotate-90" />
+                  <ChevronRight className="h-5 w-5 text-gray-400 dark:text-gray-500 transition-transform group-open:rotate-90" />
                 </summary>
-                <div className="px-6 pb-4 text-gray-600 leading-relaxed">{item.a}</div>
+                <div className="px-6 pb-4 text-gray-600 dark:text-gray-400 leading-relaxed">{item.a}</div>
               </details>
             ))}
           </div>
