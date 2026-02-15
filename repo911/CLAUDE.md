@@ -178,6 +178,24 @@ NEXT_PUBLIC_APP_NAME=Repo911
 - **Stripe webhooks**: Atomic lead claiming with `claimed_by IS NULL` check. Handles refunds by reverting claim.
 - **`useSearchParams()`**: Must be wrapped in `<Suspense>` for Next.js 16 static generation.
 
+## Lighthouse Scores (Production Build)
+
+| Page | Performance | Accessibility | Best Practices | SEO |
+|------|:-----------:|:-------------:|:--------------:|:---:|
+| `/` | 86 | 100 | 100 | 100 |
+| `/claim` | 83 | 100 | 100 | 100 |
+| `/how-it-works` | 90 | 100 | 100 | 100 |
+| `/faq` | 96 | 100 | 100 | 100 |
+| `/track` | 92 | 100 | 100 | 100 |
+| `/privacy` | 94 | 100 | 100 | 100 |
+| `/terms` | 90 | 100 | 100 | 100 |
+| `/disclaimer` | 92 | 100 | 100 | 100 |
+| `/claim/confirmation` | 95 | 100 | 100 | 66* |
+
+*\* Intentional `noindex` on confirmation page — correct behavior, Lighthouse flags it.*
+
+Performance scores measured on localhost production build (`pnpm build && pnpm start`). Expect higher scores on Vercel with CDN edge caching.
+
 ## Deployment
 
 - Hosted on **Vercel** (auto-deploys from `main` branch)
