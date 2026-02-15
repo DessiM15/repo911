@@ -3,7 +3,7 @@
 import { useState, useRef, useCallback, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { Search, Clock, CheckCircle, Shield, FileText, Upload, X, AlertTriangle, Loader2 } from 'lucide-react';
+import { Search, Clock, CheckCircle, Shield, FileText, Upload, X, AlertTriangle, Loader2, Phone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { formatDistanceToNow } from 'date-fns';
 
@@ -54,8 +54,11 @@ function SearchParamReader({ onId }: { onId: (id: string) => void }) {
 }
 
 export default function TrackPage() {
+  const [lookupMode, setLookupMode] = useState<'case_id' | 'phone'>('case_id');
   const [email, setEmail] = useState('');
   const [leadId, setLeadId] = useState('');
+  const [phone, setPhone] = useState('');
+  const [lastName, setLastName] = useState('');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<TrackResult | null>(null);
   const [error, setError] = useState('');
@@ -78,10 +81,14 @@ export default function TrackPage() {
     setUploadSuccess('');
 
     try {
+      const payload = lookupMode === 'case_id'
+        ? { mode: 'case_id' as const, email: email.trim(), leadId: leadId.trim() }
+        : { mode: 'phone' as const, phone: phone.trim(), lastName: lastName.trim() };
+
       const res = await fetch('/api/leads/track', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email.trim(), leadId: leadId.trim() }),
+        body: JSON.stringify(payload),
       });
 
       const data = await res.json();
@@ -187,41 +194,105 @@ export default function TrackPage() {
         <Search className="h-12 w-12 mx-auto mb-4 text-[#3474BA]" />
         <h1 className="text-3xl sm:text-4xl font-bold text-gray-900">Track Your Case</h1>
         <p className="mt-3 text-gray-600">
-          Enter the email you used to submit your case and your case ID to check your status.
+          Look up your case status using your case ID or phone number.
         </p>
       </div>
 
       <form onSubmit={handleTrack} className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm space-y-4">
-        <div>
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-            Email Address
-          </label>
-          <input
-            id="email"
-            type="email"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="you@example.com"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#3474BA]"
-          />
+        {/* Lookup mode toggle */}
+        <div className="flex rounded-lg border border-gray-200 overflow-hidden">
+          <button
+            type="button"
+            onClick={() => { setLookupMode('case_id'); setError(''); setResult(null); }}
+            className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium transition-colors ${
+              lookupMode === 'case_id'
+                ? 'bg-[#3474BA] text-white'
+                : 'bg-white text-gray-600 hover:bg-gray-50'
+            }`}
+          >
+            <Search className="h-4 w-4" />
+            By Case ID
+          </button>
+          <button
+            type="button"
+            onClick={() => { setLookupMode('phone'); setError(''); setResult(null); }}
+            className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium transition-colors ${
+              lookupMode === 'phone'
+                ? 'bg-[#3474BA] text-white'
+                : 'bg-white text-gray-600 hover:bg-gray-50'
+            }`}
+          >
+            <Phone className="h-4 w-4" />
+            By Phone & Last Name
+          </button>
         </div>
 
-        <div>
-          <label htmlFor="leadId" className="block text-sm font-medium text-gray-700 mb-1">
-            Case ID
-          </label>
-          <input
-            id="leadId"
-            type="text"
-            required
-            value={leadId}
-            onChange={(e) => setLeadId(e.target.value)}
-            placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm font-mono focus:outline-none focus:ring-2 focus:ring-[#3474BA]"
-          />
-          <p className="mt-1 text-xs text-gray-500">You received this in your confirmation email.</p>
-        </div>
+        {lookupMode === 'case_id' ? (
+          <>
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                Email Address
+              </label>
+              <input
+                id="email"
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="you@example.com"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#3474BA]"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="leadId" className="block text-sm font-medium text-gray-700 mb-1">
+                Case ID
+              </label>
+              <input
+                id="leadId"
+                type="text"
+                required
+                value={leadId}
+                onChange={(e) => setLeadId(e.target.value)}
+                placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm font-mono focus:outline-none focus:ring-2 focus:ring-[#3474BA]"
+              />
+              <p className="mt-1 text-xs text-gray-500">You received this in your confirmation email.</p>
+            </div>
+          </>
+        ) : (
+          <>
+            <div>
+              <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
+                Phone Number
+              </label>
+              <input
+                id="phone"
+                type="tel"
+                required
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                placeholder="(555) 555-5555"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#3474BA]"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-1">
+                Last Name
+              </label>
+              <input
+                id="lastName"
+                type="text"
+                required
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                placeholder="Enter your last name"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#3474BA]"
+              />
+            </div>
+          </>
+        )}
 
         {error && (
           <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg p-3 text-sm">
@@ -284,8 +355,8 @@ export default function TrackPage() {
             )}
           </div>
 
-          {/* File Upload Section */}
-          <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+          {/* File Upload Section — only shown for case_id lookup (upload API requires email+leadId) */}
+          {lookupMode === 'case_id' && <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
             <h2 className="text-lg font-semibold text-gray-900 mb-1 flex items-center gap-2">
               <FileText className="h-5 w-5 text-[#3474BA]" />
               Evidence & Documents
@@ -383,7 +454,7 @@ export default function TrackPage() {
                 {uploadSuccess}
               </div>
             )}
-          </div>
+          </div>}
         </div>
       )}
 

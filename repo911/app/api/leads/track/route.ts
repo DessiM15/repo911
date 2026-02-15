@@ -28,20 +28,39 @@ export async function POST(request: NextRequest) {
       return apiError('Validation failed', 400, parsed.error.flatten());
     }
 
-    const { email, leadId } = parsed.data;
+    const { mode } = parsed.data;
 
     const supabase = createAdminClient();
 
-    const { data: lead, error: leadError } = await supabase
-      .from('leads')
-      .select('id, status, qualification_tier, created_at, claimed_by, uploaded_files')
-      .eq('id', leadId)
-      .eq('email', email.toLowerCase().trim())
-      .single();
+    let lead;
 
-    if (leadError || !lead) {
-      // Don't reveal whether ID exists — generic message
-      return apiError('No case found matching that email and case ID combination.', 404);
+    if (mode === 'case_id') {
+      const { email, leadId } = parsed.data;
+      const { data, error: leadError } = await supabase
+        .from('leads')
+        .select('id, status, qualification_tier, created_at, claimed_by, uploaded_files')
+        .eq('id', leadId)
+        .eq('email', email.toLowerCase().trim())
+        .single();
+      if (leadError || !data) {
+        return apiError('No case found matching those details.', 404);
+      }
+      lead = data;
+    } else {
+      const { phone, lastName } = parsed.data;
+      const normalizedPhone = phone.replace(/\D/g, '').slice(-10);
+      const { data, error: leadError } = await supabase
+        .from('leads')
+        .select('id, status, qualification_tier, created_at, claimed_by, uploaded_files')
+        .eq('last_name', lastName.trim())
+        .ilike('phone', `%${normalizedPhone}`)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .single();
+      if (leadError || !data) {
+        return apiError('No case found matching those details.', 404);
+      }
+      lead = data;
     }
 
     // Return safe info only — no attorney details exposed

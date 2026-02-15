@@ -14,10 +14,12 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { RadioGroup } from '@/components/ui/radio';
 import { Button } from '@/components/ui/button';
 import { US_STATES, COMMON_LENDERS } from '@/lib/utils';
-import { AlertCircle, ArrowLeft, ArrowRight } from 'lucide-react';
+import { AlertCircle, ArrowLeft, ArrowRight, X } from 'lucide-react';
 import Link from 'next/link';
 
 const TOTAL_STEPS = 11;
+const DRAFT_KEY = 'repo911_intake_draft';
+const CONSENT_FIELDS = ['electronic_signature', 'consent_accurate_info', 'consent_not_legal_advice', 'consent_contact', 'consent_privacy_policy'];
 
 const REPO_LOCATIONS = [
   { value: 'driveway', label: 'Driveway' },
@@ -93,12 +95,16 @@ export function IntakeForm() {
   const [completedSteps, setCompletedSteps] = useState<number[]>([]);
   const [otherLender, setOtherLender] = useState('');
   const [otherRepoLocation, setOtherRepoLocation] = useState('');
+  const [draftRestored, setDraftRestored] = useState(false);
+  const [draftSavedAt, setDraftSavedAt] = useState<number | null>(null);
+  const saveTimerRef = useRef<number>(0);
 
   const {
     register,
     handleSubmit,
     control,
     watch,
+    reset,
     setValue,
     trigger,
     formState: { errors },
@@ -124,6 +130,59 @@ export function IntakeForm() {
       if (val) utmRef.current[key] = val;
     }
   }, []);
+
+  // Restore draft on mount
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(DRAFT_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        reset(parsed.values, { keepDefaultValues: true });
+        setStep(parsed.step || 0);
+        setCompletedSteps(parsed.completedSteps || []);
+        if (parsed.otherLender) setOtherLender(parsed.otherLender);
+        if (parsed.otherRepoLocation) setOtherRepoLocation(parsed.otherRepoLocation);
+        setDraftSavedAt(parsed.savedAt || null);
+        setDraftRestored(true);
+      }
+    } catch { /* ignore corrupt data */ }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Debounced save to localStorage
+  useEffect(() => {
+    const subscription = watch((values) => {
+      clearTimeout(saveTimerRef.current);
+      saveTimerRef.current = window.setTimeout(() => {
+        try {
+          // Exclude consent fields to avoid implying pre-consent
+          const filtered = { ...values };
+          for (const key of CONSENT_FIELDS) {
+            delete filtered[key as keyof typeof filtered];
+          }
+          localStorage.setItem(DRAFT_KEY, JSON.stringify({
+            values: filtered,
+            step,
+            completedSteps,
+            otherLender,
+            otherRepoLocation,
+            savedAt: Date.now(),
+          }));
+        } catch { /* quota exceeded — ignore */ }
+      }, 1000);
+    });
+    return () => subscription.unsubscribe();
+  }, [watch, step, completedSteps, otherLender, otherRepoLocation]);
+
+  function discardDraft() {
+    localStorage.removeItem(DRAFT_KEY);
+    reset();
+    setStep(0);
+    setCompletedSteps([]);
+    setOtherLender('');
+    setOtherRepoLocation('');
+    setDraftRestored(false);
+    setDraftSavedAt(null);
+  }
 
   const watchBehindOnPayments = watch('behind_on_payments');
   const watchVerballyObjected = watch('verbally_objected');
@@ -205,6 +264,8 @@ export function IntakeForm() {
         throw new Error(result.error || 'Something went wrong. Please try again.');
       }
 
+      localStorage.removeItem(DRAFT_KEY);
+
       const params = new URLSearchParams({
         tier: result.tier,
         id: result.id,
@@ -221,6 +282,22 @@ export function IntakeForm() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      {draftRestored && (
+        <div className="flex items-center justify-between bg-blue-50 border border-blue-200 rounded-lg px-4 py-3 text-sm text-blue-800">
+          <span>
+            Draft restored{draftSavedAt ? ` from ${new Date(draftSavedAt).toLocaleString()}` : ''}.
+          </span>
+          <button
+            type="button"
+            onClick={discardDraft}
+            className="flex items-center gap-1 text-blue-600 hover:text-blue-800 font-medium ml-4 flex-shrink-0"
+          >
+            <X className="h-3.5 w-3.5" />
+            Discard draft
+          </button>
+        </div>
+      )}
+
       <ProgressIndicator
         currentSection={step}
         completedSections={completedSteps}
