@@ -6,7 +6,17 @@ import { ErrorBoundary } from './ErrorBoundary';
 
 export function ErrorTrackingProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
-    errorTracker.init();
+    const schedule = typeof requestIdleCallback === 'function'
+      ? requestIdleCallback
+      : (cb: () => void) => setTimeout(cb, 1);
+    const id = schedule(() => errorTracker.init());
+    return () => {
+      if (typeof cancelIdleCallback === 'function') {
+        cancelIdleCallback(id as number);
+      } else {
+        clearTimeout(id as number);
+      }
+    };
   }, []);
 
   return <ErrorBoundary>{children}</ErrorBoundary>;

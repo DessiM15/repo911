@@ -29,7 +29,7 @@ const nextConfig: NextConfig = {
     formats: ['image/avif', 'image/webp'],
   },
   experimental: {
-    optimizePackageImports: ['lucide-react', 'date-fns', 'zod', 'react-hook-form', '@hookform/resolvers'],
+    optimizePackageImports: ['lucide-react', 'date-fns', 'zod', 'react-hook-form', '@hookform/resolvers', '@hello-pangea/dnd', '@tanstack/react-table'],
   },
   env: {
     NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL?.trim(),

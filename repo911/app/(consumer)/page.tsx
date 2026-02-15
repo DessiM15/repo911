@@ -122,7 +122,7 @@ export default function HomePage() {
       </section>
 
       {/* Social Proof Stats */}
-      <section className="bg-[#1B2A4A] py-8">
+      <section className="bg-[#1B2A4A] py-8" style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 120px' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
             <div>
@@ -146,7 +146,7 @@ export default function HomePage() {
       </section>
 
       {/* How It Works */}
-      <section className="py-16 sm:py-20 bg-white">
+      <section className="py-16 sm:py-20 bg-white" style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 500px' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">How It Works</h2>
@@ -195,7 +195,7 @@ export default function HomePage() {
       </section>
 
       {/* Common Violations */}
-      <section className="py-16 sm:py-20 bg-gray-50">
+      <section className="py-16 sm:py-20 bg-gray-50" style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 600px' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">
@@ -256,7 +256,7 @@ export default function HomePage() {
       </section>
 
       {/* Urgency — Statute of Limitations */}
-      <section className="py-12 sm:py-16 bg-[#FEF3C7] border-y border-[#F5A623]/30">
+      <section className="py-12 sm:py-16 bg-[#FEF3C7] border-y border-[#F5A623]/30" style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 200px' }}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row items-center gap-6 text-center sm:text-left">
             <div className="flex-shrink-0">
@@ -280,7 +280,7 @@ export default function HomePage() {
       </section>
 
       {/* Trust Section */}
-      <section className="py-16 sm:py-20 bg-white">
+      <section className="py-16 sm:py-20 bg-white" style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 500px' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
@@ -333,7 +333,7 @@ export default function HomePage() {
       </section>
 
       {/* FAQ Preview */}
-      <section className="py-16 sm:py-20 bg-gray-50">
+      <section className="py-16 sm:py-20 bg-gray-50" style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 500px' }}>
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10">
             <h2 className="text-3xl font-bold text-gray-900">Frequently Asked Questions</h2>
@@ -378,7 +378,7 @@ export default function HomePage() {
       </section>
 
       {/* Final CTA */}
-      <section className="py-16 sm:py-20 bg-[#3474BA]">
+      <section className="py-16 sm:py-20 bg-[#3474BA]" style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 300px' }}>
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
             Ready to Find Out If You Have a Case?
