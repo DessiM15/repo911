@@ -124,7 +124,7 @@ export function AttorneyNav() {
           {unreadCount > 0 && (
             <button
               onClick={handleMarkAllRead}
-              className="text-xs text-[#3474BA] hover:underline flex items-center gap-1"
+              className="text-xs text-[#3474BA] dark:text-blue-300 hover:underline flex items-center gap-1"
             >
               <CheckCheck className="h-3 w-3" />
               Mark all read
@@ -163,7 +163,7 @@ export function AttorneyNav() {
         <Link
           href="/attorney/notifications"
           onClick={() => setBellOpen(false)}
-          className="block text-center text-xs text-[#3474BA] hover:underline px-4 py-2.5 border-t border-gray-100 dark:border-slate-700"
+          className="block text-center text-xs text-[#3474BA] dark:text-blue-300 hover:underline px-4 py-2.5 border-t border-gray-100 dark:border-slate-700"
         >
           View all notifications
         </Link>

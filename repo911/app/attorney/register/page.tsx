@@ -104,7 +104,7 @@ export default function AttorneyRegisterPage() {
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-2 mb-4">
             <Scale className="h-8 w-8 text-[#2ECC71]" />
-            <span className="text-2xl font-bold text-[#1B2A4A]">
+            <span className="text-2xl font-bold text-[#1B2A4A] dark:text-gray-100">
               Repo<span className="text-[#2ECC71]">911</span>
             </span>
           </Link>
@@ -118,7 +118,7 @@ export default function AttorneyRegisterPage() {
 
         {/* Step Indicator */}
         <div className="flex items-center justify-center gap-4 mb-8">
-          <div className={`flex items-center gap-2 text-sm font-medium ${step === 'register' ? 'text-[#1B2A4A]' : 'text-green-600'}`}>
+          <div className={`flex items-center gap-2 text-sm font-medium ${step === 'register' ? 'text-[#1B2A4A] dark:text-gray-100' : 'text-green-600'}`}>
             <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${step === 'register' ? 'bg-[#1B2A4A] text-white' : 'bg-green-100 text-green-600'}`}>
               {step === 'register' ? '1' : '\u2713'}
             </span>
@@ -254,7 +254,7 @@ export default function AttorneyRegisterPage() {
             <div>
               <button
                 onClick={() => setStep('register')}
-                className="text-sm text-[#3474BA] hover:underline mb-4"
+                className="text-sm text-[#3474BA] dark:text-blue-300 hover:underline mb-4"
               >
                 &larr; Back to account details
               </button>
@@ -265,7 +265,7 @@ export default function AttorneyRegisterPage() {
 
         <p className="text-center text-sm text-gray-500 dark:text-gray-400 mt-6">
           Already have an account?{' '}
-          <Link href="/attorney/login" className="text-[#1B2A4A] font-medium hover:underline">
+          <Link href="/attorney/login" className="text-[#1B2A4A] dark:text-blue-300 font-medium hover:underline">
             Sign in
           </Link>
         </p>

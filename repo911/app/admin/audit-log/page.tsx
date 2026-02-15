@@ -136,7 +136,7 @@ export default function AuditLogPage() {
                     <td className="px-4 py-3">
                       <span className="capitalize text-gray-600 dark:text-gray-400">{entry.entity_type}</span>
                       {link ? (
-                        <Link href={link} className="ml-1 text-[#3474BA] hover:underline text-xs">
+                        <Link href={link} className="ml-1 text-[#3474BA] dark:text-blue-300 hover:underline text-xs">
                           View
                         </Link>
                       ) : null}

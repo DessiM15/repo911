@@ -46,7 +46,7 @@ export function LeadCard({ lead, isSubscribed, onPreview }: LeadCardProps) {
         {isSubscribed ? (
           <Badge variant="success" className="text-xs">Included</Badge>
         ) : (
-          <span className="text-lg font-bold text-[#1B2A4A]">{formatCurrency(price)}</span>
+          <span className="text-lg font-bold text-[#1B2A4A] dark:text-gray-100">{formatCurrency(price)}</span>
         )}
       </div>
 

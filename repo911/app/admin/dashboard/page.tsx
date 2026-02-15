@@ -135,52 +135,52 @@ export default function AdminDashboardPage() {
           value={data.total_leads}
           icon={FileText}
           sub={`${data.qualification_rate}% qualification rate`}
-          color="bg-blue-50 text-blue-600"
+          color="bg-blue-50 dark:bg-blue-950 text-blue-600 dark:text-blue-400"
         />
         <StatCard
           label="Qualified Leads"
           value={data.qualified_leads}
           icon={TrendingUp}
           sub={`${data.claim_rate}% claim rate`}
-          color="bg-green-50 text-green-600"
+          color="bg-green-50 dark:bg-green-950 text-green-600 dark:text-green-400"
         />
         <StatCard
           label="Claimed Leads"
           value={data.claimed_leads}
           icon={DollarSign}
-          color="bg-amber-50 text-amber-600"
+          color="bg-amber-50 dark:bg-amber-950 text-amber-600 dark:text-amber-400"
         />
         <StatCard
           label="Disqualified"
           value={data.disqualified_leads}
           icon={XCircle}
-          color="bg-gray-100 text-gray-500"
+          color="bg-gray-100 dark:bg-slate-800 text-gray-500 dark:text-gray-400"
         />
         <StatCard
           label="Total Revenue"
           value={formatCurrency(data.total_revenue)}
           icon={DollarSign}
           sub={`${formatCurrency(data.this_month_revenue)} this month`}
-          color="bg-emerald-50 text-emerald-600"
+          color="bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400"
         />
         <StatCard
           label="Total Attorneys"
           value={data.total_attorneys}
           icon={Users}
           sub={`${data.active_attorneys} active`}
-          color="bg-indigo-50 text-indigo-600"
+          color="bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400"
         />
         <StatCard
           label="Hot Leads"
           value={data.hot_leads}
           icon={Flame}
-          color="bg-red-50 text-red-600"
+          color="bg-red-50 dark:bg-red-950 text-red-600 dark:text-red-400"
         />
         <StatCard
           label="Warm / Cold"
           value={`${data.warm_leads} / ${data.cold_leads}`}
           icon={Thermometer}
-          color="bg-yellow-50 text-yellow-600"
+          color="bg-yellow-50 dark:bg-yellow-950 text-yellow-600 dark:text-yellow-400"
         />
       </div>
 
@@ -278,7 +278,7 @@ export default function AdminDashboardPage() {
         <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-5">
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-semibold text-gray-900 dark:text-gray-100">Recent Leads</h2>
-            <Link href="/admin/leads" className="text-sm text-[#3474BA] hover:underline flex items-center gap-1">
+            <Link href="/admin/leads" className="text-sm text-[#3474BA] dark:text-blue-300 hover:underline flex items-center gap-1">
               View all <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           </div>
@@ -306,7 +306,7 @@ export default function AdminDashboardPage() {
         <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-5">
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-semibold text-gray-900 dark:text-gray-100">Recent Transactions</h2>
-            <Link href="/admin/transactions" className="text-sm text-[#3474BA] hover:underline flex items-center gap-1">
+            <Link href="/admin/transactions" className="text-sm text-[#3474BA] dark:text-blue-300 hover:underline flex items-center gap-1">
               View all <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           </div>

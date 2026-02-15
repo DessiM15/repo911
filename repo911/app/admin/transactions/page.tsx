@@ -183,14 +183,14 @@ export default function TransactionsPage() {
                   <TableCell className="text-sm whitespace-nowrap">{formatDate(tx.created_at)}</TableCell>
                   <TableCell>
                     {tx.attorney_id ? (
-                      <Link href={`/admin/attorneys/${tx.attorney_id}`} className="text-sm font-medium text-[#1B2A4A] hover:underline">
+                      <Link href={`/admin/attorneys/${tx.attorney_id}`} className="text-sm font-medium text-[#1B2A4A] dark:text-blue-300 hover:underline">
                         {attorneys[tx.attorney_id] || 'Unknown'}
                       </Link>
                     ) : '—'}
                   </TableCell>
                   <TableCell>
                     {tx.lead_id ? (
-                      <Link href={`/admin/leads/${tx.lead_id}`} className="text-sm text-[#3474BA] hover:underline">
+                      <Link href={`/admin/leads/${tx.lead_id}`} className="text-sm text-[#3474BA] dark:text-blue-300 hover:underline">
                         View
                       </Link>
                     ) : '—'}

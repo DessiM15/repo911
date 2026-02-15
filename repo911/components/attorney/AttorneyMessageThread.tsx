@@ -90,7 +90,7 @@ export function AttorneyMessageThread({ leadId }: AttorneyMessageThreadProps) {
   return (
     <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-6 mt-4">
       <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center gap-2">
-        <MessageSquare className="h-5 w-5 text-[#3474BA]" />
+        <MessageSquare className="h-5 w-5 text-[#3474BA] dark:text-blue-400" />
         Messages
       </h3>
 

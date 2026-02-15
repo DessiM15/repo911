@@ -15,7 +15,7 @@ export default function BlogListingPage() {
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
       <div className="text-center mb-12">
-        <BookOpen className="h-12 w-12 mx-auto mb-4 text-[#3474BA]" />
+        <BookOpen className="h-12 w-12 mx-auto mb-4 text-[#3474BA] dark:text-blue-400" />
         <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-gray-100">
           Repossession Rights Blog
         </h1>
@@ -34,7 +34,7 @@ export default function BlogListingPage() {
           >
             <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
               <div className="flex-1 min-w-0">
-                <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 group-hover:text-[#3474BA] transition-colors">
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 group-hover:text-[#3474BA] dark:group-hover:text-blue-300 transition-colors">
                   {post.title}
                 </h2>
                 <p className="mt-2 text-gray-600 dark:text-gray-400 text-sm leading-relaxed line-clamp-2">
@@ -58,14 +58,14 @@ export default function BlogListingPage() {
                   {post.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 dark:bg-blue-950 text-[#3474BA]"
+                      className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 dark:bg-blue-950 text-[#3474BA] dark:text-blue-300"
                     >
                       {tag}
                     </span>
                   ))}
                 </div>
               </div>
-              <div className="hidden sm:flex items-center text-[#3474BA] opacity-0 group-hover:opacity-100 transition-opacity">
+              <div className="hidden sm:flex items-center text-[#3474BA] dark:text-blue-300 opacity-0 group-hover:opacity-100 transition-opacity">
                 <ArrowRight className="h-5 w-5" />
               </div>
             </div>

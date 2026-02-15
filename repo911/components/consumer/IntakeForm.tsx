@@ -1373,11 +1373,11 @@ export function IntakeForm() {
             />
             <label htmlFor="consent_privacy_policy" className="text-sm text-gray-700 -mt-2 block ml-4 sm:ml-8 cursor-pointer">
               I have read and agree to the{' '}
-              <Link href="/privacy" target="_blank" className="text-[#3474BA] underline">
+              <Link href="/privacy" target="_blank" className="text-[#3474BA] dark:text-blue-300 underline">
                 Privacy Policy
               </Link>{' '}
               and{' '}
-              <Link href="/terms" target="_blank" className="text-[#3474BA] underline">
+              <Link href="/terms" target="_blank" className="text-[#3474BA] dark:text-blue-300 underline">
                 Terms of Service
               </Link>
               .

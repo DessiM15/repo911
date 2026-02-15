@@ -262,7 +262,7 @@ export default function MyLeadDetailPage() {
                             href={file.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-xs text-[#3474BA] hover:underline font-medium shrink-0"
+                            className="text-xs text-[#3474BA] dark:text-blue-300 hover:underline font-medium shrink-0"
                           >
                             Download
                           </a>

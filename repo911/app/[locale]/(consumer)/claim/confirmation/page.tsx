@@ -28,7 +28,7 @@ function getTierContent(tier: string | null) {
     case 'warm':
       return {
         icon: CheckCircle,
-        iconColor: 'text-[#3474BA]',
+        iconColor: 'text-[#3474BA] dark:text-blue-400',
         bgColor: 'bg-blue-50 dark:bg-blue-950 border-blue-200 dark:border-blue-800',
         title: 'Your Case Shows Promise!',
         description:
@@ -42,7 +42,7 @@ function getTierContent(tier: string | null) {
     case 'cold':
       return {
         icon: Clock,
-        iconColor: 'text-[#3474BA]',
+        iconColor: 'text-[#3474BA] dark:text-blue-400',
         bgColor: 'bg-blue-50 dark:bg-blue-950 border-blue-200 dark:border-blue-800',
         title: 'Your Case Has Been Submitted for Review',
         description:

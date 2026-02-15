@@ -40,10 +40,10 @@ const LEVEL_OPTIONS = [
 
 function LevelBadge({ level }: { level: ErrorLevel }) {
   const config = {
-    fatal:   { bg: 'bg-red-100 text-red-800', Icon: AlertOctagon },
-    error:   { bg: 'bg-orange-100 text-orange-800', Icon: AlertCircle },
-    warning: { bg: 'bg-yellow-100 text-yellow-700', Icon: AlertTriangle },
-    info:    { bg: 'bg-blue-100 text-blue-700', Icon: Info },
+    fatal:   { bg: 'bg-red-100 dark:bg-red-950 text-red-800 dark:text-red-300', Icon: AlertOctagon },
+    error:   { bg: 'bg-orange-100 dark:bg-orange-950 text-orange-800 dark:text-orange-300', Icon: AlertCircle },
+    warning: { bg: 'bg-yellow-100 dark:bg-yellow-950 text-yellow-700 dark:text-yellow-300', Icon: AlertTriangle },
+    info:    { bg: 'bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300', Icon: Info },
   };
   const { bg, Icon } = config[level] || config.error;
   return (

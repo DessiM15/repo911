@@ -150,7 +150,7 @@ export default function LeadDetailPage() {
       <div className="text-center py-12">
         <AlertTriangle className="h-12 w-12 text-red-400 mx-auto mb-4" />
         <p className="text-red-600 font-medium">{error}</p>
-        <Link href="/attorney/marketplace" className="text-sm text-[#3474BA] hover:underline mt-2 inline-block">
+        <Link href="/attorney/marketplace" className="text-sm text-[#3474BA] dark:text-blue-300 hover:underline mt-2 inline-block">
           Back to Marketplace
         </Link>
       </div>
@@ -193,7 +193,7 @@ export default function LeadDetailPage() {
               {isSubscribed ? (
                 <Badge variant="success" className="text-sm px-3 py-1">Included in Subscription</Badge>
               ) : (
-                <p className="text-2xl font-bold text-[#1B2A4A]">{formatCurrency(price)}</p>
+                <p className="text-2xl font-bold text-[#1B2A4A] dark:text-gray-100">{formatCurrency(price)}</p>
               )}
               <Button variant="attorney" onClick={handleClaim} loading={claiming} className="mt-2">
                 Claim This Lead
@@ -283,7 +283,7 @@ export default function LeadDetailPage() {
               )}
               <div className="pt-2 border-t border-gray-200 dark:border-slate-700 flex items-center justify-between">
                 <span className="font-medium text-gray-900 dark:text-gray-100">Total Score</span>
-                <span className="font-bold text-lg text-[#1B2A4A]">{lead.qualification_score}</span>
+                <span className="font-bold text-lg text-[#1B2A4A] dark:text-gray-100">{lead.qualification_score}</span>
               </div>
               {lead.estimated_value_range && (
                 <p className="text-sm text-gray-500 dark:text-gray-400">Estimated value: {lead.estimated_value_range}</p>
@@ -367,7 +367,7 @@ export default function LeadDetailPage() {
                             href={file.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-xs text-[#3474BA] hover:underline font-medium shrink-0"
+                            className="text-xs text-[#3474BA] dark:text-blue-300 hover:underline font-medium shrink-0"
                           >
                             Download
                           </a>

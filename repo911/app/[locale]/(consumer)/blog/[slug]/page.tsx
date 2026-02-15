@@ -54,7 +54,7 @@ export default async function BlogPostPage({ params }: Props) {
 
       <Link
         href="/blog"
-        className="inline-flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 hover:text-[#3474BA] mb-8"
+        className="inline-flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 hover:text-[#3474BA] dark:hover:text-blue-300 mb-8"
       >
         <ArrowLeft className="h-4 w-4" />
         Back to Blog
@@ -88,7 +88,7 @@ export default async function BlogPostPage({ params }: Props) {
             {post.tags.map((tag) => (
               <span
                 key={tag}
-                className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 dark:bg-blue-950 text-[#3474BA]"
+                className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 dark:bg-blue-950 text-[#3474BA] dark:text-blue-300"
               >
                 {tag}
               </span>
@@ -96,7 +96,7 @@ export default async function BlogPostPage({ params }: Props) {
           </div>
         </header>
 
-        <div className="prose prose-gray dark:prose-invert max-w-none prose-headings:text-gray-900 dark:prose-headings:text-gray-100 prose-a:text-[#3474BA] prose-strong:text-gray-900 dark:prose-strong:text-gray-100">
+        <div className="prose prose-gray dark:prose-invert max-w-none prose-headings:text-gray-900 dark:prose-headings:text-gray-100 prose-a:text-[#3474BA] dark:prose-a:text-blue-300 prose-strong:text-gray-900 dark:prose-strong:text-gray-100">
           <MDXRemote source={post.content} />
         </div>
       </article>

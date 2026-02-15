@@ -12,9 +12,9 @@ export async function ConsumerFooter() {
           {/* Brand */}
           <div className="md:col-span-1">
             <Link href="/" className="flex items-center gap-2 mb-4">
-              <Shield className="h-7 w-7 text-[#3474BA]" />
+              <Shield className="h-7 w-7 text-[#3474BA] dark:text-blue-400" />
               <span className="text-lg font-bold text-gray-900 dark:text-gray-100">
-                Repo<span className="text-[#3474BA]">911</span>
+                Repo<span className="text-[#3474BA] dark:text-blue-400">911</span>
               </span>
             </Link>
             <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
@@ -27,27 +27,27 @@ export async function ConsumerFooter() {
             <h2 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-4">{t('quickLinks')}</h2>
             <ul className="space-y-2">
               <li>
-                <Link href="/claim" className="text-sm text-gray-500 dark:text-gray-400 hover:text-[#3474BA] transition-colors">
+                <Link href="/claim" className="text-sm text-gray-500 dark:text-gray-400 hover:text-[#3474BA] dark:hover:text-blue-300 transition-colors">
                   {t('freeReview')}
                 </Link>
               </li>
               <li>
-                <Link href="/how-it-works" className="text-sm text-gray-500 dark:text-gray-400 hover:text-[#3474BA] transition-colors">
+                <Link href="/how-it-works" className="text-sm text-gray-500 dark:text-gray-400 hover:text-[#3474BA] dark:hover:text-blue-300 transition-colors">
                   {t('howItWorks')}
                 </Link>
               </li>
               <li>
-                <Link href="/faq" className="text-sm text-gray-500 dark:text-gray-400 hover:text-[#3474BA] transition-colors">
+                <Link href="/faq" className="text-sm text-gray-500 dark:text-gray-400 hover:text-[#3474BA] dark:hover:text-blue-300 transition-colors">
                   {t('faq')}
                 </Link>
               </li>
               <li>
-                <Link href="/track" className="text-sm text-gray-500 dark:text-gray-400 hover:text-[#3474BA] transition-colors">
+                <Link href="/track" className="text-sm text-gray-500 dark:text-gray-400 hover:text-[#3474BA] dark:hover:text-blue-300 transition-colors">
                   {t('trackCase')}
                 </Link>
               </li>
               <li>
-                <Link href="/blog" className="text-sm text-gray-500 dark:text-gray-400 hover:text-[#3474BA] transition-colors">
+                <Link href="/blog" className="text-sm text-gray-500 dark:text-gray-400 hover:text-[#3474BA] dark:hover:text-blue-300 transition-colors">
                   {t('blog')}
                 </Link>
               </li>
@@ -59,17 +59,17 @@ export async function ConsumerFooter() {
             <h2 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-4">{t('legal')}</h2>
             <ul className="space-y-2">
               <li>
-                <Link href="/privacy" className="text-sm text-gray-500 dark:text-gray-400 hover:text-[#3474BA] transition-colors">
+                <Link href="/privacy" className="text-sm text-gray-500 dark:text-gray-400 hover:text-[#3474BA] dark:hover:text-blue-300 transition-colors">
                   {t('privacy')}
                 </Link>
               </li>
               <li>
-                <Link href="/terms" className="text-sm text-gray-500 dark:text-gray-400 hover:text-[#3474BA] transition-colors">
+                <Link href="/terms" className="text-sm text-gray-500 dark:text-gray-400 hover:text-[#3474BA] dark:hover:text-blue-300 transition-colors">
                   {t('terms')}
                 </Link>
               </li>
               <li>
-                <Link href="/disclaimer" className="text-sm text-gray-500 dark:text-gray-400 hover:text-[#3474BA] transition-colors">
+                <Link href="/disclaimer" className="text-sm text-gray-500 dark:text-gray-400 hover:text-[#3474BA] dark:hover:text-blue-300 transition-colors">
                   {t('disclaimer')}
                 </Link>
               </li>
@@ -81,12 +81,12 @@ export async function ConsumerFooter() {
             <h2 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-4">{t('forAttorneys')}</h2>
             <ul className="space-y-2">
               <li>
-                <Link href="/attorney/login" className="text-sm text-gray-500 dark:text-gray-400 hover:text-[#3474BA] transition-colors">
+                <Link href="/attorney/login" className="text-sm text-gray-500 dark:text-gray-400 hover:text-[#3474BA] dark:hover:text-blue-300 transition-colors">
                   {t('attorneyLogin')}
                 </Link>
               </li>
               <li>
-                <Link href="/attorney/register" className="text-sm text-gray-500 dark:text-gray-400 hover:text-[#3474BA] transition-colors">
+                <Link href="/attorney/register" className="text-sm text-gray-500 dark:text-gray-400 hover:text-[#3474BA] dark:hover:text-blue-300 transition-colors">
                   {t('joinNetwork')}
                 </Link>
               </li>

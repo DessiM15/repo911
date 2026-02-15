@@ -61,8 +61,8 @@ export default function DisclaimerPage() {
         <div className="mt-8 pt-6 border-t border-gray-200 dark:border-slate-700 text-sm text-gray-500 dark:text-gray-400">
           <p>
             For more information, please review our{' '}
-            <Link href="/privacy" className="text-[#3474BA] underline">Privacy Policy</Link> and{' '}
-            <Link href="/terms" className="text-[#3474BA] underline">Terms of Service</Link>.
+            <Link href="/privacy" className="text-[#3474BA] dark:text-blue-300 underline">Privacy Policy</Link> and{' '}
+            <Link href="/terms" className="text-[#3474BA] dark:text-blue-300 underline">Terms of Service</Link>.
           </p>
         </div>
       </div>

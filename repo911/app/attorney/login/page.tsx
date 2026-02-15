@@ -47,7 +47,7 @@ export default function AttorneyLoginPage() {
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-2 mb-4">
             <Scale className="h-8 w-8 text-[#2ECC71]" />
-            <span className="text-2xl font-bold text-[#1B2A4A]">
+            <span className="text-2xl font-bold text-[#1B2A4A] dark:text-gray-100">
               Repo<span className="text-[#2ECC71]">911</span>
             </span>
           </Link>
@@ -91,7 +91,7 @@ export default function AttorneyLoginPage() {
 
         <p className="text-center text-sm text-gray-500 dark:text-gray-400 mt-6">
           Don&apos;t have an account?{' '}
-          <Link href="/attorney/register" className="text-[#1B2A4A] font-medium hover:underline">
+          <Link href="/attorney/register" className="text-[#1B2A4A] dark:text-blue-300 font-medium hover:underline">
             Register here
           </Link>
         </p>

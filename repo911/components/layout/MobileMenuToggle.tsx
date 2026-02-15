@@ -32,7 +32,7 @@ export function MobileMenuToggle({ navLinks }: { navLinks: NavLink[] }) {
               <Link
                 key={link.href}
                 href={link.href}
-                className="block px-3 py-2 text-base font-medium text-gray-600 dark:text-gray-300 hover:text-[#3474BA] hover:bg-gray-50 dark:hover:bg-slate-800 rounded-lg"
+                className="block px-3 py-2 text-base font-medium text-gray-600 dark:text-gray-300 hover:text-[#3474BA] dark:hover:text-blue-300 hover:bg-gray-50 dark:hover:bg-slate-800 rounded-lg"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 {link.label}

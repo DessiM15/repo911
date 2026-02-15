@@ -26,14 +26,14 @@ function getStatusIcon(status: string) {
   if (status === 'disqualified' || status === 'closed') {
     return <AlertTriangle className="h-5 w-5 text-gray-400" />;
   }
-  return <Clock className="h-5 w-5 text-[#3474BA]" />;
+  return <Clock className="h-5 w-5 text-[#3474BA] dark:text-blue-400" />;
 }
 
 function getTierBadge(tier: string) {
   const colors: Record<string, string> = {
-    hot: 'bg-green-100 text-green-700',
-    warm: 'bg-blue-100 text-blue-700',
-    cold: 'bg-gray-100 text-gray-700',
+    hot: 'bg-green-100 dark:bg-green-950 text-green-700 dark:text-green-300',
+    warm: 'bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300',
+    cold: 'bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-300',
   };
   return (
     <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${colors[tier] || 'bg-gray-100 text-gray-600'}`}>
@@ -186,7 +186,7 @@ export default function TrackPage() {
         <SearchParamReader onId={setLeadId} />
       </Suspense>
       <div className="text-center mb-8">
-        <Search className="h-12 w-12 mx-auto mb-4 text-[#3474BA]" />
+        <Search className="h-12 w-12 mx-auto mb-4 text-[#3474BA] dark:text-blue-400" />
         <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-gray-100">Track Your Case</h1>
         <p className="mt-3 text-gray-600 dark:text-gray-400">
           Look up your case status using your case ID or phone number.
@@ -306,7 +306,7 @@ export default function TrackPage() {
           {/* Status Card */}
           <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-6 shadow-sm">
             <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center gap-2">
-              <Shield className="h-5 w-5 text-[#3474BA]" />
+              <Shield className="h-5 w-5 text-[#3474BA] dark:text-blue-400" />
               Case Status
             </h2>
 
@@ -358,7 +358,7 @@ export default function TrackPage() {
           {/* File Upload Section — only shown for case_id lookup (upload API requires email+leadId) */}
           {lookupMode === 'case_id' && <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-6 shadow-sm">
             <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-1 flex items-center gap-2">
-              <FileText className="h-5 w-5 text-[#3474BA]" />
+              <FileText className="h-5 w-5 text-[#3474BA] dark:text-blue-400" />
               Evidence & Documents
             </h2>
             <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
@@ -394,7 +394,7 @@ export default function TrackPage() {
                 >
                   <Upload className="h-8 w-8 mx-auto mb-2 text-gray-400 dark:text-gray-500" />
                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                    Drag and drop files here, or <span className="text-[#3474BA] font-medium">browse</span>
+                    Drag and drop files here, or <span className="text-[#3474BA] dark:text-blue-300 font-medium">browse</span>
                   </p>
                   <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">JPG, PNG, WebP, or PDF up to 10MB</p>
                 </div>

@@ -62,7 +62,7 @@ export default function AdminLoginPage() {
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-2 mb-4">
             <ShieldCheck className="h-10 w-10 text-[#2ECC71]" />
-            <span className="text-2xl font-bold text-[#1B2A4A]">
+            <span className="text-2xl font-bold text-[#1B2A4A] dark:text-gray-100">
               Repo<span className="text-[#2ECC71]">911</span>
             </span>
           </div>

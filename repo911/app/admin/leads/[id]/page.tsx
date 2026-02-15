@@ -90,7 +90,7 @@ export default function AdminLeadDetailPage() {
       <div className="text-center py-12">
         <AlertTriangle className="h-12 w-12 text-red-400 mx-auto mb-4" />
         <p className="text-red-600 font-medium">{error}</p>
-        <Link href="/admin/leads" className="text-sm text-[#3474BA] hover:underline mt-2 inline-block">
+        <Link href="/admin/leads" className="text-sm text-[#3474BA] dark:text-blue-300 hover:underline mt-2 inline-block">
           Back to Leads
         </Link>
       </div>
@@ -264,7 +264,7 @@ export default function AdminLeadDetailPage() {
               )}
               <div className="pt-2 border-t border-gray-200 dark:border-slate-700 flex items-center justify-between">
                 <span className="font-medium text-gray-900 dark:text-gray-100">Total Score</span>
-                <span className="font-bold text-lg text-[#1B2A4A]">{lead.qualification_score}</span>
+                <span className="font-bold text-lg text-[#1B2A4A] dark:text-gray-100">{lead.qualification_score}</span>
               </div>
               {lead.qualification_breakdown.details?.length > 0 && (
                 <div className="mt-3 pt-3 border-t border-gray-200 dark:border-slate-700">

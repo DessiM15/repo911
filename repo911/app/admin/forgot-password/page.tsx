@@ -43,7 +43,7 @@ export default function AdminForgotPasswordPage() {
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-2 mb-4">
             <ShieldCheck className="h-10 w-10 text-[#2ECC71]" />
-            <span className="text-2xl font-bold text-[#1B2A4A]">
+            <span className="text-2xl font-bold text-[#1B2A4A] dark:text-gray-100">
               Repo<span className="text-[#2ECC71]">911</span>
             </span>
           </div>
@@ -86,7 +86,7 @@ export default function AdminForgotPasswordPage() {
         )}
 
         <p className="text-center text-sm text-gray-500 dark:text-gray-400 mt-6">
-          <Link href="/admin/login" className="inline-flex items-center gap-1 text-[#1B2A4A] font-medium hover:underline">
+          <Link href="/admin/login" className="inline-flex items-center gap-1 text-[#1B2A4A] dark:text-blue-300 font-medium hover:underline">
             <ArrowLeft className="h-4 w-4" />
             Back to Sign In
           </Link>

@@ -144,7 +144,7 @@ export default function MarketplacePage() {
               {isSubscribed ? (
                 <Badge variant="success" className="text-xs">Included</Badge>
               ) : (
-                <span className="text-lg font-bold text-[#1B2A4A]">{formatCurrency(getTierPrice(previewLead.qualification_tier))}</span>
+                <span className="text-lg font-bold text-[#1B2A4A] dark:text-gray-100">{formatCurrency(getTierPrice(previewLead.qualification_tier))}</span>
               )}
             </div>
 

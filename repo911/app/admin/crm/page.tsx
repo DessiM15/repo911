@@ -175,7 +175,7 @@ export default function CRMPage() {
               {contacts.map((contact) => (
                 <TableRow key={contact.id}>
                   <TableCell>
-                    <Link href={`/admin/crm/${contact.id}`} className="font-medium text-[#1B2A4A] hover:underline">
+                    <Link href={`/admin/crm/${contact.id}`} className="font-medium text-[#1B2A4A] dark:text-blue-300 hover:underline">
                       {contact.first_name} {contact.last_name}
                     </Link>
                   </TableCell>

@@ -243,7 +243,7 @@ export default function AdminLeadsPage() {
               {leads.map((lead) => (
                 <TableRow key={lead.id}>
                   <TableCell>
-                    <Link href={`/admin/leads/${lead.id}`} className="font-medium text-[#1B2A4A] hover:underline">
+                    <Link href={`/admin/leads/${lead.id}`} className="font-medium text-[#1B2A4A] dark:text-blue-300 hover:underline">
                       {lead.first_name} {lead.last_name}
                     </Link>
                     <p className="text-xs text-gray-500 dark:text-gray-400">{lead.email}</p>

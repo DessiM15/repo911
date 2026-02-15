@@ -33,7 +33,7 @@ export function ProgressIndicator({ currentSection, completedSections, onSection
         <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
           Step {currentSection + 1} of {SECTIONS.length}: {SECTIONS[currentSection]}
         </span>
-        <span className="text-sm font-medium text-[#3474BA]">{progress}% complete</span>
+        <span className="text-sm font-medium text-[#3474BA] dark:text-blue-300">{progress}% complete</span>
       </div>
       <div className="w-full bg-gray-200 dark:bg-slate-700 rounded-full h-2.5">
         <div
@@ -70,7 +70,7 @@ export function ProgressIndicator({ currentSection, completedSections, onSection
                   isCompleted
                     ? 'bg-[#3474BA] text-white'
                     : isCurrent
-                    ? 'bg-[#3474BA]/20 text-[#3474BA] ring-2 ring-[#3474BA]'
+                    ? 'bg-[#3474BA]/20 text-[#3474BA] dark:text-blue-300 ring-2 ring-[#3474BA]'
                     : 'bg-gray-100 dark:bg-slate-700 text-gray-400 dark:text-gray-500'
                 )}
               >
@@ -79,7 +79,7 @@ export function ProgressIndicator({ currentSection, completedSections, onSection
               <span
                 className={cn(
                   'text-[10px] max-w-[60px] text-center leading-tight',
-                  isCurrent ? 'text-[#3474BA] font-medium' : isCompleted ? 'text-gray-600' : 'text-gray-400'
+                  isCurrent ? 'text-[#3474BA] dark:text-blue-300 font-medium' : isCompleted ? 'text-gray-600 dark:text-gray-400' : 'text-gray-400 dark:text-gray-500'
                 )}
               >
                 {name}

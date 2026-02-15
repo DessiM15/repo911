@@ -128,7 +128,7 @@ export default function AdminAttorneysPage() {
               {attorneys.map((atty) => (
                 <TableRow key={atty.id}>
                   <TableCell>
-                    <Link href={`/admin/attorneys/${atty.id}`} className="font-medium text-[#1B2A4A] hover:underline">
+                    <Link href={`/admin/attorneys/${atty.id}`} className="font-medium text-[#1B2A4A] dark:text-blue-300 hover:underline">
                       {atty.first_name} {atty.last_name}
                     </Link>
                     <p className="text-xs text-gray-500 dark:text-gray-400">{atty.email}</p>

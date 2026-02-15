@@ -196,12 +196,12 @@ export default function FeeTrackingPage() {
                   <TableRow key={fee.id}>
                     <TableCell className="text-sm whitespace-nowrap">{formatDate(fee.created_at)}</TableCell>
                     <TableCell>
-                      <Link href={`/admin/attorneys/${fee.attorney_id}`} className="text-sm font-medium text-[#1B2A4A] hover:underline">
+                      <Link href={`/admin/attorneys/${fee.attorney_id}`} className="text-sm font-medium text-[#1B2A4A] dark:text-blue-300 hover:underline">
                         {attorneys[fee.attorney_id] || 'Unknown'}
                       </Link>
                     </TableCell>
                     <TableCell>
-                      <Link href={`/admin/leads/${fee.lead_id}`} className="text-sm text-[#3474BA] hover:underline">
+                      <Link href={`/admin/leads/${fee.lead_id}`} className="text-sm text-[#3474BA] dark:text-blue-300 hover:underline">
                         View
                       </Link>
                     </TableCell>
@@ -264,7 +264,7 @@ export default function FeeTrackingPage() {
                       ) : (
                         <button
                           onClick={() => startEdit(fee)}
-                          className="text-xs text-[#3474BA] hover:underline"
+                          className="text-xs text-[#3474BA] dark:text-blue-300 hover:underline"
                         >
                           Edit
                         </button>

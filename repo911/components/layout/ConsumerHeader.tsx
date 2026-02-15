@@ -22,9 +22,9 @@ export async function ConsumerHeader() {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2">
-            <Shield className="h-8 w-8 text-[#3474BA]" />
+            <Shield className="h-8 w-8 text-[#3474BA] dark:text-blue-400" />
             <span className="text-xl font-bold text-gray-900 dark:text-gray-100">
-              Repo<span className="text-[#3474BA]">911</span>
+              Repo<span className="text-[#3474BA] dark:text-blue-400">911</span>
             </span>
           </Link>
 
@@ -34,7 +34,7 @@ export async function ConsumerHeader() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-[#3474BA] transition-colors"
+                className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-[#3474BA] dark:hover:text-blue-300 transition-colors"
               >
                 {link.label}
               </Link>

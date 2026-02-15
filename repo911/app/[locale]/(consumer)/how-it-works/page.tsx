@@ -90,14 +90,14 @@ export default function HowItWorksPage() {
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-2">
-                    <span className="text-sm font-semibold text-[#3474BA] uppercase tracking-wide">Step {step.number}</span>
+                    <span className="text-sm font-semibold text-[#3474BA] dark:text-blue-300 uppercase tracking-wide">Step {step.number}</span>
                   </div>
                   <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100 mb-3">{step.title}</h2>
                   <p className="text-gray-600 dark:text-gray-400 mb-4 leading-relaxed">{step.description}</p>
                   <ul className="space-y-2">
                     {step.details.map((detail, i) => (
                       <li key={i} className="flex items-start gap-2 text-gray-600 dark:text-gray-400">
-                        <span className="text-[#3474BA] mt-1.5 flex-shrink-0">&#8226;</span>
+                        <span className="text-[#3474BA] dark:text-blue-300 mt-1.5 flex-shrink-0">&#8226;</span>
                         <span>{detail}</span>
                       </li>
                     ))}
@@ -115,7 +115,7 @@ export default function HowItWorksPage() {
           const Icon = point.icon;
           return (
             <div key={point.title} className="text-center p-6 bg-blue-50 dark:bg-blue-950 rounded-xl border border-blue-100 dark:border-blue-800">
-              <Icon className="h-8 w-8 text-[#3474BA] mx-auto mb-3" />
+              <Icon className="h-8 w-8 text-[#3474BA] dark:text-blue-400 mx-auto mb-3" />
               <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">{point.title}</h3>
               <p className="text-sm text-gray-600 dark:text-gray-400">{point.description}</p>
             </div>

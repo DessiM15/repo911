@@ -56,7 +56,7 @@ export default function ResetPasswordPage() {
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-2 mb-4">
             <Scale className="h-8 w-8 text-[#2ECC71]" />
-            <span className="text-2xl font-bold text-[#1B2A4A]">
+            <span className="text-2xl font-bold text-[#1B2A4A] dark:text-gray-100">
               Repo<span className="text-[#2ECC71]">911</span>
             </span>
           </Link>

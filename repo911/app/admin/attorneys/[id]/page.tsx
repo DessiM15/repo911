@@ -86,7 +86,7 @@ export default function AdminAttorneyDetailPage() {
       <div className="text-center py-12">
         <AlertTriangle className="h-12 w-12 text-red-400 mx-auto mb-4" />
         <p className="text-red-600 font-medium">Attorney not found.</p>
-        <Link href="/admin/attorneys" className="text-sm text-[#3474BA] hover:underline mt-2 inline-block">
+        <Link href="/admin/attorneys" className="text-sm text-[#3474BA] dark:text-blue-300 hover:underline mt-2 inline-block">
           Back to Attorneys
         </Link>
       </div>
@@ -117,7 +117,7 @@ export default function AdminAttorneyDetailPage() {
             </div>
           </div>
           <div className="text-right">
-            <p className="text-2xl font-bold text-[#1B2A4A]">{formatCurrency(totalSpent)}</p>
+            <p className="text-2xl font-bold text-[#1B2A4A] dark:text-gray-100">{formatCurrency(totalSpent)}</p>
             <p className="text-xs text-gray-500 dark:text-gray-400">Total spent</p>
           </div>
         </div>
@@ -214,7 +214,7 @@ export default function AdminAttorneyDetailPage() {
               {claimedLeads.map((lead) => (
                 <TableRow key={lead.id}>
                   <TableCell>
-                    <Link href={`/admin/leads/${lead.id}`} className="font-medium text-[#1B2A4A] hover:underline">
+                    <Link href={`/admin/leads/${lead.id}`} className="font-medium text-[#1B2A4A] dark:text-blue-300 hover:underline">
                       {lead.first_name} {lead.last_name}
                     </Link>
                   </TableCell>

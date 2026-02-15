@@ -160,7 +160,7 @@ export default function FAQPage() {
       <div className="mt-8 text-sm text-gray-500 dark:text-gray-400 text-center">
         <p>
           For other questions, contact us at{' '}
-          <a href="mailto:support@repo911.com" className="text-[#3474BA] underline">support@repo911.com</a>.
+          <a href="mailto:support@repo911.com" className="text-[#3474BA] dark:text-blue-300 underline">support@repo911.com</a>.
         </p>
       </div>
     </div>
