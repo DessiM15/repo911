@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useCallback, Suspense } from 'react';
+import { useState, useRef, useCallback, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { Search, Clock, CheckCircle, Shield, FileText, Upload, X, AlertTriangle, Loader2 } from 'lucide-react';
@@ -44,22 +44,18 @@ const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/heic', 'a
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 const MAX_FILES = 5;
 
-export default function TrackPage() {
-  return (
-    <Suspense fallback={
-      <div className="max-w-xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 text-center">
-        <Loader2 className="h-8 w-8 animate-spin mx-auto text-[#3474BA]" />
-      </div>
-    }>
-      <TrackPageContent />
-    </Suspense>
-  );
+function SearchParamReader({ onId }: { onId: (id: string) => void }) {
+  const searchParams = useSearchParams();
+  const id = searchParams.get('id');
+  useEffect(() => {
+    if (id) onId(id);
+  }, [id, onId]);
+  return null;
 }
 
-function TrackPageContent() {
-  const searchParams = useSearchParams();
+export default function TrackPage() {
   const [email, setEmail] = useState('');
-  const [leadId, setLeadId] = useState(searchParams.get('id') || '');
+  const [leadId, setLeadId] = useState('');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<TrackResult | null>(null);
   const [error, setError] = useState('');
@@ -184,6 +180,9 @@ function TrackPageContent() {
 
   return (
     <div className="max-w-xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+      <Suspense>
+        <SearchParamReader onId={setLeadId} />
+      </Suspense>
       <div className="text-center mb-8">
         <Search className="h-12 w-12 mx-auto mb-4 text-[#3474BA]" />
         <h1 className="text-3xl sm:text-4xl font-bold text-gray-900">Track Your Case</h1>
