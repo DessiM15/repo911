@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
     const {
       first_name, last_name, email, password, phone,
       firm_name, bar_number, bar_state, licensed_states,
-      preferred_case_types, website,
+      preferred_case_types, website, referral_code: incomingRefCode,
     } = parsed.data;
 
     const electronic_signature = body.electronic_signature;
@@ -79,7 +79,26 @@ export async function POST(request: NextRequest) {
       request.headers.get('x-real-ip') ||
       'unknown';
 
-    // 4. Create attorney record
+    // 4. Generate referral code: first 3 chars of last name (uppercase) + 5 random alphanumeric
+    const prefix = last_name.replace(/[^a-zA-Z]/g, '').substring(0, 3).toUpperCase().padEnd(3, 'X');
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    const suffix = Array.from({ length: 5 }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+    const generatedRefCode = `${prefix}${suffix}`;
+
+    // 5. Look up referring attorney if referral code provided
+    let referredByAttorneyId: string | null = null;
+    if (incomingRefCode) {
+      const { data: referrer } = await supabase
+        .from('attorneys')
+        .select('id')
+        .eq('referral_code', incomingRefCode)
+        .single();
+      if (referrer) {
+        referredByAttorneyId = referrer.id;
+      }
+    }
+
+    // 6. Create attorney record
     const { data: attorney, error: attorneyError } = await supabase
       .from('attorneys')
       .insert({
@@ -99,6 +118,8 @@ export async function POST(request: NextRequest) {
         fee_agreement_signed_at: new Date().toISOString(),
         fee_agreement_ip: ip_address,
         stripe_customer_id: stripeCustomerId,
+        referral_code: generatedRefCode,
+        referred_by: referredByAttorneyId,
         status: 'pending',
         is_verified: false,
         email_notifications: true,
@@ -114,7 +135,17 @@ export async function POST(request: NextRequest) {
       return apiError('Failed to create attorney profile.', 500);
     }
 
-    // 5. Create CRM contact for attorney
+    // 7. Create referral record if referred
+    if (referredByAttorneyId && attorney) {
+      await supabase.from('referrals').insert({
+        referrer_id: referredByAttorneyId,
+        referred_id: attorney.id,
+        referral_code: incomingRefCode!,
+        status: 'pending',
+      });
+    }
+
+    // 8. Create CRM contact for attorney
     await supabase.from('crm_contacts').insert({
       contact_type: 'attorney',
       source_attorney_id: attorney.id,

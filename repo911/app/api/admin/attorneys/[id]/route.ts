@@ -159,6 +159,48 @@ export async function PATCH(
             }).then(() => {});
           }
         });
+
+      // Complete referral and award credit when attorney becomes active
+      if (parsed.data.status === 'active') {
+        // Check if this attorney was referred
+        supabase
+          .from('attorneys')
+          .select('referred_by')
+          .eq('id', id)
+          .single()
+          .then(({ data: atty }) => {
+            if (atty?.referred_by) {
+              // Complete the referral record
+              supabase
+                .from('referrals')
+                .update({
+                  status: 'completed',
+                  completed_at: new Date().toISOString(),
+                  credit_awarded: true,
+                  updated_at: new Date().toISOString(),
+                })
+                .eq('referred_id', id)
+                .eq('referrer_id', atty.referred_by)
+                .then(() => {});
+
+              // Award credit to referrer
+              supabase.rpc('increment_referral_credits', {
+                attorney_id: atty.referred_by,
+                amount: 1,
+              }).then(() => {});
+
+              // Notify referrer
+              supabase.from('notifications').insert({
+                recipient_type: 'attorney',
+                recipient_id: atty.referred_by,
+                title: 'Referral Completed!',
+                message: 'An attorney you referred has been activated. You earned 1 free lead claim!',
+                type: 'system',
+                link: '/attorney/referrals',
+              }).then(() => {});
+            }
+          });
+      }
     }
 
     return apiSuccess({ success: true });

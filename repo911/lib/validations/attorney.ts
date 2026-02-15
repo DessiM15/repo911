@@ -22,6 +22,10 @@ export const attorneyLeadUpdateSchema = z.object({
   { message: 'At least one field is required' }
 );
 
+export const attorneyMessageSchema = z.object({
+  content: z.string().min(1, 'Message is required').max(2000, 'Message must be under 2000 characters'),
+});
+
 export const notificationUpdateSchema = z.object({
   mark_all_read: z.boolean().optional(),
   notification_id: z.string().optional(),

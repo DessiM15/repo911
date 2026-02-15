@@ -249,6 +249,11 @@ export interface Attorney {
   subscription_current_period_end: string | null;
   subscription_cancel_at_period_end: boolean;
 
+  // Referrals
+  referral_code: string | null;
+  referral_credits: number;
+  referred_by: string | null;
+
   // Status
   status: AttorneyStatus;
   is_verified: boolean;
@@ -522,6 +527,37 @@ export interface AlertRule {
   time_window: number;
   notification_channels: { email?: string[]; };
   last_triggered: string | null;
+}
+
+// ---------- Referrals ----------
+
+export type ReferralStatus = 'pending' | 'completed' | 'expired';
+
+export interface Referral {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  referrer_id: string;
+  referred_id: string;
+  referral_code: string;
+  status: ReferralStatus;
+  completed_at: string | null;
+  credit_awarded: boolean;
+}
+
+// ---------- Messaging ----------
+
+export type MessageSenderType = 'consumer' | 'attorney';
+
+export interface Message {
+  id: string;
+  created_at: string;
+  lead_id: string;
+  sender_type: MessageSenderType;
+  sender_id: string | null;
+  content: string;
+  read: boolean;
+  read_at: string | null;
 }
 
 // ---------- Admin Audit Log ----------

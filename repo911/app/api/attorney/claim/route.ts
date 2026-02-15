@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
 
     const { data: attorney } = await supabase
       .from('attorneys')
-      .select('id, stripe_customer_id, status, subscription_plan, subscription_status, first_name, email')
+      .select('id, stripe_customer_id, status, subscription_plan, subscription_status, first_name, email, referral_credits')
       .eq('supabase_auth_id', user.id)
       .single();
 
@@ -73,6 +73,89 @@ export async function POST(request: NextRequest) {
     const price = tier === 'hot' ? LEAD_PRICES.hot
       : tier === 'warm' ? LEAD_PRICES.warm
       : LEAD_PRICES.cold;
+
+    // --- Referral credits: free claim ---
+    if (attorney.referral_credits > 0) {
+      const adminSupabase = createAdminClient();
+
+      // Atomic update — only if still unclaimed
+      const { data: updatedLead, error: claimError } = await adminSupabase
+        .from('leads')
+        .update({
+          status: 'claimed',
+          claimed_by: attorney.id,
+          claimed_at: new Date().toISOString(),
+          claim_price: 0,
+          stripe_payment_id: null,
+        })
+        .eq('id', lead_id)
+        .is('claimed_by', null)
+        .select('id')
+        .single();
+
+      if (claimError || !updatedLead) {
+        return apiError('This lead has already been claimed', 409);
+      }
+
+      // Decrement referral credits atomically
+      await adminSupabase.rpc('decrement_referral_credits', {
+        attorney_id: attorney.id,
+        amount: 1,
+      });
+
+      // Create $0 transaction record
+      await adminSupabase.from('transactions').insert({
+        attorney_id: attorney.id,
+        lead_id,
+        stripe_payment_intent_id: null,
+        amount: 0,
+        currency: 'usd',
+        status: 'succeeded',
+        description: `Lead claim — ${tier?.toUpperCase()} lead (referral credit)`,
+        receipt_url: null,
+        payment_type: 'per_lead',
+      });
+
+      // Create fee tracking record
+      await adminSupabase.from('fee_tracking').insert({
+        attorney_id: attorney.id,
+        lead_id,
+        transaction_id: null,
+        case_status: 'open',
+      });
+
+      // In-app notification
+      await adminSupabase.from('notifications').insert({
+        recipient_type: 'attorney',
+        recipient_id: attorney.id,
+        title: 'Lead Claimed with Referral Credit',
+        message: `You used a referral credit to claim a ${tier?.toUpperCase()} lead in ${lead.repo_state}. Full contact info is now available.`,
+        type: 'lead_claimed',
+        link: '/attorney/my-leads',
+      });
+
+      // Emails (fire-and-forget)
+      sendLeadClaimedToConsumer({
+        to: lead.email,
+        firstName: lead.first_name,
+      }).catch(() => { /* non-critical */ });
+
+      sendLeadClaimedToAttorney({
+        to: attorney.email,
+        attorneyName: attorney.first_name,
+        leadName: `${lead.first_name} ${lead.last_name}`,
+        leadEmail: lead.email,
+        leadPhone: lead.phone || '',
+        leadState: lead.repo_state || '',
+        tier: tier || 'cold',
+        amount: 0,
+      }).catch(() => { /* non-critical */ });
+
+      return apiSuccess({
+        success: true,
+        redirect_url: `${process.env.NEXT_PUBLIC_APP_URL}/attorney/my-leads?claimed=${lead.id}`,
+      });
+    }
 
     // --- Active subscription: instant claim ---
     if (isSubscriptionActive(

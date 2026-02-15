@@ -1,11 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Scale } from 'lucide-react';
+import { Scale, UserPlus } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -21,12 +21,23 @@ const PRACTICE_AREAS = [
   { value: 'fcra', label: 'FCRA / Credit Reporting' },
 ];
 
+function RefCodeReader({ onCode }: { onCode: (code: string) => void }) {
+  const searchParams = useSearchParams();
+  const ref = searchParams.get('ref');
+  if (ref) {
+    // Set once on mount via useEffect-like pattern
+    onCode(ref);
+  }
+  return null;
+}
+
 export default function AttorneyRegisterPage() {
   const router = useRouter();
   const [step, setStep] = useState<'register' | 'agreement'>('register');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState<AttorneyRegistrationData | null>(null);
+  const [refCode, setRefCode] = useState('');
 
   const {
     register: formRegister,
@@ -60,6 +71,7 @@ export default function AttorneyRegisterPage() {
         body: JSON.stringify({
           ...formData,
           electronic_signature: signature,
+          referral_code: refCode || undefined,
         }),
       });
 
@@ -79,7 +91,17 @@ export default function AttorneyRegisterPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-4 py-12">
+      <Suspense>
+        <RefCodeReader onCode={(code) => setRefCode((prev) => prev || code)} />
+      </Suspense>
       <div className="w-full max-w-2xl">
+        {/* Referral indicator */}
+        {refCode && (
+          <div className="mb-4 bg-green-50 border border-green-200 rounded-lg p-3 text-sm text-green-700 flex items-center gap-2">
+            <UserPlus className="h-4 w-4 shrink-0" />
+            Referred by a colleague (code: <strong>{refCode}</strong>)
+          </div>
+        )}
         {/* Header */}
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-2 mb-4">

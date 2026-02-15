@@ -33,7 +33,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html suppressHydrationWarning>
       <head>
         {process.env.NEXT_PUBLIC_SUPABASE_URL && (
           <>

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { EnglishOnlyNotice } from '@/components/layout/EnglishOnlyNotice';
 
 export const metadata: Metadata = {
   title: 'Privacy Policy',
@@ -7,6 +8,8 @@ export const metadata: Metadata = {
 
 export default function PrivacyPage() {
   return (
+    <>
+    <EnglishOnlyNotice />
     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
       <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 text-center mb-8">Privacy Policy</h1>
       <p className="text-sm text-gray-500 text-center mb-8">Last updated: February 2026</p>
@@ -92,5 +95,6 @@ export default function PrivacyPage() {
         </section>
       </div>
     </div>
+    </>
   );
 }

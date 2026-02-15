@@ -1,0 +1,122 @@
+{
+  "header": {
+    "howItWorks": "How It Works",
+    "blog": "Blog",
+    "faq": "FAQ",
+    "trackCase": "Track My Case",
+    "checkCase": "Check My Case Now"
+  },
+  "footer": {
+    "brandDescription": "Helping victims of wrongful vehicle repossession connect with licensed attorneys who can fight for their rights.",
+    "quickLinks": "Quick Links",
+    "freeReview": "Free Case Review",
+    "howItWorks": "How It Works",
+    "faq": "FAQ",
+    "trackCase": "Track My Case",
+    "blog": "Blog",
+    "legal": "Legal",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "disclaimer": "Disclaimer",
+    "forAttorneys": "For Attorneys",
+    "attorneyLogin": "Attorney Login",
+    "joinNetwork": "Join Our Network",
+    "copyright": "© {year} Repo911. All rights reserved.",
+    "legalNotice": "This website is not a law firm and does not provide legal advice. The information provided is for general informational purposes only. No attorney-client relationship is formed by using this site."
+  },
+  "home": {
+    "heroTitle": "Was Your Car Wrongfully Repossessed?",
+    "heroSubtitle": "Even if you missed payments, the repo company may have broken the law. You could be owed $10,000–$100,000+.",
+    "ctaButton": "Get My Free Case Review",
+    "howItWorksTitle": "How It Works",
+    "step1Title": "Tell Us What Happened",
+    "step1Description": "Answer a few questions about your repossession. Takes about 5 minutes.",
+    "step2Title": "We Review Your Case",
+    "step2Description": "Our system evaluates your situation for potential legal violations.",
+    "step3Title": "Connect with an Attorney",
+    "step3Description": "If you have a case, a licensed attorney in your state will reach out.",
+    "statsTitle": "Fighting for Your Rights",
+    "statsLeads": "Cases Reviewed",
+    "statsAttorneys": "Licensed Attorneys",
+    "statsStates": "States Covered"
+  },
+  "howItWorks": {
+    "title": "How It Works",
+    "subtitle": "Three simple steps to find out if your rights were violated."
+  },
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "subtitle": "Common questions about wrongful repossession and how Repo911 can help."
+  },
+  "track": {
+    "title": "Track Your Case",
+    "subtitle": "Look up your case status using your case ID or phone number.",
+    "byCaseId": "By Case ID",
+    "byPhone": "By Phone & Last Name",
+    "email": "Email Address",
+    "caseId": "Case ID",
+    "caseIdHint": "You received this in your confirmation email.",
+    "phone": "Phone Number",
+    "lastName": "Last Name",
+    "lookUp": "Look Up My Case",
+    "status": "Status",
+    "priority": "Priority",
+    "submitted": "Submitted",
+    "attorneyAssigned": "Attorney Assigned",
+    "yes": "Yes",
+    "notYet": "Not yet",
+    "claimed": "An attorney has claimed your case. They will reach out to you using the contact information you provided.",
+    "available": "Your case is available for attorney review. You will be contacted when an attorney claims your case.",
+    "returnHome": "Return to Homepage"
+  },
+  "claim": {
+    "title": "Free Case Review",
+    "subtitle": "Find out if your rights were violated during your vehicle repossession.",
+    "labels": {
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "email": "Email Address",
+      "phone": "Phone Number",
+      "preferredContact": "Preferred Contact Method",
+      "bestTime": "Best Time to Contact",
+      "streetAddress": "Street Address",
+      "city": "City",
+      "state": "State",
+      "zipCode": "ZIP Code"
+    },
+    "buttons": {
+      "next": "Next",
+      "back": "Back",
+      "submit": "Submit My Case"
+    },
+    "steps": {
+      "contactInfo": "Contact Info",
+      "vehicleInfo": "Vehicle Info",
+      "lenderInfo": "Lender Info",
+      "repoDetails": "Repo Details",
+      "breachOfPeace": "Breach of Peace",
+      "belongings": "Belongings",
+      "postRepo": "Post-Repo",
+      "military": "Military",
+      "debtCollection": "Debt Collection",
+      "evidence": "Evidence",
+      "consent": "Consent"
+    }
+  },
+  "blog": {
+    "title": "Repossession Rights Blog",
+    "subtitle": "Know your rights. Expert articles on vehicle repossession law, consumer protections, and what to do if your rights were violated.",
+    "readMore": "Read more",
+    "minRead": "{minutes} min read",
+    "ctaTitle": "Think Your Rights Were Violated?",
+    "ctaDescription": "Get a free case review in just 5 minutes. Find out if you may be owed $10,000–$100,000+.",
+    "ctaButton": "Start My Free Case Review",
+    "backToBlog": "Back to Blog"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "backToHome": "Return to Homepage",
+    "englishOnly": "This page is only available in English."
+  }
+}

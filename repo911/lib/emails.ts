@@ -216,6 +216,63 @@ export async function sendLeadClaimedToAttorney(opts: {
 /**
  * Sent to admin when a new attorney registers.
  */
+/**
+ * Sent to attorney when a consumer sends a message.
+ */
+export async function sendConsumerMessageNotification(opts: {
+  to: string;
+  attorneyName: string;
+  consumerName: string;
+  leadId: string;
+}) {
+  const html = wrap('New Message from Consumer', [
+    p(`Hi ${escapeHtml(opts.attorneyName)},`),
+    p(`<strong>${escapeHtml(opts.consumerName)}</strong> has sent you a new message regarding their case.`),
+    p('Log in to your portal to view and reply to the message.'),
+    btn('View Messages', `${APP_URL}/attorney/my-leads/${opts.leadId}`),
+    p(`&mdash; The ${APP_NAME} Team`),
+  ].join(''));
+
+  return resend.emails.send({
+    from: EMAIL_FROM,
+    to: opts.to,
+    subject: `New Message from ${opts.consumerName} — ${APP_NAME}`,
+    html,
+  });
+}
+
+/**
+ * Sent to consumer when an attorney sends a message.
+ */
+export async function sendAttorneyMessageToConsumer(opts: {
+  to: string;
+  consumerName: string;
+  attorneyName: string;
+  messageContent: string;
+  leadId: string;
+}) {
+  const html = wrap('New Message from Your Attorney', [
+    p(`Hi ${escapeHtml(opts.consumerName)},`),
+    p(`<strong>${escapeHtml(opts.attorneyName)}</strong> sent you a message:`),
+    `<div style="margin:16px 0;padding:16px;background:#f3f4f6;border-radius:8px;border-left:4px solid #3474BA;">
+      <p style="margin:0;font-size:15px;line-height:1.6;color:#374151;white-space:pre-wrap;">${escapeHtml(opts.messageContent)}</p>
+    </div>`,
+    p('You can reply to this message by visiting your case tracking page.'),
+    btn('Reply to Message', `${APP_URL}/track?id=${opts.leadId}`),
+    p(`&mdash; The ${APP_NAME} Team`),
+  ].join(''));
+
+  return resend.emails.send({
+    from: EMAIL_FROM,
+    to: opts.to,
+    subject: `Message from Your Attorney — ${APP_NAME}`,
+    html,
+  });
+}
+
+/**
+ * Sent to admin when a new attorney registers.
+ */
 export async function sendAttorneyRegistrationAlert(opts: {
   attorneyName: string;
   email: string;

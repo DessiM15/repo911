@@ -13,6 +13,7 @@ export const attorneyRegistrationSchema = z.object({
   licensed_states: z.array(z.string()).min(1, 'Select at least one licensed state'),
   preferred_case_types: z.array(z.string()).min(1, 'Select at least one practice area'),
   website: z.string().url('Please enter a valid URL').optional().or(z.literal('')),
+  referral_code: z.string().optional(),
 }).refine((data) => data.password === data.confirm_password, {
   message: 'Passwords do not match',
   path: ['confirm_password'],

@@ -15,6 +15,7 @@ import {
   X,
   Scale,
   CheckCheck,
+  Gift,
 } from 'lucide-react';
 import { cn, formatDate } from '@/lib/utils';
 import { createClient } from '@/lib/supabase/client';
@@ -23,6 +24,7 @@ const navItems = [
   { href: '/attorney/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/attorney/marketplace', label: 'Marketplace', icon: ShoppingCart },
   { href: '/attorney/my-leads', label: 'My Leads', icon: FileText },
+  { href: '/attorney/referrals', label: 'Referrals', icon: Gift },
   { href: '/attorney/billing', label: 'Billing', icon: CreditCard },
   { href: '/attorney/profile', label: 'Profile', icon: User },
 ];

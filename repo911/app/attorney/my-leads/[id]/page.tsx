@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Select } from '@/components/ui/select';
 import { Skeleton } from '@/components/ui/skeleton';
+import { AttorneyMessageThread } from '@/components/attorney/AttorneyMessageThread';
 import { formatDate, formatPhone } from '@/lib/utils';
 import type { Lead } from '@/types';
 
@@ -278,8 +279,11 @@ export default function MyLeadDetailPage() {
         </div>
       </div>
 
+      {/* Messages */}
+      <AttorneyMessageThread leadId={id} />
+
       {/* Case Management */}
-      <div className="bg-white rounded-xl border border-gray-200 p-6">
+      <div className="bg-white rounded-xl border border-gray-200 p-6 mt-4">
         <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
           <Notebook className="h-5 w-5 text-green-500" /> Case Management
         </h3>

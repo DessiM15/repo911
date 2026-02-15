@@ -2,14 +2,19 @@ import Link from 'next/link';
 import { Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { MobileMenuToggle } from './MobileMenuToggle';
+import { LanguageSwitcher } from './LanguageSwitcher';
+import { getTranslations } from 'next-intl/server';
 
-const navLinks = [
-  { href: '/how-it-works', label: 'How It Works' },
-  { href: '/faq', label: 'FAQ' },
-  { href: '/track', label: 'Track My Case' },
-];
+export async function ConsumerHeader() {
+  const t = await getTranslations('header');
 
-export function ConsumerHeader() {
+  const navLinks = [
+    { href: '/how-it-works', label: t('howItWorks') },
+    { href: '/blog', label: t('blog') },
+    { href: '/faq', label: t('faq') },
+    { href: '/track', label: t('trackCase') },
+  ];
+
   return (
     <header className="sticky top-0 z-40 bg-white border-b border-gray-100 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -33,9 +38,10 @@ export function ConsumerHeader() {
                 {link.label}
               </Link>
             ))}
+            <LanguageSwitcher />
             <Link href="/claim">
               <Button variant="consumer" size="sm">
-                Check My Case Now
+                {t('checkCase')}
               </Button>
             </Link>
           </nav>

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { Search, Clock, CheckCircle, Shield, FileText, Upload, X, AlertTriangle, Loader2, Phone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { MessageThread } from '@/components/consumer/MessageThread';
 import { formatDistanceToNow } from 'date-fns';
 
 interface TrackResult {
@@ -354,6 +355,11 @@ export default function TrackPage() {
               </div>
             )}
           </div>
+
+          {/* Messages Section — only shown when case is claimed and lookup by case_id */}
+          {lookupMode === 'case_id' && result.claimed && (
+            <MessageThread email={email} leadId={leadId} />
+          )}
 
           {/* File Upload Section — only shown for case_id lookup (upload API requires email+leadId) */}
           {lookupMode === 'case_id' && <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">

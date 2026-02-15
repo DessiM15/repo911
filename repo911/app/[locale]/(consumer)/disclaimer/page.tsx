@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { EnglishOnlyNotice } from '@/components/layout/EnglishOnlyNotice';
 
 export const metadata: Metadata = {
   title: 'Disclaimer',
@@ -8,6 +9,8 @@ export const metadata: Metadata = {
 
 export default function DisclaimerPage() {
   return (
+    <>
+    <EnglishOnlyNotice />
     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
       <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 text-center mb-8">Legal Disclaimer</h1>
 
@@ -64,5 +67,6 @@ export default function DisclaimerPage() {
         </div>
       </div>
     </div>
+    </>
   );
 }

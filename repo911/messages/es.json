@@ -1,0 +1,122 @@
+{
+  "header": {
+    "howItWorks": "Cómo Funciona",
+    "blog": "Blog",
+    "faq": "Preguntas Frecuentes",
+    "trackCase": "Seguir Mi Caso",
+    "checkCase": "Revisar Mi Caso Ahora"
+  },
+  "footer": {
+    "brandDescription": "Ayudamos a víctimas de reposesión ilegal de vehículos a conectar con abogados licenciados que pueden luchar por sus derechos.",
+    "quickLinks": "Enlaces Rápidos",
+    "freeReview": "Revisión Gratuita",
+    "howItWorks": "Cómo Funciona",
+    "faq": "Preguntas Frecuentes",
+    "trackCase": "Seguir Mi Caso",
+    "blog": "Blog",
+    "legal": "Legal",
+    "privacy": "Política de Privacidad",
+    "terms": "Términos de Servicio",
+    "disclaimer": "Aviso Legal",
+    "forAttorneys": "Para Abogados",
+    "attorneyLogin": "Iniciar Sesión",
+    "joinNetwork": "Únete a Nuestra Red",
+    "copyright": "© {year} Repo911. Todos los derechos reservados.",
+    "legalNotice": "Este sitio web no es un bufete de abogados y no proporciona asesoría legal. La información proporcionada es solo para fines informativos generales. No se forma ninguna relación abogado-cliente al usar este sitio."
+  },
+  "home": {
+    "heroTitle": "¿Le Reposeyeron Su Vehículo Ilegalmente?",
+    "heroSubtitle": "Aunque haya atrasado pagos, la empresa de reposesión pudo haber violado la ley. Podría recibir $10,000–$100,000+.",
+    "ctaButton": "Obtener Mi Revisión Gratuita",
+    "howItWorksTitle": "Cómo Funciona",
+    "step1Title": "Cuéntenos Lo Que Pasó",
+    "step1Description": "Responda unas preguntas sobre su reposesión. Toma unos 5 minutos.",
+    "step2Title": "Revisamos Su Caso",
+    "step2Description": "Nuestro sistema evalúa su situación para posibles violaciones legales.",
+    "step3Title": "Conéctese con un Abogado",
+    "step3Description": "Si tiene un caso, un abogado licenciado en su estado se comunicará con usted.",
+    "statsTitle": "Luchando Por Sus Derechos",
+    "statsLeads": "Casos Revisados",
+    "statsAttorneys": "Abogados Licenciados",
+    "statsStates": "Estados Cubiertos"
+  },
+  "howItWorks": {
+    "title": "Cómo Funciona",
+    "subtitle": "Tres pasos simples para saber si sus derechos fueron violados."
+  },
+  "faq": {
+    "title": "Preguntas Frecuentes",
+    "subtitle": "Preguntas comunes sobre reposesión ilegal y cómo Repo911 puede ayudar."
+  },
+  "track": {
+    "title": "Seguir Su Caso",
+    "subtitle": "Busque el estado de su caso usando su ID de caso o número de teléfono.",
+    "byCaseId": "Por ID de Caso",
+    "byPhone": "Por Teléfono y Apellido",
+    "email": "Correo Electrónico",
+    "caseId": "ID de Caso",
+    "caseIdHint": "Lo recibió en su correo de confirmación.",
+    "phone": "Número de Teléfono",
+    "lastName": "Apellido",
+    "lookUp": "Buscar Mi Caso",
+    "status": "Estado",
+    "priority": "Prioridad",
+    "submitted": "Enviado",
+    "attorneyAssigned": "Abogado Asignado",
+    "yes": "Sí",
+    "notYet": "Aún no",
+    "claimed": "Un abogado ha tomado su caso. Se comunicarán con usted usando la información de contacto que proporcionó.",
+    "available": "Su caso está disponible para revisión por abogados. Se le contactará cuando un abogado tome su caso.",
+    "returnHome": "Volver a la Página Principal"
+  },
+  "claim": {
+    "title": "Revisión Gratuita de Caso",
+    "subtitle": "Descubra si sus derechos fueron violados durante la reposesión de su vehículo.",
+    "labels": {
+      "firstName": "Nombre",
+      "lastName": "Apellido",
+      "email": "Correo Electrónico",
+      "phone": "Número de Teléfono",
+      "preferredContact": "Método de Contacto Preferido",
+      "bestTime": "Mejor Hora para Contactar",
+      "streetAddress": "Dirección",
+      "city": "Ciudad",
+      "state": "Estado",
+      "zipCode": "Código Postal"
+    },
+    "buttons": {
+      "next": "Siguiente",
+      "back": "Atrás",
+      "submit": "Enviar Mi Caso"
+    },
+    "steps": {
+      "contactInfo": "Información de Contacto",
+      "vehicleInfo": "Información del Vehículo",
+      "lenderInfo": "Información del Prestamista",
+      "repoDetails": "Detalles de la Reposesión",
+      "breachOfPeace": "Violación de la Paz",
+      "belongings": "Pertenencias",
+      "postRepo": "Post-Reposesión",
+      "military": "Militar",
+      "debtCollection": "Cobro de Deudas",
+      "evidence": "Evidencia",
+      "consent": "Consentimiento"
+    }
+  },
+  "blog": {
+    "title": "Blog de Derechos de Reposesión",
+    "subtitle": "Conozca sus derechos. Artículos de expertos sobre leyes de reposesión de vehículos, protecciones al consumidor y qué hacer si sus derechos fueron violados.",
+    "readMore": "Leer más",
+    "minRead": "{minutes} min de lectura",
+    "ctaTitle": "¿Cree Que Sus Derechos Fueron Violados?",
+    "ctaDescription": "Obtenga una revisión gratuita de su caso en solo 5 minutos. Descubra si le deben $10,000–$100,000+.",
+    "ctaButton": "Comenzar Mi Revisión Gratuita",
+    "backToBlog": "Volver al Blog"
+  },
+  "common": {
+    "loading": "Cargando...",
+    "error": "Algo salió mal",
+    "backToHome": "Volver a la Página Principal",
+    "englishOnly": "Esta página solo está disponible en inglés."
+  }
+}
