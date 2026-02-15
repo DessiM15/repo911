@@ -1,4 +1,11 @@
+import { Geist_Mono } from 'next/font/google';
 import { AttorneyLayoutWrapper } from '@/components/layout/AttorneyLayoutWrapper';
+
+const geistMono = Geist_Mono({
+  variable: '--font-geist-mono',
+  subsets: ['latin'],
+  display: 'swap',
+});
 
 export const metadata = {
   title: {
@@ -16,5 +23,9 @@ export default function AttorneyLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <AttorneyLayoutWrapper>{children}</AttorneyLayoutWrapper>;
+  return (
+    <div className={geistMono.variable}>
+      <AttorneyLayoutWrapper>{children}</AttorneyLayoutWrapper>
+    </div>
+  );
 }

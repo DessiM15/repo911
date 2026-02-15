@@ -1,4 +1,11 @@
+import { Geist_Mono } from 'next/font/google';
 import { AdminLayoutWrapper } from '@/components/layout/AdminLayoutWrapper';
+
+const geistMono = Geist_Mono({
+  variable: '--font-geist-mono',
+  subsets: ['latin'],
+  display: 'swap',
+});
 
 export const metadata = {
   title: {
@@ -16,5 +23,9 @@ export default function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <AdminLayoutWrapper>{children}</AdminLayoutWrapper>;
+  return (
+    <div className={geistMono.variable}>
+      <AdminLayoutWrapper>{children}</AdminLayoutWrapper>
+    </div>
+  );
 }
