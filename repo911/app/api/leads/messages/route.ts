@@ -7,6 +7,21 @@ import { apiSuccess, apiError } from '@/lib/api-response';
 
 export async function GET(request: NextRequest) {
   try {
+    // Rate limit: 30 per IP per 60 seconds
+    const ip =
+      request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+      request.headers.get('x-real-ip') ||
+      'unknown';
+    const rateLimitResult = rateLimit(`consumer-messages-get:${ip}`, { limit: 30, windowSeconds: 60 });
+    if (!rateLimitResult.success) {
+      return apiError(
+        'Too many requests. Please try again later.',
+        429,
+        undefined,
+        { 'Retry-After': Math.ceil((rateLimitResult.resetAt - Date.now()) / 1000).toString() }
+      );
+    }
+
     const email = request.nextUrl.searchParams.get('email');
     const leadId = request.nextUrl.searchParams.get('leadId');
 
