@@ -1,5 +1,6 @@
-import Link from 'next/link';
 import { Shield, FileSearch, UserCheck, ArrowRight, ChevronRight, Clock, Lock, Scale } from 'lucide-react';
+import { getTranslations } from 'next-intl/server';
+import { Link } from '@/i18n/navigation';
 import { Button } from '@/components/ui/button';
 
 const jsonLd = {
@@ -64,7 +65,25 @@ const faqJsonLd = {
   ],
 };
 
-export default function HomePage() {
+export default async function HomePage() {
+  const t = await getTranslations('home');
+
+  const violations = [
+    { quote: t('violation1Quote'), title: t('violation1Title'), description: t('violation1Description') },
+    { quote: t('violation2Quote'), title: t('violation2Title'), description: t('violation2Description') },
+    { quote: t('violation3Quote'), title: t('violation3Title'), description: t('violation3Description') },
+    { quote: t('violation4Quote'), title: t('violation4Title'), description: t('violation4Description') },
+    { quote: t('violation5Quote'), title: t('violation5Title'), description: t('violation5Description') },
+    { quote: t('violation6Quote'), title: t('violation6Title'), description: t('violation6Description') },
+  ];
+
+  const faqPreviews = [
+    { q: t('faqPreview1Q'), a: t('faqPreview1A') },
+    { q: t('faqPreview2Q'), a: t('faqPreview2A') },
+    { q: t('faqPreview3Q'), a: t('faqPreview3A') },
+    { q: t('faqPreview4Q'), a: t('faqPreview4A') },
+  ];
+
   return (
     <>
       {/* Structured Data */}
@@ -86,35 +105,35 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="text-3xl sm:text-5xl lg:text-7xl font-bold text-gray-900 dark:text-gray-100 leading-tight">
-              Was Your Car{' '}
-              <span className="text-[#3474BA] dark:text-blue-300">Wrongfully Repossessed?</span>
+              {t.rich('heroTitle', {
+                highlight: (chunks) => <span className="text-[#3474BA] dark:text-blue-300">{chunks}</span>,
+              })}
             </h1>
             <p className="mt-4 text-xl sm:text-2xl text-gray-900 dark:text-gray-100 font-semibold">
-              You May Be Owed $10,000–$100,000+
+              {t('heroAmount')}
             </p>
             <p className="mt-4 text-lg text-gray-600 dark:text-gray-400 leading-relaxed">
-              Even if you missed payments, the repo company may have broken the law.
-              Find out in 5 minutes — it&apos;s 100% free.
+              {t('heroDescription')}
             </p>
             <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link href="/claim">
                 <Button variant="consumer" size="lg" className="text-lg px-8 py-4">
-                  Check My Case Now <ArrowRight className="ml-2 h-5 w-5" />
+                  {t('ctaButton')} <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
             </div>
             <div className="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-gray-500 dark:text-gray-400">
               <span className="flex items-center gap-1">
                 <Shield className="h-4 w-4 text-[#3474BA] dark:text-blue-400" />
-                Free Case Review
+                {t('badgeFreeReview')}
               </span>
               <span className="flex items-center gap-1">
                 <Shield className="h-4 w-4 text-[#3474BA] dark:text-blue-400" />
-                No Obligation
+                {t('badgeNoObligation')}
               </span>
               <span className="flex items-center gap-1">
                 <Shield className="h-4 w-4 text-[#3474BA] dark:text-blue-400" />
-                Nationwide Coverage
+                {t('badgeNationwide')}
               </span>
             </div>
           </div>
@@ -126,20 +145,20 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
             <div>
-              <p className="text-2xl sm:text-3xl font-bold text-white">100%</p>
-              <p className="text-sm text-gray-300 mt-1">Free Case Review</p>
+              <p className="text-2xl sm:text-3xl font-bold text-white">{t('stat1Value')}</p>
+              <p className="text-sm text-gray-300 mt-1">{t('stat1Label')}</p>
             </div>
             <div>
-              <p className="text-2xl sm:text-3xl font-bold text-white">50</p>
-              <p className="text-sm text-gray-300 mt-1">States Covered</p>
+              <p className="text-2xl sm:text-3xl font-bold text-white">{t('stat2Value')}</p>
+              <p className="text-sm text-gray-300 mt-1">{t('stat2Label')}</p>
             </div>
             <div>
-              <p className="text-2xl sm:text-3xl font-bold text-white">5 Min</p>
-              <p className="text-sm text-gray-300 mt-1">Quick Questionnaire</p>
+              <p className="text-2xl sm:text-3xl font-bold text-white">{t('stat3Value')}</p>
+              <p className="text-sm text-gray-300 mt-1">{t('stat3Label')}</p>
             </div>
             <div>
-              <p className="text-2xl sm:text-3xl font-bold text-white">24-48 Hr</p>
-              <p className="text-sm text-gray-300 mt-1">Attorney Response</p>
+              <p className="text-2xl sm:text-3xl font-bold text-white">{t('stat4Value')}</p>
+              <p className="text-sm text-gray-300 mt-1">{t('stat4Label')}</p>
             </div>
           </div>
         </div>
@@ -149,31 +168,28 @@ export default function HomePage() {
       <section className="py-16 sm:py-20 bg-white dark:bg-slate-800" style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 500px' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-gray-100">How It Works</h2>
-            <p className="mt-3 text-lg text-gray-500 dark:text-gray-400">Three simple steps to find out if you have a case</p>
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-gray-100">{t('howItWorksTitle')}</h2>
+            <p className="mt-3 text-lg text-gray-500 dark:text-gray-400">{t('howItWorksSubtitle')}</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
               {
                 icon: FileSearch,
                 step: '1',
-                title: 'Tell Us What Happened',
-                description:
-                  'Fill out our simple questionnaire about your repossession experience. It takes about 5 minutes.',
+                title: t('step1Title'),
+                description: t('step1Description'),
               },
               {
                 icon: Shield,
                 step: '2',
-                title: 'We Review Your Case',
-                description:
-                  'Our system analyzes your situation against federal and state repossession laws to determine if your rights were violated.',
+                title: t('step2Title'),
+                description: t('step2Description'),
               },
               {
                 icon: UserCheck,
                 step: '3',
-                title: 'Get Connected to an Attorney',
-                description:
-                  'If you have a case, we connect you with a licensed attorney in your state who can fight for your compensation. No fees unless you win.',
+                title: t('step3Title'),
+                description: t('step3Description'),
               },
             ].map((item) => (
               <div
@@ -199,53 +215,22 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-gray-100">
-              Did Any of This Happen to You?
+              {t('violationsTitle')}
             </h2>
             <p className="mt-3 text-lg text-gray-500 dark:text-gray-400">
-              These are common violations that may entitle you to compensation
+              {t('violationsSubtitle')}
             </p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
-              {
-                quote: '"The repo man broke into my garage"',
-                violation: 'Illegal Entry',
-                description: 'Entering a locked or gated area without permission is a breach of peace under UCC Article 9.',
-              },
-              {
-                quote: '"I told them to stop but they took it anyway"',
-                violation: 'Breach of Peace',
-                description: 'If you verbally objected and they continued, the repossession may be unlawful.',
-              },
-              {
-                quote: '"They kept all my personal belongings"',
-                violation: 'Property Violation',
-                description: 'Lenders and repo companies are required to return your personal belongings.',
-              },
-              {
-                quote: '"I was on active military duty"',
-                violation: 'SCRA Violation',
-                description: 'Active-duty military members have special protections against repossession under federal law.',
-              },
-              {
-                quote: '"They called me at 3am threatening me"',
-                violation: 'FDCPA Violation',
-                description: 'Debt collectors cannot call outside certain hours or use threats and harassment.',
-              },
-              {
-                quote: '"They caused a huge scene in front of everyone"',
-                violation: 'Public Embarrassment',
-                description: 'Creating a public disturbance during repossession can constitute a breach of peace.',
-              },
-            ].map((item) => (
+            {violations.map((item) => (
               <Link
-                key={item.violation}
+                key={item.title}
                 href="/claim"
                 className="block bg-white dark:bg-slate-800 rounded-xl p-4 sm:p-6 border border-gray-200 dark:border-slate-700 hover:border-[#3474BA] hover:shadow-md transition-all group"
               >
                 <p className="text-[#3474BA] dark:text-blue-300 font-medium italic mb-3">{item.quote}</p>
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-1 flex items-center gap-1">
-                  {item.violation}
+                  {item.title}
                   <ChevronRight className="h-4 w-4 text-[#F5A623] opacity-0 group-hover:opacity-100 transition-opacity" />
                 </h3>
                 <p className="text-sm text-gray-600 dark:text-gray-400">{item.description}</p>
@@ -266,13 +251,15 @@ export default function HomePage() {
             </div>
             <div>
               <h3 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
-                Time May Be Running Out on Your Claim
+                {t('urgencyTitle')}
               </h3>
               <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                Most states have a <strong>statute of limitations</strong> on wrongful repossession claims — typically 2-4 years from the date of repossession. Once this window closes, you may lose your right to compensation forever. The sooner you act, the stronger your case.
+                {t.rich('urgencyDescription', {
+                  strong: (chunks) => <strong>{chunks}</strong>,
+                })}
               </p>
               <Link href="/claim" className="inline-flex items-center gap-1 mt-3 text-[#2B5EA2] dark:text-blue-300 font-semibold hover:underline">
-                Check your case now before it&apos;s too late <ArrowRight className="h-4 w-4" />
+                {t('urgencyLink')} <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
           </div>
@@ -284,10 +271,10 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">
-              Why Consumers Trust Repo911
+              {t('trustTitle')}
             </h2>
             <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-              We connect you with experienced attorneys who specialize in wrongful repossession and consumer protection law.
+              {t('trustSubtitle')}
             </p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 mb-12">
@@ -295,37 +282,37 @@ export default function HomePage() {
               <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-[#3474BA]/10 text-[#3474BA] dark:text-blue-400 mb-4">
                 <Scale className="h-6 w-6" />
               </div>
-              <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Licensed Attorneys Only</h3>
-              <p className="text-sm text-gray-600 dark:text-gray-400">Every attorney in our network is licensed and verified in their state.</p>
+              <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">{t('trustLicensedTitle')}</h3>
+              <p className="text-sm text-gray-600 dark:text-gray-400">{t('trustLicensedDescription')}</p>
             </div>
             <div className="text-center p-6">
               <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-[#3474BA]/10 text-[#3474BA] dark:text-blue-400 mb-4">
                 <Lock className="h-6 w-6" />
               </div>
-              <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Your Info Is Protected</h3>
-              <p className="text-sm text-gray-600 dark:text-gray-400">Your personal information is encrypted and only shared with your matched attorney.</p>
+              <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">{t('trustProtectedTitle')}</h3>
+              <p className="text-sm text-gray-600 dark:text-gray-400">{t('trustProtectedDescription')}</p>
             </div>
             <div className="text-center p-6">
               <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-[#3474BA]/10 text-[#3474BA] dark:text-blue-400 mb-4">
                 <Shield className="h-6 w-6" />
               </div>
-              <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">No Win, No Fee</h3>
-              <p className="text-sm text-gray-600 dark:text-gray-400">Attorneys typically work on contingency — you pay nothing unless you win your case.</p>
+              <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">{t('trustNoFeeTitle')}</h3>
+              <p className="text-sm text-gray-600 dark:text-gray-400">{t('trustNoFeeDescription')}</p>
             </div>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-8 text-gray-500 dark:text-gray-400 pt-8 border-t border-gray-100 dark:border-slate-700">
             <div className="text-center">
-              <p className="text-sm font-medium uppercase tracking-wider">Protected by</p>
+              <p className="text-sm font-medium uppercase tracking-wider">{t('trustProtectedBy')}</p>
               <p className="text-lg font-bold text-gray-700 dark:text-gray-300 mt-1">UCC Article 9</p>
             </div>
             <div className="hidden sm:block h-8 w-px bg-gray-200 dark:bg-slate-700" />
             <div className="text-center">
-              <p className="text-sm font-medium uppercase tracking-wider">Enforced by</p>
+              <p className="text-sm font-medium uppercase tracking-wider">{t('trustEnforcedBy')}</p>
               <p className="text-lg font-bold text-gray-700 dark:text-gray-300 mt-1">FDCPA</p>
             </div>
             <div className="hidden sm:block h-8 w-px bg-gray-200 dark:bg-slate-700" />
             <div className="text-center">
-              <p className="text-sm font-medium uppercase tracking-wider">Military Protection</p>
+              <p className="text-sm font-medium uppercase tracking-wider">{t('trustMilitaryProtection')}</p>
               <p className="text-lg font-bold text-gray-700 dark:text-gray-300 mt-1">SCRA</p>
             </div>
           </div>
@@ -336,27 +323,10 @@ export default function HomePage() {
       <section className="py-16 sm:py-20 bg-gray-50 dark:bg-slate-900" style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 500px' }}>
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10">
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Frequently Asked Questions</h2>
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100">{t('faqPreviewTitle')}</h2>
           </div>
           <div className="space-y-4">
-            {[
-              {
-                q: 'Can I still have a case if I missed payments?',
-                a: 'Yes. Even if you were behind on payments, the repo company must follow the law. If they breached the peace, entered a locked area, or violated other rules, you may have a valid claim.',
-              },
-              {
-                q: 'How much does it cost to use Repo911?',
-                a: 'Nothing. Our case review is 100% free. If an attorney takes your case, they typically work on a contingency basis — meaning no fees unless you win.',
-              },
-              {
-                q: 'How long does the case review take?',
-                a: 'The online questionnaire takes about 5 minutes. Our system reviews your case immediately, and if qualified, an attorney could reach out within 24-48 hours.',
-              },
-              {
-                q: 'What kind of compensation can I receive?',
-                a: 'Depending on the violations, you may be entitled to $1,000-$100,000+ in statutory damages, actual damages, and attorney\'s fees.',
-              },
-            ].map((item) => (
+            {faqPreviews.map((item) => (
               <details
                 key={item.q}
                 className="group bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 overflow-hidden"
@@ -371,7 +341,7 @@ export default function HomePage() {
           </div>
           <div className="text-center mt-8">
             <Link href="/faq" className="text-[#3474BA] dark:text-blue-300 font-medium hover:underline">
-              View all frequently asked questions
+              {t('viewAllFaqs')}
             </Link>
           </div>
         </div>
@@ -381,17 +351,17 @@ export default function HomePage() {
       <section className="py-16 sm:py-20 bg-[#3474BA]" style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 300px' }}>
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
-            Ready to Find Out If You Have a Case?
+            {t('finalCtaTitle')}
           </h2>
           <p className="text-lg text-white mb-8">
-            It only takes 5 minutes and it&apos;s completely free. No obligation.
+            {t('finalCtaDescription')}
           </p>
           <Link href="/claim">
             <Button
               size="lg"
               className="bg-[#F5A623] hover:bg-[#E09612] text-gray-900 text-lg px-8 py-4"
             >
-              Check My Case Now <ArrowRight className="ml-2 h-5 w-5" />
+              {t('finalCtaButton')} <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </Link>
         </div>

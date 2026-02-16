@@ -2,20 +2,7 @@
 
 import { cn } from '@/lib/utils';
 import { Check } from 'lucide-react';
-
-const SECTIONS = [
-  'Contact Info',
-  'Vehicle',
-  'Lender',
-  'Repo Details',
-  'Breach of Peace',
-  'Belongings',
-  'Post-Repo',
-  'Military',
-  'Debt Collection',
-  'Evidence',
-  'Consent',
-];
+import { useTranslations } from 'next-intl';
 
 interface ProgressIndicatorProps {
   currentSection: number;
@@ -24,16 +11,32 @@ interface ProgressIndicatorProps {
 }
 
 export function ProgressIndicator({ currentSection, completedSections, onSectionClick }: ProgressIndicatorProps) {
-  const progress = Math.round(((currentSection) / SECTIONS.length) * 100);
+  const t = useTranslations('claim');
+
+  const sections = [
+    t('stepsShort.contactInfo'),
+    t('stepsShort.vehicleInfo'),
+    t('stepsShort.lenderInfo'),
+    t('stepsShort.repoDetails'),
+    t('stepsShort.breachOfPeace'),
+    t('stepsShort.belongings'),
+    t('stepsShort.postRepo'),
+    t('stepsShort.military'),
+    t('stepsShort.debtCollection'),
+    t('stepsShort.evidence'),
+    t('stepsShort.consent'),
+  ];
+
+  const progress = Math.round(((currentSection) / sections.length) * 100);
 
   return (
     <div className="mb-8">
       {/* Progress bar */}
       <div className="flex items-center justify-between mb-2">
         <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-          Step {currentSection + 1} of {SECTIONS.length}: {SECTIONS[currentSection]}
+          {t('progress.stepOf', { current: currentSection + 1, total: sections.length, name: sections[currentSection] })}
         </span>
-        <span className="text-sm font-medium text-[#3474BA] dark:text-blue-300">{progress}% complete</span>
+        <span className="text-sm font-medium text-[#3474BA] dark:text-blue-300">{t('progress.complete', { percent: progress })}</span>
       </div>
       <div className="w-full bg-gray-200 dark:bg-slate-700 rounded-full h-2.5">
         <div
@@ -49,13 +52,13 @@ export function ProgressIndicator({ currentSection, completedSections, onSection
 
       {/* Section dots (desktop) */}
       <div className="hidden sm:flex items-center justify-between mt-4">
-        {SECTIONS.map((name, index) => {
+        {sections.map((name, index) => {
           const isCompleted = completedSections.includes(index);
           const isCurrent = index === currentSection;
           const isClickable = isCompleted && onSectionClick;
           return (
             <button
-              key={name}
+              key={index}
               type="button"
               disabled={!isClickable}
               onClick={() => isClickable && onSectionClick(index)}

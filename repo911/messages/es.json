@@ -25,28 +25,181 @@
     "legalNotice": "Este sitio web no es un bufete de abogados y no proporciona asesoría legal. La información proporcionada es solo para fines informativos generales. No se forma ninguna relación abogado-cliente al usar este sitio."
   },
   "home": {
-    "heroTitle": "¿Le Reposeyeron Su Vehículo Ilegalmente?",
-    "heroSubtitle": "Aunque haya atrasado pagos, la empresa de reposesión pudo haber violado la ley. Podría recibir $10,000–$100,000+.",
-    "ctaButton": "Obtener Mi Revisión Gratuita",
+    "heroTitle": "¿Le Reposeyeron Su Vehículo <highlight>Ilegalmente?</highlight>",
+    "heroAmount": "Podría Recibir $10,000–$100,000+",
+    "heroDescription": "Aunque haya atrasado pagos, la empresa de reposesión pudo haber violado la ley. Descúbralo en 5 minutos — es 100% gratis.",
+    "ctaButton": "Revisar Mi Caso Ahora",
+    "badgeFreeReview": "Revisión Gratuita",
+    "badgeNoObligation": "Sin Compromiso",
+    "badgeNationwide": "Cobertura Nacional",
+    "stat1Value": "100%",
+    "stat1Label": "Revisión Gratuita",
+    "stat2Value": "50",
+    "stat2Label": "Estados Cubiertos",
+    "stat3Value": "5 Min",
+    "stat3Label": "Cuestionario Rápido",
+    "stat4Value": "24-48 Hr",
+    "stat4Label": "Respuesta de Abogado",
     "howItWorksTitle": "Cómo Funciona",
+    "howItWorksSubtitle": "Tres pasos simples para saber si tiene un caso",
     "step1Title": "Cuéntenos Lo Que Pasó",
-    "step1Description": "Responda unas preguntas sobre su reposesión. Toma unos 5 minutos.",
+    "step1Description": "Complete nuestro sencillo cuestionario sobre su experiencia de reposesión. Toma unos 5 minutos.",
     "step2Title": "Revisamos Su Caso",
-    "step2Description": "Nuestro sistema evalúa su situación para posibles violaciones legales.",
+    "step2Description": "Nuestro sistema analiza su situación contra las leyes federales y estatales de reposesión para determinar si sus derechos fueron violados.",
     "step3Title": "Conéctese con un Abogado",
-    "step3Description": "Si tiene un caso, un abogado licenciado en su estado se comunicará con usted.",
-    "statsTitle": "Luchando Por Sus Derechos",
-    "statsLeads": "Casos Revisados",
-    "statsAttorneys": "Abogados Licenciados",
-    "statsStates": "Estados Cubiertos"
+    "step3Description": "Si tiene un caso, lo conectamos con un abogado licenciado en su estado que puede luchar por su compensación. Sin cargos a menos que gane.",
+    "violationsTitle": "¿Le Pasó Algo de Esto?",
+    "violationsSubtitle": "Estas son violaciones comunes que podrían darle derecho a una compensación",
+    "violation1Quote": "\"El agente de reposesión irrumpió en mi garaje\"",
+    "violation1Title": "Entrada Ilegal",
+    "violation1Description": "Entrar a un área cerrada o con portón sin permiso es una violación de la paz bajo el Artículo 9 del UCC.",
+    "violation2Quote": "\"Les dije que pararan pero se lo llevaron de todos modos\"",
+    "violation2Title": "Violación de la Paz",
+    "violation2Description": "Si usted se opuso verbalmente y ellos continuaron, la reposesión puede ser ilegal.",
+    "violation3Quote": "\"Se quedaron con todas mis pertenencias personales\"",
+    "violation3Title": "Violación de Propiedad",
+    "violation3Description": "Los prestamistas y las empresas de reposesión están obligados a devolver sus pertenencias personales.",
+    "violation4Quote": "\"Estaba en servicio militar activo\"",
+    "violation4Title": "Violación del SCRA",
+    "violation4Description": "Los militares en servicio activo tienen protecciones especiales contra la reposesión bajo la ley federal.",
+    "violation5Quote": "\"Me llamaron a las 3am amenazándome\"",
+    "violation5Title": "Violación del FDCPA",
+    "violation5Description": "Los cobradores de deudas no pueden llamar fuera de ciertas horas ni usar amenazas y acoso.",
+    "violation6Quote": "\"Hicieron una gran escena frente a todos\"",
+    "violation6Title": "Vergüenza Pública",
+    "violation6Description": "Crear un disturbio público durante la reposesión puede constituir una violación de la paz.",
+    "urgencyTitle": "El Tiempo Puede Estar Agotándose para Su Reclamo",
+    "urgencyDescription": "La mayoría de los estados tienen un <strong>plazo de prescripción</strong> para reclamos de reposesión ilegal — típicamente de 2 a 4 años desde la fecha de reposesión. Una vez que esta ventana se cierra, puede perder su derecho a compensación para siempre. Cuanto antes actúe, más fuerte será su caso.",
+    "urgencyLink": "Revise su caso ahora antes de que sea tarde",
+    "trustTitle": "Por Qué los Consumidores Confían en Repo911",
+    "trustSubtitle": "Lo conectamos con abogados experimentados que se especializan en reposesión ilegal y leyes de protección al consumidor.",
+    "trustLicensedTitle": "Solo Abogados Licenciados",
+    "trustLicensedDescription": "Cada abogado en nuestra red está licenciado y verificado en su estado.",
+    "trustProtectedTitle": "Su Información Está Protegida",
+    "trustProtectedDescription": "Su información personal está encriptada y solo se comparte con su abogado asignado.",
+    "trustNoFeeTitle": "Sin Victoria, Sin Cargo",
+    "trustNoFeeDescription": "Los abogados típicamente trabajan por contingencia — no paga nada a menos que gane su caso.",
+    "trustProtectedBy": "Protegido por",
+    "trustEnforcedBy": "Aplicado por",
+    "trustMilitaryProtection": "Protección Militar",
+    "faqPreviewTitle": "Preguntas Frecuentes",
+    "faqPreview1Q": "¿Puedo tener un caso si atrasé pagos?",
+    "faqPreview1A": "Sí. Aunque haya atrasado pagos, la empresa de reposesión debe seguir la ley. Si violaron la paz, entraron a un área cerrada o violaron otras reglas, puede tener un reclamo válido.",
+    "faqPreview2Q": "¿Cuánto cuesta usar Repo911?",
+    "faqPreview2A": "Nada. Nuestra revisión de caso es 100% gratuita. Si un abogado toma su caso, típicamente trabajan por contingencia — sin cargos a menos que gane.",
+    "faqPreview3Q": "¿Cuánto tarda la revisión del caso?",
+    "faqPreview3A": "El cuestionario en línea toma unos 5 minutos. Nuestro sistema revisa su caso inmediatamente, y si califica, un abogado podría comunicarse dentro de 24-48 horas.",
+    "faqPreview4Q": "¿Qué tipo de compensación puedo recibir?",
+    "faqPreview4A": "Dependiendo de las violaciones, podría tener derecho a $1,000-$100,000+ en daños estatutarios, daños reales y honorarios de abogados.",
+    "viewAllFaqs": "Ver todas las preguntas frecuentes",
+    "finalCtaTitle": "¿Listo para Saber Si Tiene un Caso?",
+    "finalCtaDescription": "Solo toma 5 minutos y es completamente gratis. Sin compromiso.",
+    "finalCtaButton": "Revisar Mi Caso Ahora"
   },
   "howItWorks": {
-    "title": "Cómo Funciona",
-    "subtitle": "Tres pasos simples para saber si sus derechos fueron violados."
+    "title": "Cómo Funciona Repo911",
+    "subtitle": "Le facilitamos descubrir si su vehículo fue reposesionado ilegalmente y lo conectamos con un abogado que puede ayudar — todo en tres simples pasos.",
+    "stepLabel": "Paso {number}",
+    "step1Title": "Cuéntenos Lo Que Pasó",
+    "step1Description": "Complete nuestro sencillo cuestionario sobre su experiencia de reposesión. Toma unos 5 minutos. Le preguntaremos sobre las circunstancias de su reposesión, cómo se comportó la empresa de reposesión y si sus derechos pudieron haber sido violados.",
+    "step1Detail1": "Describa las circunstancias de su reposesión",
+    "step1Detail2": "Cuéntenos sobre cualquier comportamiento agresivo o ilegal",
+    "step1Detail3": "Suba cualquier evidencia que tenga (fotos, documentos, videos)",
+    "step1Detail4": "Proporcione su información de contacto para que un abogado pueda comunicarse",
+    "step2Title": "Revisamos Su Caso",
+    "step2Description": "Nuestro sistema analiza su situación contra las leyes federales y estatales de reposesión para determinar si sus derechos fueron violados. Verificamos violaciones del UCC, FDCPA, SCRA y leyes estatales de protección al consumidor.",
+    "step2Detail1": "Su caso es evaluado por violaciones de la paz",
+    "step2Detail2": "Verificamos violaciones del FDCPA y cobro de deudas",
+    "step2Detail3": "Los miembros del servicio militar son evaluados para protecciones del SCRA",
+    "step2Detail4": "Se asigna un nivel de calificación a su caso basado en la gravedad de las violaciones",
+    "step3Title": "Conéctese con un Abogado",
+    "step3Description": "Si su caso muestra señales de violaciones legales, lo conectamos con un abogado licenciado en su estado que se especializa en leyes de protección al consumidor. Revisarán su caso y lucharán por su compensación.",
+    "step3Detail1": "Un abogado licenciado en su estado revisa su caso",
+    "step3Detail2": "El abogado se comunica directamente con usted para discutir los próximos pasos",
+    "step3Detail3": "No paga nada a menos que el abogado gane su caso",
+    "step3Detail4": "El abogado maneja todos los procedimientos legales en su nombre",
+    "trustFreeTitle": "Revisión Gratuita",
+    "trustFreeDescription": "No hay costo para enviar su caso para revisión. Solo paga si un abogado toma su caso y gana.",
+    "trustFastTitle": "Respuesta Rápida",
+    "trustFastDescription": "Los casos calificados se emparejan con abogados rápidamente. La mayoría de los consumidores reciben respuesta dentro de 24-48 horas.",
+    "trustNoFeesTitle": "Sin Cargos Iniciales",
+    "trustNoFeesDescription": "Los abogados en nuestra red trabajan por contingencia. No paga nada de su bolsillo — solo cobran si usted gana.",
+    "violationsTitle": "Violaciones Comunes de Reposesión",
+    "violation1Quote": "\"El agente de reposesión irrumpió en mi garaje\"",
+    "violation1Title": "Entrada Ilegal",
+    "violation1Description": "Los agentes de reposesión no pueden entrar a estructuras cerradas como garajes, propiedades con portón o edificios cerrados para tomar un vehículo.",
+    "violation2Quote": "\"Les dije que pararan pero se lo llevaron de todos modos\"",
+    "violation2Title": "Violación de la Paz",
+    "violation2Description": "Si usted se opone verbalmente a la reposesión y el agente continúa, puede constituir una violación ilegal de la paz.",
+    "violation3Quote": "\"Se quedaron con todas mis pertenencias personales\"",
+    "violation3Title": "Violación de Propiedad",
+    "violation3Description": "Su propiedad personal dentro del vehículo debe ser devuelta. Cobrar tarifas para devolver pertenencias también puede ser ilegal.",
+    "violation4Quote": "\"Estaba en servicio militar activo\"",
+    "violation4Title": "Violación del SCRA",
+    "violation4Description": "La Ley de Alivio Civil para Miembros del Servicio proporciona protecciones especiales para militares en servicio activo. La reposesión sin orden judicial puede ser ilegal.",
+    "violation5Quote": "\"Me llamaron a las 3am amenazándome\"",
+    "violation5Title": "Violación del FDCPA",
+    "violation5Description": "La Ley de Prácticas Justas de Cobro de Deudas prohíbe el acoso, amenazas y llamadas en horas irrazonables por parte de cobradores de deudas.",
+    "violation6Quote": "\"Nunca recibí ningún aviso escrito\"",
+    "violation6Title": "Violación de Notificación",
+    "violation6Description": "Muchos estados requieren que los prestamistas envíen un aviso de derecho a subsanar antes de la reposesión. No hacerlo puede hacer la reposesión ilegal.",
+    "ctaTitle": "¿Cree que sus Derechos Fueron Violados?",
+    "ctaDescription": "Solo toma 5 minutos para saber si tiene un caso. Nuestra revisión gratuita no le cuesta nada y podría valer miles.",
+    "ctaButton": "Revisar Mi Caso Ahora",
+    "disclaimer": "Esto no es asesoría legal. Repo911 no es un bufete de abogados y no proporciona representación legal. Los resultados varían según las circunstancias individuales y la ley aplicable."
   },
   "faq": {
     "title": "Preguntas Frecuentes",
-    "subtitle": "Preguntas comunes sobre reposesión ilegal y cómo Repo911 puede ayudar."
+    "subtitle": "Encuentre respuestas a preguntas comunes sobre reposesión ilegal y cómo Repo911 puede ayudar.",
+    "cat1Title": "Sobre Repo911",
+    "cat1Q1": "¿Qué es Repo911?",
+    "cat1A1": "Repo911 es un servicio gratuito que ayuda a personas que han experimentado una reposesión ilegal de vehículos. Evaluamos su caso para identificar posibles violaciones legales y luego lo conectamos con un abogado licenciado en su estado que se especializa en leyes de protección al consumidor.",
+    "cat1Q2": "¿Es Repo911 un bufete de abogados?",
+    "cat1A2": "No. Repo911 no es un bufete de abogados y no proporciona asesoría legal. Somos un servicio de generación de prospectos y emparejamiento con abogados. Le ayudamos a entender si sus derechos pudieron haber sido violados y lo conectamos con abogados licenciados independientes que pueden proporcionar representación legal.",
+    "cat1Q3": "¿Me cuesta algo enviar mi caso?",
+    "cat1A3": "No. Enviar su caso a través de nuestro formulario de admisión es completamente gratis. No hay costo ni obligación. Si un abogado revisa su caso y acepta representarlo, la mayoría trabajan por contingencia, lo que significa que no paga nada a menos que ganen su caso.",
+    "cat2Title": "Reposesión Ilegal",
+    "cat2Q1": "¿Qué es la reposesión ilegal?",
+    "cat2A1": "La reposesión ilegal ocurre cuando un prestamista o empresa de reposesión viola las leyes federales o estatales durante el proceso de reposesión de su vehículo. Esto puede incluir violar la paz, entrar a propiedad cerrada, quedarse con sus pertenencias personales, no proporcionar los avisos requeridos o violar las leyes de cobro de deudas.",
+    "cat2Q2": "¿Qué es una \"violación de la paz\" durante la reposesión?",
+    "cat2A2": "Una violación de la paz ocurre cuando un agente de reposesión usa fuerza, amenazas o intimidación durante la reposesión, continúa después de que usted se opone verbalmente, entra a un garaje cerrado o área con portón, causa ruido excesivo o disturbio, daña su propiedad o causa una escena pública. Bajo el Artículo 9 del UCC, la reposesión debe realizarse pacíficamente.",
+    "cat2Q3": "¿Puede la empresa de reposesión quedarse con mis pertenencias personales?",
+    "cat2A3": "No. Su propiedad personal dentro del vehículo (herramientas, electrónicos, ropa, sillas de auto para niños, etc.) debe ser devuelta. Si la empresa de reposesión se quedó con sus pertenencias, se negó a devolverlas o le cobró una tarifa para recuperarlas, eso puede ser una violación de sus derechos.",
+    "cat2Q4": "¿Tengo que estar atrasado en pagos para que reposesan mi auto?",
+    "cat2A4": "En la mayoría de los estados, un prestamista puede iniciar la reposesión después de un solo pago atrasado si el acuerdo de préstamo lo permite. Sin embargo, muchos estados requieren que el prestamista le envíe un aviso de \"derecho a subsanar\" primero, dándole la oportunidad de ponerse al día en los pagos antes de la reposesión. Si no recibió este aviso, la reposesión puede haber sido ilegal.",
+    "cat2Q5": "¿Qué pasa si estaba en servicio militar activo cuando reposeyeron mi auto?",
+    "cat2A5": "La Ley de Alivio Civil para Miembros del Servicio (SCRA) proporciona protecciones especiales para miembros militares en servicio activo. Si su préstamo de vehículo se originó antes de entrar en servicio activo, el prestamista generalmente no puede reposestar su vehículo sin una orden judicial. Las violaciones del SCRA pueden resultar en penalidades significativas.",
+    "cat2Q6": "¿Qué es el FDCPA y cómo se aplica a la reposesión?",
+    "cat2A6": "La Ley de Prácticas Justas de Cobro de Deudas (FDCPA) prohíbe a los cobradores de deudas usar prácticas abusivas, injustas o engañosas. Si un cobrador de deudas o empresa de reposesión lo llamó en horas irrazonables, usó amenazas o vulgaridades, contactó a su empleador, tergiversó la cantidad adeudada o lo acosó, pueden haber violado el FDCPA.",
+    "cat3Title": "El Proceso",
+    "cat3Q1": "¿Cómo funciona el proceso de revisión de casos?",
+    "cat3A1": "Después de enviar su información a través de nuestro formulario de admisión, nuestro sistema analiza sus respuestas para identificar posibles violaciones legales. Se asigna un nivel de calificación a su caso (basado en la fuerza de los indicadores), y los casos calificados se ponen a disposición de abogados licenciados en nuestra red que se especializan en su tipo de caso.",
+    "cat3Q2": "¿Cuánto tiempo tarda en recibir respuesta?",
+    "cat3A2": "Para casos con indicadores fuertes de violaciones legales, típicamente puede esperar recibir respuesta de un abogado dentro de 24 horas. Para otros casos, puede tomar 24-48 horas o más. En algunos casos, un abogado puede no tomar el caso, pero se lo comunicaremos de cualquier manera.",
+    "cat3Q3": "¿Qué sucede después de que un abogado toma mi caso?",
+    "cat3A3": "El abogado se comunicará directamente con usted usando la información de contacto que proporcionó. Discutirán los detalles de su situación, explicarán sus opciones legales y determinarán si pueden representarlo. Si acepta avanzar, el abogado manejará todos los procedimientos legales en su nombre.",
+    "cat3Q4": "¿Qué pasa si ningún abogado toma mi caso?",
+    "cat3A4": "No todos los casos serán tomados por un abogado. Si su caso no es tomado, no necesariamente significa que no tiene un reclamo válido. Recomendamos consultar con un abogado local de protección al consumidor que pueda revisar su situación específica. Muchos abogados ofrecen consultas iniciales gratuitas.",
+    "cat4Title": "Legal y Compensación",
+    "cat4Q1": "¿Qué tipo de compensación puedo recibir?",
+    "cat4A1": "La compensación varía dependiendo del tipo y severidad de las violaciones. Podría tener derecho a daños reales (valor del vehículo, propiedad perdida, gastos), daños estatutarios bajo el FDCPA (hasta $1,000 por violación), daños punitivos en algunos casos y honorarios de abogados. Un abogado puede darle una estimación más específica basada en su situación.",
+    "cat4Q2": "¿Tengo que pagar al abogado por adelantado?",
+    "cat4A2": "La mayoría de los abogados en nuestra red trabajan por contingencia, lo que significa que solo cobran si ganan su caso. Los honorarios del abogado típicamente salen del acuerdo o sentencia, así que no paga nada de su bolsillo. El arreglo específico de honorarios es entre usted y el abogado.",
+    "cat4Q3": "¿Hay un límite de tiempo para presentar un reclamo de reposesión ilegal?",
+    "cat4A3": "Sí. Los plazos de prescripción varían por estado y por tipo de reclamo. Los reclamos del FDCPA generalmente deben presentarse dentro de un año de la violación. Los reclamos de ley estatal pueden tener diferentes límites de tiempo. Es importante actuar rápidamente — cuanto antes envíe su caso, mejores serán sus posibilidades de un resultado exitoso.",
+    "cat4Q4": "¿Enviar un formulario crea una relación abogado-cliente?",
+    "cat4A4": "No. Enviar el formulario de admisión no crea una relación abogado-cliente con Repo911 ni con ningún abogado. Una relación abogado-cliente solo se forma cuando usted y un abogado específico acuerdan mutuamente la representación, típicamente a través de un acuerdo de retención firmado.",
+    "cat5Title": "Privacidad y Datos",
+    "cat5Q1": "¿Cómo se protege mi información?",
+    "cat5A1": "Nos tomamos su privacidad en serio. Su información está encriptada en tránsito y en reposo, almacenada de forma segura usando prácticas estándar de la industria, y solo se comparte con abogados licenciados que toman su caso. Nunca vendemos su información personal con fines de marketing. Consulte nuestra Política de Privacidad para detalles completos.",
+    "cat5Q2": "¿Quién verá mi información?",
+    "cat5A2": "Su información solo se comparte con abogados licenciados en nuestra red que están revisando o tomando su caso. Antes de que un abogado tome su caso, solo ven detalles anónimos (sin nombre, email, teléfono o dirección). La información de contacto completa solo se revela después de que un abogado toma el caso.",
+    "cat5Q3": "¿Puedo eliminar mi información?",
+    "cat5A3": "Sí. Tiene derecho a solicitar la eliminación de sus datos personales en cualquier momento contactándonos en privacy@repo911.com. Parte de la información puede ser retenida según lo requiera la ley o para asuntos legales en curso.",
+    "ctaTitle": "¿Aún Tiene Preguntas?",
+    "ctaDescription": "La mejor manera de saber si tiene un caso es enviar nuestro formulario gratuito de admisión. Solo toma 5 minutos.",
+    "ctaButton": "Comenzar Mi Revisión Gratuita",
+    "contactText": "Para otras preguntas, contáctenos en <email>support@repo911.com</email>."
   },
   "track": {
     "title": "Seguir Su Caso",
@@ -67,11 +220,82 @@
     "notYet": "Aún no",
     "claimed": "Un abogado ha tomado su caso. Se comunicarán con usted usando la información de contacto que proporcionó.",
     "available": "Su caso está disponible para revisión por abogados. Se le contactará cuando un abogado tome su caso.",
-    "returnHome": "Volver a la Página Principal"
+    "returnHome": "Volver a la Página Principal",
+    "caseStatus": "Estado del Caso",
+    "tierHot": "Alta Prioridad",
+    "tierWarm": "En Revisión",
+    "tierCold": "Revisión Pendiente",
+    "uploadTitle": "Evidencia y Documentos",
+    "uploadDescription": "Suba fotos, videos o documentos relacionados con su caso. Máximo 5 archivos, 10MB cada uno.",
+    "previouslyUploaded": "Subidos Anteriormente",
+    "dropZoneText": "Arrastre y suelte archivos aquí, o <browse>busque</browse>",
+    "fileTypes": "JPG, PNG, WebP o PDF hasta 10MB",
+    "uploadButton": "{count, plural, one {Subir # Archivo} other {Subir # Archivos}}",
+    "uploading": "Subiendo...",
+    "uploadSuccess": "{count, plural, one {# archivo subido exitosamente.} other {# archivos subidos exitosamente.}}",
+    "uploadError": "Error al subir. Por favor intente de nuevo.",
+    "uploadErrorConnection": "Error al subir. Verifique su conexión e intente de nuevo.",
+    "maxFilesError": "Puede subir un máximo de {max} archivos en total. Ya tiene {existing} subidos.",
+    "unsupportedFileType": "\"{name}\" no es un tipo de archivo soportado. Por favor suba imágenes (JPG, PNG, WebP) o PDFs.",
+    "fileTooLarge": "\"{name}\" excede el límite de 10MB.",
+    "connectionError": "No se puede conectar. Verifique su internet e intente de nuevo.",
+    "genericError": "Algo salió mal. Por favor intente de nuevo.",
+    "emailPlaceholder": "correo@ejemplo.com",
+    "caseIdPlaceholder": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+    "phonePlaceholder": "(555) 555-5555",
+    "lastNamePlaceholder": "Ingrese su apellido"
   },
   "claim": {
     "title": "Revisión Gratuita de Caso",
     "subtitle": "Descubra si sus derechos fueron violados durante la reposesión de su vehículo.",
+    "pageDescription": "Cuéntenos sobre su experiencia de reposesión. Esto toma unos 5 minutos.",
+    "requiredFieldsNote": "Todos los campos marcados con <red>*</red> son obligatorios.",
+    "sections": {
+      "contactInfo": {
+        "title": "Información de Contacto",
+        "description": "¿Cómo podemos comunicarnos con usted?"
+      },
+      "vehicleInfo": {
+        "title": "Información del Vehículo",
+        "description": "Cuéntenos sobre el vehículo reposesionado."
+      },
+      "lenderInfo": {
+        "title": "Información del Prestamista",
+        "description": "¿Quién tenía el préstamo o arrendamiento de su vehículo?"
+      },
+      "repoDetails": {
+        "title": "Detalles de la Reposesión",
+        "description": "¿Cuándo y dónde ocurrió la reposesión?"
+      },
+      "breachOfPeace": {
+        "title": "Evaluación de Violación de la Paz",
+        "description": "La ley lo protege de comportamiento agresivo o ilegal durante una reposesión. Por favor responda todas las preguntas a continuación."
+      },
+      "belongings": {
+        "title": "Pertenencias Personales",
+        "description": "¿Se vieron afectados sus artículos personales?"
+      },
+      "postRepo": {
+        "title": "Post-Reposesión",
+        "description": "¿Qué sucedió después de la reposesión?"
+      },
+      "military": {
+        "title": "Servicio Militar (Protección SCRA)",
+        "description": "Los militares en servicio activo tienen protecciones federales especiales."
+      },
+      "debtCollection": {
+        "title": "Cobro Ilegal de Deudas (FDCPA)",
+        "description": "La ley federal lo protege de prácticas abusivas de cobro de deudas."
+      },
+      "evidence": {
+        "title": "Evidencia y Documentos",
+        "description": "La evidencia de respaldo fortalece su caso."
+      },
+      "consent": {
+        "title": "Consentimiento y Envío",
+        "description": "Por favor revise y firme a continuación para enviar su caso para revisión."
+      }
+    },
     "labels": {
       "firstName": "Nombre",
       "lastName": "Apellido",
@@ -82,12 +306,179 @@
       "streetAddress": "Dirección",
       "city": "Ciudad",
       "state": "Estado",
-      "zipCode": "Código Postal"
+      "zipCode": "Código Postal",
+      "vehicleYear": "Año del Vehículo",
+      "vehicleMake": "Marca del Vehículo",
+      "vehicleModel": "Modelo del Vehículo",
+      "vehicleColor": "Color del Vehículo",
+      "vin": "VIN (si lo sabe)",
+      "lenderName": "Nombre del Prestamista / Compañía Financiera",
+      "repoCompanyName": "Nombre de la Empresa de Reposesión (si lo sabe)",
+      "repoDate": "Fecha de la Reposesión",
+      "repoTimeOfDay": "Hora Aproximada del Día",
+      "repoState": "Estado donde ocurrió la reposesión",
+      "militaryBranch": "Rama del Servicio",
+      "witnessInfo": "Nombre(s) y contacto de testigos",
+      "electronicSignature": "Firma Electrónica (Nombre Legal Completo)",
+      "date": "Fecha",
+      "belongingsList": "¿Qué artículos había en el vehículo?",
+      "belongingsValue": "Valor estimado de pertenencias no devueltas"
+    },
+    "placeholders": {
+      "phone": "(555) 555-5555",
+      "selectTime": "Seleccione una hora...",
+      "selectState": "Seleccione estado...",
+      "selectYear": "Seleccione año...",
+      "vehicleMake": "ej., Toyota",
+      "vehicleModel": "ej., Camry",
+      "selectLender": "Seleccione su prestamista...",
+      "enterLender": "Ingrese nombre del prestamista...",
+      "select": "Seleccione...",
+      "selectBranch": "Seleccione rama...",
+      "describeLocation": "Por favor describa la ubicación...",
+      "narrative": "Por favor describa la reposesión con el mayor detalle posible. Incluya lo que dijo o hizo el agente de reposesión, dónde estaba usted, quién lo presenció y cualquier otra cosa que recuerde.",
+      "belongingsList": "Liste todos los artículos personales (laptops, teléfonos, herramientas, sillas de auto, medicamentos, documentos, etc.)",
+      "witnessInfo": "Proporcione nombres de testigos y sus números de teléfono o direcciones de correo",
+      "signature": "Escriba su nombre legal completo",
+      "dollarSign": "$"
+    },
+    "helpers": {
+      "vin": "Número de Identificación del Vehículo de 17 caracteres"
+    },
+    "questions": {
+      "leaseOrFinance": "¿Este vehículo era arrendado o financiado?",
+      "behindOnPayments": "¿Estaba atrasado en los pagos al momento de la reposesión?",
+      "paymentsBehind": "¿Cuántos pagos atrasado?",
+      "contactedLender": "¿Había estado en contacto con su prestamista sobre arreglos de pago?",
+      "receivedWrittenNotice": "¿Recibió algún aviso escrito antes de la reposesión?",
+      "repoLocation": "¿Dónde estaba su vehículo cuando fue tomado?",
+      "verballyObjected": "¿Se opuso verbalmente a la reposesión? (ej., \"Pare\", \"Deje mi auto\", \"No se lo pueden llevar\")",
+      "continuedAfterObjection": "¿El agente de reposesión continuó tomando el vehículo DESPUÉS de que usted se opuso?",
+      "physicalForce": "¿El agente de reposesión usó fuerza física, amenazas o intimidación?",
+      "excessiveNoise": "¿El agente de reposesión gritó, causó una escena o creó ruido excesivo?",
+      "enteredLockedArea": "¿El agente de reposesión entró a un área cerrada o con portón sin permiso? (ej., garaje cerrado, patio con portón, comunidad cerrada)",
+      "propertyDamage": "¿El agente de reposesión dañó su propiedad durante la reposesión? (ej., rompió un candado, dañó un portón, rayó otro vehículo)",
+      "policePresent": "¿Se llamó a la policía o estuvieron presentes durante la reposesión?",
+      "policeAssisted": "Si la policía estuvo presente, ¿asistieron o alentaron al agente de reposesión?",
+      "repoAtWorkplace": "¿El agente de reposesión fue a su lugar de trabajo?",
+      "publicEmbarrassment": "¿La reposesión ocurrió de una manera que causó vergüenza o humillación pública?",
+      "narrative": "Describa lo que pasó con sus propias palabras",
+      "hadBelongings": "¿Tenía pertenencias personales en el vehículo en ese momento?",
+      "belongingsReturned": "¿Le devolvieron sus pertenencias?",
+      "chargedFee": "¿El prestamista o empresa de reposesión le cobró una tarifa para recuperar sus pertenencias?",
+      "receivedNoticeOfSale": "¿Ha recibido un Aviso de Venta (aviso de que su vehículo será vendido en subasta)?",
+      "deficiencyBalance": "¿Ha sido contactado sobre un saldo deficiente (monto restante del préstamo después de vendido el vehículo)?",
+      "impactsLabel": "¿Ha experimentado alguno de los siguientes como resultado de la reposesión?",
+      "creditReport": "¿Se ha reportado la reposesión en su informe de crédito?",
+      "militaryService": "¿Está sirviendo actualmente o ha servido recientemente en el ejército de EE.UU.?",
+      "activeDuty": "¿Estaba en servicio activo al momento de la reposesión?",
+      "loanBeforeActiveDuty": "¿Su préstamo de auto se originó antes de que comenzara su servicio activo?",
+      "debtCollectorContact": "¿Algún cobrador de deudas lo ha contactado sobre este vehículo?",
+      "fdcpaLabel": "¿Han hecho alguno de los siguientes? (Marque todos los que apliquen)",
+      "hasPhotosVideos": "¿Tiene fotos o videos de la reposesión?",
+      "hasDocuments": "¿Tiene documentos relacionados con su préstamo o reposesión?",
+      "hasWitnesses": "¿Tiene testigos de la reposesión?"
+    },
+    "options": {
+      "contactMethods": {
+        "phone": "Teléfono",
+        "email": "Correo Electrónico",
+        "text": "Mensaje de Texto"
+      },
+      "times": {
+        "morning": "Mañana",
+        "afternoon": "Tarde",
+        "evening": "Noche",
+        "anytime": "Cualquier Hora"
+      },
+      "leaseOrFinance": {
+        "financed": "Financiado",
+        "leased": "Arrendado",
+        "notSure": "No Estoy Seguro"
+      },
+      "repoTimes": {
+        "earlyMorning": "Madrugada (12am-6am)",
+        "morning": "Mañana (6am-12pm)",
+        "afternoon": "Tarde (12pm-6pm)",
+        "evening": "Noche (6pm-12am)",
+        "notSure": "No Estoy Seguro"
+      },
+      "repoLocations": {
+        "driveway": "Entrada de la casa",
+        "streetFront": "Calle frente a la casa",
+        "closedGarage": "Garaje cerrado/con llave",
+        "gatedCommunity": "Comunidad o propiedad con portón",
+        "privateParking": "Estacionamiento privado",
+        "workplaceParking": "Estacionamiento del trabajo",
+        "publicParking": "Estacionamiento público",
+        "other": "Otro"
+      },
+      "impacts": {
+        "lostJob": "Perdió trabajo o faltó al trabajo",
+        "missedMedical": "Perdió citas médicas",
+        "childrenSchool": "Los niños no pudieron llegar a la escuela",
+        "emotionalDistress": "Angustia emocional / ansiedad / depresión",
+        "creditScore": "Impacto negativo en el puntaje de crédito",
+        "harassment": "Acoso del prestamista o cobradores",
+        "other": "Otro"
+      },
+      "fdcpaViolations": {
+        "calledOutsideHours": "Llamaron antes de las 8am o después de las 9pm",
+        "calledWorkplace": "Llamaron a su trabajo después de pedirles que no lo hicieran",
+        "abusiveLanguage": "Usaron lenguaje abusivo o vulgar",
+        "threatenedArrest": "Amenazaron con arresto o cárcel",
+        "toldOthers": "Le dijeron a amigos/familia/empleador sobre su deuda",
+        "continuedCalling": "Continuaron llamando después de que solicitó por escrito que pararan",
+        "misrepresentedAmount": "Tergiversaron la cantidad que debe",
+        "noValidation": "No enviaron validación escrita de la deuda"
+      },
+      "militaryBranches": {
+        "army": "Ejército",
+        "navy": "Marina",
+        "airForce": "Fuerza Aérea",
+        "marines": "Marines",
+        "coastGuard": "Guardia Costera",
+        "spaceForce": "Fuerza Espacial",
+        "nationalGuard": "Guardia Nacional",
+        "reserves": "Reservas"
+      },
+      "belongingsReturned": {
+        "yes": "Sí",
+        "no": "No",
+        "some": "Algunas fueron devueltas"
+      },
+      "paymentsBehind": {
+        "5plus": "5+"
+      }
+    },
+    "consent": {
+      "accurateInfo": "Certifico que la información proporcionada es verdadera y precisa según mi mejor conocimiento.",
+      "notLegalAdvice": "Entiendo que enviar este formulario no crea una relación abogado-cliente. Esto no es asesoría legal.",
+      "contact": "Consiento ser contactado por Repo911 y su red de abogados por teléfono, correo electrónico o mensaje de texto respecto a mi caso.",
+      "privacyConsent": "He leído y acepto la <privacyLink>Política de Privacidad</privacyLink> y los <termsLink>Términos de Servicio</termsLink>."
     },
     "buttons": {
       "next": "Siguiente",
       "back": "Atrás",
-      "submit": "Enviar Mi Caso"
+      "submit": "Enviar Mi Caso",
+      "continue": "Continuar",
+      "submitFull": "Enviar Mi Caso para Revisión Gratuita"
+    },
+    "draft": {
+      "restored": "Borrador restaurado.",
+      "restoredWithDate": "Borrador restaurado de {date}.",
+      "discard": "Descartar borrador"
+    },
+    "breachAlert": "Estas preguntas son críticas para evaluar su caso. Por favor responda con la mayor precisión posible.",
+    "uploadNote": "Podrá subir fotos, videos y documentos después de enviar este formulario.",
+    "submitDisclaimer": "Al enviar, acepta nuestra Política de Privacidad y Términos de Servicio. Esto no es asesoría legal y no crea una relación abogado-cliente.",
+    "errors": {
+      "submitError": "Algo salió mal. Por favor intente de nuevo.",
+      "generic": "Algo salió mal"
+    },
+    "progress": {
+      "stepOf": "Paso {current} de {total}: {name}",
+      "complete": "{percent}% completado"
     },
     "steps": {
       "contactInfo": "Información de Contacto",
@@ -101,7 +492,229 @@
       "debtCollection": "Cobro de Deudas",
       "evidence": "Evidencia",
       "consent": "Consentimiento"
+    },
+    "stepsShort": {
+      "contactInfo": "Contacto",
+      "vehicleInfo": "Vehículo",
+      "lenderInfo": "Prestamista",
+      "repoDetails": "Reposesión",
+      "breachOfPeace": "Violación Paz",
+      "belongings": "Pertenencias",
+      "postRepo": "Post-Repo",
+      "military": "Militar",
+      "debtCollection": "Cobro Deudas",
+      "evidence": "Evidencia",
+      "consent": "Consentimiento"
     }
+  },
+  "confirmation": {
+    "hot": {
+      "title": "¡Buenas Noticias — Probablemente Tiene un Caso Fuerte!",
+      "description": "Según la información que proporcionó, su situación muestra indicadores fuertes de violaciones legales. Un abogado de nuestra red se comunicará con usted pronto para discutir su caso.",
+      "step1": "Un abogado licenciado en su estado lo contactará dentro de 24 horas.",
+      "step2": "Tenga listos sus documentos de préstamo y cualquier evidencia para compartir.",
+      "step3": "La consulta con el abogado es gratuita — no paga nada a menos que ganen su caso."
+    },
+    "warm": {
+      "title": "¡Su Caso Muestra Potencial!",
+      "description": "Según la información que proporcionó, su situación muestra posibles violaciones legales que un abogado debería revisar. Estamos trabajando para conectarlo con un abogado licenciado en su estado.",
+      "step1": "Un abogado revisará su caso y puede comunicarse dentro de 24-48 horas.",
+      "step2": "Reúna cualquier documento relacionado con su préstamo y la reposesión.",
+      "step3": "Si un abogado toma su caso, no paga nada a menos que ganen."
+    },
+    "cold": {
+      "title": "Su Caso Ha Sido Enviado para Revisión",
+      "description": "Gracias por compartir su experiencia. Aunque los indicadores iniciales son menos claros, un abogado aún podría encontrar violaciones que justifiquen una acción legal. Nos comunicaremos si un abogado está interesado en revisar su caso más a fondo.",
+      "step1": "Su caso estará disponible para revisión de abogados.",
+      "step2": "Si un abogado está interesado, lo contactará directamente.",
+      "step3": "Mientras tanto, conserve todos los documentos y evidencia relacionados con su reposesión."
+    },
+    "default": {
+      "title": "Gracias por Su Envío",
+      "description": "Según la información que proporcionó, su situación puede no cumplir con los criterios típicos para un reclamo de reposesión ilegal. Sin embargo, cada caso es diferente, y recomendamos consultar con un abogado local para una revisión personalizada de su situación.",
+      "step1": "Considere consultar con un abogado local de protección al consumidor.",
+      "step2": "Muchos abogados ofrecen consultas iniciales gratuitas.",
+      "step3": "Conserve todos los documentos relacionados con su reposesión para sus registros."
+    },
+    "whatHappensNext": "Qué Sucede Después",
+    "importantReminders": "Recordatorios Importantes",
+    "reminder1": "No firme nada de su prestamista o empresa de reposesión sin consultar con un abogado.",
+    "reminder2": "Conserve registros de toda comunicación con su prestamista, empresa de reposesión y cobradores de deudas.",
+    "reminder3": "Si recibe un aviso de saldo deficiente, no lo pague sin asesoría legal.",
+    "reminder4": "Escriba todo lo que recuerde sobre la reposesión mientras aún lo tiene fresco.",
+    "uploadTitle": "Suba Su Evidencia",
+    "uploadDescription": "Fortalezca su caso subiendo fotos, videos o documentos relacionados con su reposesión. Puede subir hasta 5 archivos (imágenes o PDFs, 10MB cada uno).",
+    "caseIdLabel": "Su ID de Caso (guárdelo)",
+    "uploadButton": "Subir Evidencia y Seguir Su Caso",
+    "returnHome": "Volver al Inicio",
+    "trackCase": "Subir Evidencia y Seguir Caso",
+    "disclaimer": "Esto no es asesoría legal. Enviar este formulario no crea una relación abogado-cliente. Los resultados varían según las circunstancias individuales y la ley aplicable."
+  },
+  "privacy": {
+    "title": "Política de Privacidad",
+    "lastUpdated": "Última actualización: febrero 2026",
+    "s1": {
+      "title": "1. Información que Recopilamos",
+      "intro": "Cuando usa Repo911, recopilamos los siguientes tipos de información:",
+      "item1": "<strong>Información Personal:</strong> Nombre, dirección de correo electrónico, número de teléfono, dirección postal y otros datos de contacto que proporciona a través de nuestro formulario de admisión.",
+      "item2": "<strong>Información del Caso:</strong> Detalles sobre su vehículo, préstamo, experiencia de reposesión, estado de servicio militar y circunstancias relacionadas.",
+      "item3": "<strong>Archivos Subidos:</strong> Fotos, videos y documentos que elige subir como evidencia.",
+      "item4": "<strong>Información Técnica:</strong> Dirección IP, tipo de navegador, información del dispositivo y cookies para funcionalidad del sitio web y análisis.",
+      "item5": "<strong>Datos de Uso:</strong> Páginas visitadas, tiempo en el sitio y patrones de interacción para mejorar nuestro servicio."
+    },
+    "s2": {
+      "title": "2. Cómo Usamos Su Información",
+      "intro": "Usamos la información que recopilamos para:",
+      "item1": "Evaluar su caso de reposesión usando nuestro sistema de calificación",
+      "item2": "Conectarlo con abogados licenciados en su estado que puedan asistir con su caso",
+      "item3": "Comunicarnos con usted sobre el estado de su caso y próximos pasos",
+      "item4": "Procesar pagos y gestionar el emparejamiento abogado-cliente",
+      "item5": "Mejorar nuestros servicios y experiencia del usuario",
+      "item6": "Cumplir con obligaciones legales"
+    },
+    "s3": {
+      "title": "3. Compartir Información",
+      "intro": "Compartimos su información solo en las siguientes circunstancias:",
+      "item1": "<strong>Con Abogados Licenciados:</strong> Cuando un abogado toma su prospecto a través de nuestro mercado, reciben su información de contacto y detalles del caso para evaluar y potencialmente representarlo. Usted consiente a compartir esta información al enviar el formulario de admisión.",
+      "item2": "<strong>Proveedores de Servicio:</strong> Usamos servicios de terceros confiables incluyendo Supabase (alojamiento de base de datos), Stripe (procesamiento de pagos), Vercel (alojamiento web) y Resend (entrega de correo). Estos proveedores solo acceden a datos necesarios para realizar sus servicios.",
+      "item3": "<strong>Requisitos Legales:</strong> Podemos divulgar información cuando lo requiera la ley, orden judicial o regulación gubernamental.",
+      "closing": "No vendemos su información personal a terceros con fines de marketing."
+    },
+    "s4": {
+      "title": "4. Retención de Datos",
+      "body": "Retenemos su información el tiempo necesario para proporcionar nuestros servicios y cumplir los propósitos descritos en esta política. Los datos de prospectos se retienen por un mínimo de 3 años para apoyar asuntos legales en curso. Puede solicitar la eliminación de sus datos en cualquier momento (vea Sus Derechos a continuación)."
+    },
+    "s5": {
+      "title": "5. Sus Derechos",
+      "intro": "Usted tiene derecho a:",
+      "item1": "<strong>Acceso:</strong> Solicitar una copia de los datos personales que tenemos sobre usted",
+      "item2": "<strong>Corrección:</strong> Solicitar la corrección de datos inexactos o incompletos",
+      "item3": "<strong>Eliminación:</strong> Solicitar la eliminación de sus datos personales, sujeto a requisitos legales de retención",
+      "item4": "<strong>Exclusión:</strong> Darse de baja de comunicaciones de marketing en cualquier momento",
+      "closing": "Para ejercer estos derechos, contáctenos en privacy@repo911.com."
+    },
+    "s6": {
+      "title": "6. Seguridad de Datos",
+      "body": "Implementamos medidas de seguridad estándar de la industria para proteger su información, incluyendo encriptación en tránsito (TLS/SSL), almacenamiento de base de datos encriptado, controles de acceso y auditorías de seguridad regulares. Sin embargo, ningún método de transmisión por internet es 100% seguro."
+    },
+    "s7": {
+      "title": "7. Cookies",
+      "body": "Usamos cookies esenciales para funcionalidad del sitio web y autenticación. También podemos usar cookies de análisis para entender cómo los visitantes interactúan con nuestro sitio. Puede controlar las preferencias de cookies a través de la configuración de su navegador."
+    },
+    "s8": {
+      "title": "8. Ley de Privacidad del Consumidor de California (CCPA)",
+      "body": "Si es residente de California, tiene derechos adicionales bajo la CCPA, incluyendo el derecho a saber qué información personal se recopila, el derecho a solicitar eliminación y el derecho a optar por no participar en la venta de información personal. No vendemos información personal. Para ejercer sus derechos bajo la CCPA, contáctenos en privacy@repo911.com."
+    },
+    "s9": {
+      "title": "9. Cambios a Esta Política",
+      "body": "Podemos actualizar esta Política de Privacidad de vez en cuando. Le notificaremos de cambios materiales publicando la política actualizada en esta página con una fecha revisada."
+    },
+    "s10": {
+      "title": "10. Contáctenos",
+      "intro": "Para preguntas o solicitudes relacionadas con la privacidad, contáctenos en:",
+      "email": "Correo: privacy@repo911.com"
+    }
+  },
+  "terms": {
+    "title": "Términos de Servicio",
+    "lastUpdated": "Última actualización: febrero 2026",
+    "s1": {
+      "title": "1. Sobre Repo911",
+      "body": "Repo911 es un servicio de generación de prospectos y emparejamiento con abogados. <strong>Repo911 no es un bufete de abogados y no proporciona asesoría legal.</strong> Conectamos a consumidores que pueden haber experimentado una reposesión ilegal de vehículos con abogados licenciados que se especializan en leyes de protección al consumidor."
+    },
+    "s2": {
+      "title": "2. Sin Relación Abogado-Cliente",
+      "body": "Enviar un formulario de admisión o usar cualquier parte de este sitio web no crea una relación abogado-cliente entre usted y Repo911, o entre usted y cualquier abogado en nuestra red. Una relación abogado-cliente solo se forma cuando usted y un abogado específico acuerdan mutuamente la representación, típicamente a través de un acuerdo de retención o compromiso firmado."
+    },
+    "s3": {
+      "title": "3. Responsabilidades del Consumidor",
+      "item1": "Acepta que toda la información enviada a través del formulario de admisión es verdadera y precisa según su mejor conocimiento.",
+      "item2": "Consiente ser contactado por Repo911 y abogados en nuestra red respecto a su caso.",
+      "item3": "Entiende que los resultados de los casos no están garantizados y dependen de las circunstancias individuales y la ley aplicable."
+    },
+    "s4": {
+      "title": "4. Emparejamiento con Abogados",
+      "body": "Cuando su caso califica según nuestros criterios de evaluación, se pone a disposición de abogados licenciados en nuestra red. Un abogado puede revisar y tomar su caso, momento en el cual lo contactarán directamente. Repo911 no garantiza que un abogado tomará su caso o que su caso tiene mérito legal."
+    },
+    "s5": {
+      "title": "5. Estructura de Honorarios de Abogados",
+      "body": "Los abogados en nuestra red pagan una tarifa de compra de prospecto a Repo911 para tomar y recibir prospectos calificados. Estos acuerdos son entre Repo911 y el abogado y no afectan ningún honorario o costo que pueda aplicarse entre usted y su abogado."
+    },
+    "s6": {
+      "title": "6. Limitación de Responsabilidad",
+      "body": "Repo911 no es responsable por las acciones, asesoría o representación proporcionada por ningún abogado en nuestra red. No garantizamos el resultado de ningún asunto legal. Nuestra responsabilidad está limitada al máximo permitido por la ley. En ningún caso Repo911 será responsable por daños indirectos, incidentales, especiales o consecuentes derivados del uso de nuestro servicio."
+    },
+    "s7": {
+      "title": "7. Resolución de Disputas",
+      "body": "Cualquier disputa que surja de o esté relacionada con estos Términos de Servicio se resolverá mediante arbitraje vinculante de acuerdo con las reglas de la Asociación Americana de Arbitraje. Ambas partes renuncian al derecho a un juicio con jurado y al derecho a participar en demandas colectivas."
+    },
+    "s8": {
+      "title": "8. Terminación de Cuenta",
+      "body": "Repo911 se reserva el derecho de terminar o suspender el acceso a nuestra plataforma para cualquier usuario o abogado que viole estos términos, participe en actividades fraudulentas o abuse del servicio de otra manera."
+    },
+    "s9": {
+      "title": "9. Modificaciones",
+      "body": "Nos reservamos el derecho de modificar estos Términos de Servicio en cualquier momento. Los cambios materiales se comunicarán a través del sitio web. El uso continuado del servicio después de los cambios constituye aceptación de los términos actualizados."
+    },
+    "s10": {
+      "title": "10. Ley Aplicable",
+      "body": "Estos Términos de Servicio se rigen e interpretan de acuerdo con las leyes del Estado de Delaware, sin considerar principios de conflicto de leyes."
+    },
+    "s11": {
+      "title": "11. Contacto",
+      "body": "Para preguntas sobre estos Términos de Servicio, contáctenos en legal@repo911.com."
+    },
+    "s12": {
+      "title": "12. Idioma",
+      "body": "Estos Términos de Servicio pueden proporcionarse en varios idiomas por conveniencia. En caso de conflicto o inconsistencia entre la versión en inglés y cualquier versión traducida, la versión en inglés prevalecerá."
+    }
+  },
+  "disclaimer": {
+    "title": "Aviso Legal",
+    "noticeTitle": "Aviso Importante",
+    "noticeBody": "Repo911 no es un bufete de abogados y no proporciona asesoría legal. La información en este sitio web es solo para fines informativos generales y no debe interpretarse como asesoría legal.",
+    "s1": {
+      "title": "Sin Relación Abogado-Cliente",
+      "body": "No se forma ninguna relación abogado-cliente al enviar una consulta a través de este sitio web, ver contenido en este sitio web o usar cualquiera de nuestros servicios. Una relación abogado-cliente solo puede establecerse a través de un acuerdo directo y mutuo entre usted y un abogado licenciado."
+    },
+    "s2": {
+      "title": "Solo Información General",
+      "body": "La información proporcionada en este sitio web, incluyendo información sobre leyes de reposesión ilegal, la Ley de Prácticas Justas de Cobro de Deudas (FDCPA), la Ley de Alivio Civil para Miembros del Servicio (SCRA) y el Artículo 9 del UCC, se proporciona solo con fines educativos generales. Las leyes varían por estado y cambian con el tiempo. Esta información puede no reflejar el estado actual de la ley en su jurisdicción."
+    },
+    "s3": {
+      "title": "Sin Garantía de Resultados",
+      "intro": "Los resultados pasados no garantizan resultados futuros. Cada caso es único, y el resultado de su caso depende de los hechos y circunstancias específicos involucrados, así como de las leyes aplicables en su estado. Repo911 no garantiza que:",
+      "item1": "Su caso califique para representación legal",
+      "item2": "Un abogado revisará o tomará su caso",
+      "item3": "Recibirá algún resultado o compensación particular",
+      "item4": "Cualquier acción legal será exitosa"
+    },
+    "s4": {
+      "title": "Consentimiento de Contacto",
+      "body": "Al enviar su información a través de nuestro formulario de admisión, consiente ser contactado por Repo911 y abogados licenciados en nuestra red por teléfono, correo electrónico o mensaje de texto respecto a su caso potencial. Puede optar por no recibir comunicaciones en cualquier momento."
+    },
+    "s5": {
+      "title": "Abogados de Terceros",
+      "body": "Los abogados en la red de Repo911 son profesionales legales independientes. Repo911 no controla, supervisa ni dirige los servicios legales que proporcionan. Cualquier acuerdo de representación es entre usted y el abogado directamente."
+    },
+    "s6": {
+      "title": "Busque Asesoría Profesional",
+      "body": "Si cree que su vehículo fue reposesionado ilegalmente, le recomendamos encarecidamente consultar con un abogado licenciado en su estado que pueda proporcionar asesoría legal personalizada basada en los detalles específicos de su situación."
+    },
+    "s7": {
+      "title": "Idioma",
+      "body": "Este Aviso Legal puede proporcionarse en varios idiomas por conveniencia. En caso de conflicto o inconsistencia entre la versión en inglés y cualquier versión traducida, la versión en inglés prevalecerá."
+    },
+    "moreInfo": "Para más información, revise nuestra <privacyLink>Política de Privacidad</privacyLink> y los <termsLink>Términos de Servicio</termsLink>."
+  },
+  "messages": {
+    "title": "Mensajes con Su Abogado",
+    "emptyState": "Aún no hay mensajes. Envíe un mensaje a su abogado a continuación.",
+    "placeholder": "Escriba un mensaje...",
+    "senderYou": "Usted",
+    "senderAttorney": "Abogado",
+    "sendError": "Error al enviar mensaje",
+    "sendErrorRetry": "Error al enviar mensaje. Por favor intente de nuevo."
   },
   "blog": {
     "title": "Blog de Derechos de Reposesión",
@@ -117,6 +730,10 @@
     "loading": "Cargando...",
     "error": "Algo salió mal",
     "backToHome": "Volver a la Página Principal",
-    "englishOnly": "Esta página solo está disponible en inglés."
+    "englishOnly": "Esta página solo está disponible en inglés.",
+    "yes": "Sí",
+    "no": "No",
+    "notSure": "No Estoy Seguro",
+    "other": "Otro"
   }
 }

@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { Send, MessageSquare, Loader2 } from 'lucide-react';
+import { useTranslations, useLocale } from 'next-intl';
 import { Button } from '@/components/ui/button';
 
 interface Message {
@@ -18,6 +19,8 @@ interface MessageThreadProps {
 }
 
 export function MessageThread({ email, leadId }: MessageThreadProps) {
+  const t = useTranslations('messages');
+  const locale = useLocale();
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(true);
   const [content, setContent] = useState('');
@@ -66,10 +69,10 @@ export function MessageThread({ email, leadId }: MessageThreadProps) {
         await fetchMessages();
       } else {
         const data = await res.json();
-        setError(data.error || 'Failed to send message');
+        setError(data.error || t('sendError'));
       }
     } catch {
-      setError('Failed to send message. Please try again.');
+      setError(t('sendErrorRetry'));
     } finally {
       setSending(false);
     }
@@ -77,7 +80,7 @@ export function MessageThread({ email, leadId }: MessageThreadProps) {
 
   function formatTime(dateStr: string) {
     const d = new Date(dateStr);
-    return d.toLocaleString('en-US', {
+    return d.toLocaleString(locale, {
       month: 'short',
       day: 'numeric',
       hour: 'numeric',
@@ -89,7 +92,7 @@ export function MessageThread({ email, leadId }: MessageThreadProps) {
     <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-6 shadow-sm">
       <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center gap-2">
         <MessageSquare className="h-5 w-5 text-[#3474BA] dark:text-blue-400" />
-        Messages with Your Attorney
+        {t('title')}
       </h2>
 
       {loading ? (
@@ -101,7 +104,7 @@ export function MessageThread({ email, leadId }: MessageThreadProps) {
           <div ref={scrollRef} className="max-h-96 overflow-y-auto space-y-3 mb-4">
             {messages.length === 0 ? (
               <p className="text-sm text-gray-400 text-center py-6">
-                No messages yet. Send a message to your attorney below.
+                {t('emptyState')}
               </p>
             ) : (
               messages.map((msg) => (
@@ -118,7 +121,7 @@ export function MessageThread({ email, leadId }: MessageThreadProps) {
                   >
                     <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
                     <p className={`text-[10px] mt-1 ${msg.sender_type === 'consumer' ? 'text-blue-400' : 'text-gray-400'}`}>
-                      {msg.sender_type === 'consumer' ? 'You' : 'Attorney'} &middot; {formatTime(msg.created_at)}
+                      {msg.sender_type === 'consumer' ? t('senderYou') : t('senderAttorney')} &middot; {formatTime(msg.created_at)}
                     </p>
                   </div>
                 </div>
@@ -130,7 +133,7 @@ export function MessageThread({ email, leadId }: MessageThreadProps) {
             <textarea
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              placeholder="Type a message..."
+              placeholder={t('placeholder')}
               rows={2}
               maxLength={2000}
               className="flex-1 px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm resize-none bg-white dark:bg-slate-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#3474BA]"

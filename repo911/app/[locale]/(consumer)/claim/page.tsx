@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import dynamic from 'next/dynamic';
+import { getTranslations } from 'next-intl/server';
 import { Skeleton } from '@/components/ui/skeleton';
 
 const IntakeForm = dynamic(
@@ -23,16 +24,20 @@ export const metadata: Metadata = {
   description: 'Fill out our free case review form to find out if your vehicle was wrongfully repossessed.',
 };
 
-export default function ClaimPage() {
+export default async function ClaimPage() {
+  const t = await getTranslations('claim');
+
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
       <div className="text-center mb-8">
-        <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-gray-100">Free Case Review</h1>
+        <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-gray-100">{t('title')}</h1>
         <p className="mt-3 text-lg text-gray-600 dark:text-gray-400">
-          Tell us about your repossession experience. This takes about 5 minutes.
+          {t('pageDescription')}
         </p>
         <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-          All fields marked with <span className="text-red-500">*</span> are required.
+          {t.rich('requiredFieldsNote', {
+            red: (chunks) => <span className="text-red-500">{chunks}</span>,
+          })}
         </p>
       </div>
       <IntakeForm />

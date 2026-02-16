@@ -3,7 +3,8 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/i18n/navigation';
+import { useTranslations } from 'next-intl';
 import { intakeFormSchema, type IntakeFormInput } from '@/lib/validations/intake-form';
 import { FormSection } from './FormSection';
 import { ProgressIndicator } from './ProgressIndicator';
@@ -15,53 +16,16 @@ import { RadioGroup } from '@/components/ui/radio';
 import { Button } from '@/components/ui/button';
 import { US_STATES, COMMON_LENDERS } from '@/lib/utils';
 import { AlertCircle, ArrowLeft, ArrowRight, X } from 'lucide-react';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 
 const TOTAL_STEPS = 11;
 const DRAFT_KEY = 'repo911_intake_draft';
 const CONSENT_FIELDS = ['electronic_signature', 'consent_accurate_info', 'consent_not_legal_advice', 'consent_contact', 'consent_privacy_policy'];
 
-const REPO_LOCATIONS = [
-  { value: 'driveway', label: 'Driveway' },
-  { value: 'street_front', label: 'Street in front of home' },
-  { value: 'closed_garage', label: 'Closed/locked garage' },
-  { value: 'gated_community', label: 'Gated community or gated property' },
-  { value: 'private_parking', label: 'Private parking lot' },
-  { value: 'workplace_parking', label: 'Workplace parking lot' },
-  { value: 'public_parking', label: 'Public parking lot' },
-  { value: 'other', label: 'Other' },
-];
-
-const IMPACT_OPTIONS = [
-  { value: 'lost_job', label: 'Lost job or missed work' },
-  { value: 'missed_medical', label: 'Missed medical appointments' },
-  { value: 'children_school', label: "Children couldn't get to school" },
-  { value: 'emotional_distress', label: 'Emotional distress / anxiety / depression' },
-  { value: 'credit_score', label: 'Negative impact on credit score' },
-  { value: 'harassment', label: 'Harassment from lender or collections' },
-  { value: 'other', label: 'Other' },
-];
-
-const FDCPA_VIOLATION_OPTIONS = [
-  { value: 'called_outside_hours', label: 'Called before 8am or after 9pm' },
-  { value: 'called_workplace', label: 'Called your workplace after being told not to' },
-  { value: 'abusive_language', label: 'Used abusive or profane language' },
-  { value: 'threatened_arrest', label: 'Threatened arrest or jail' },
-  { value: 'told_others', label: 'Told friends/family/employer about your debt' },
-  { value: 'continued_calling', label: 'Continued calling after you requested they stop in writing' },
-  { value: 'misrepresented_amount', label: 'Misrepresented the amount you owe' },
-  { value: 'no_validation', label: 'Failed to send written validation of the debt' },
-];
-
 const YEAR_OPTIONS = Array.from({ length: 2026 - 1990 + 1 }, (_, i) => ({
   value: String(2026 - i),
   label: String(2026 - i),
 }));
-
-const LENDER_OPTIONS = [
-  ...COMMON_LENDERS.map((l) => ({ value: l, label: l })),
-  { value: 'other', label: 'Other' },
-];
 
 // Fields to validate per step (only required fields)
 const STEP_FIELDS: Record<number, string[]> = {
@@ -88,6 +52,8 @@ interface UtmParams {
 
 export function IntakeForm() {
   const router = useRouter();
+  const t = useTranslations('claim');
+  const tc = useTranslations('common');
   const utmRef = useRef<UtmParams>({});
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -98,6 +64,44 @@ export function IntakeForm() {
   const [draftRestored, setDraftRestored] = useState(false);
   const [draftSavedAt, setDraftSavedAt] = useState<number | null>(null);
   const saveTimerRef = useRef<number>(0);
+
+  // Translated option arrays
+  const REPO_LOCATIONS = [
+    { value: 'driveway', label: t('options.repoLocations.driveway') },
+    { value: 'street_front', label: t('options.repoLocations.streetFront') },
+    { value: 'closed_garage', label: t('options.repoLocations.closedGarage') },
+    { value: 'gated_community', label: t('options.repoLocations.gatedCommunity') },
+    { value: 'private_parking', label: t('options.repoLocations.privateParking') },
+    { value: 'workplace_parking', label: t('options.repoLocations.workplaceParking') },
+    { value: 'public_parking', label: t('options.repoLocations.publicParking') },
+    { value: 'other', label: tc('other') },
+  ];
+
+  const IMPACT_OPTIONS = [
+    { value: 'lost_job', label: t('options.impacts.lostJob') },
+    { value: 'missed_medical', label: t('options.impacts.missedMedical') },
+    { value: 'children_school', label: t('options.impacts.childrenSchool') },
+    { value: 'emotional_distress', label: t('options.impacts.emotionalDistress') },
+    { value: 'credit_score', label: t('options.impacts.creditScore') },
+    { value: 'harassment', label: t('options.impacts.harassment') },
+    { value: 'other', label: tc('other') },
+  ];
+
+  const FDCPA_VIOLATION_OPTIONS = [
+    { value: 'called_outside_hours', label: t('options.fdcpaViolations.calledOutsideHours') },
+    { value: 'called_workplace', label: t('options.fdcpaViolations.calledWorkplace') },
+    { value: 'abusive_language', label: t('options.fdcpaViolations.abusiveLanguage') },
+    { value: 'threatened_arrest', label: t('options.fdcpaViolations.threatenedArrest') },
+    { value: 'told_others', label: t('options.fdcpaViolations.toldOthers') },
+    { value: 'continued_calling', label: t('options.fdcpaViolations.continuedCalling') },
+    { value: 'misrepresented_amount', label: t('options.fdcpaViolations.misrepresentedAmount') },
+    { value: 'no_validation', label: t('options.fdcpaViolations.noValidation') },
+  ];
+
+  const LENDER_OPTIONS = [
+    ...COMMON_LENDERS.map((l) => ({ value: l, label: l })),
+    { value: 'other', label: tc('other') },
+  ];
 
   const {
     register,
@@ -261,7 +265,7 @@ export function IntakeForm() {
       const result = await response.json();
 
       if (!response.ok) {
-        throw new Error(result.error || 'Something went wrong. Please try again.');
+        throw new Error(result.error || t('errors.submitError'));
       }
 
       localStorage.removeItem(DRAFT_KEY);
@@ -272,7 +276,7 @@ export function IntakeForm() {
       });
       router.push(`/claim/confirmation?${params.toString()}`);
     } catch (error) {
-      setSubmitError(error instanceof Error ? error.message : 'Something went wrong');
+      setSubmitError(error instanceof Error ? error.message : t('errors.generic'));
     } finally {
       setSubmitting(false);
     }
@@ -285,7 +289,7 @@ export function IntakeForm() {
       {draftRestored && (
         <div className="flex items-center justify-between bg-blue-50 border border-blue-200 rounded-lg px-4 py-3 text-sm text-blue-800">
           <span>
-            Draft restored{draftSavedAt ? ` from ${new Date(draftSavedAt).toLocaleString()}` : ''}.
+            {draftSavedAt ? t('draft.restoredWithDate', { date: new Date(draftSavedAt).toLocaleString() }) : t('draft.restored')}
           </span>
           <button
             type="button"
@@ -293,7 +297,7 @@ export function IntakeForm() {
             className="flex items-center gap-1 text-blue-600 hover:text-blue-800 font-medium ml-4 flex-shrink-0"
           >
             <X className="h-3.5 w-3.5" />
-            Discard draft
+            {t('draft.discard')}
           </button>
         </div>
       )}
@@ -306,17 +310,17 @@ export function IntakeForm() {
 
       {/* Step 0: Contact Information */}
       {step === 0 && (
-        <FormSection title="Contact Information" description="How can we reach you?">
+        <FormSection title={t('sections.contactInfo.title')} description={t('sections.contactInfo.description')}>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Input
-              label="First Name"
+              label={t('labels.firstName')}
               required
               id="first_name"
               error={errors.first_name?.message}
               {...register('first_name')}
             />
             <Input
-              label="Last Name"
+              label={t('labels.lastName')}
               required
               id="last_name"
               error={errors.last_name?.message}
@@ -325,7 +329,7 @@ export function IntakeForm() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Input
-              label="Email Address"
+              label={t('labels.email')}
               type="email"
               required
               id="email"
@@ -333,11 +337,11 @@ export function IntakeForm() {
               {...register('email')}
             />
             <Input
-              label="Phone Number"
+              label={t('labels.phone')}
               type="tel"
               required
               id="phone"
-              placeholder="(555) 555-5555"
+              placeholder={t('placeholders.phone')}
               error={errors.phone?.message}
               {...register('phone')}
             />
@@ -347,13 +351,13 @@ export function IntakeForm() {
             name="preferred_contact"
             render={({ field }) => (
               <RadioGroup
-                label="Preferred Contact Method"
+                label={t('labels.preferredContact')}
                 name="preferred_contact"
                 required
                 options={[
-                  { value: 'phone', label: 'Phone' },
-                  { value: 'email', label: 'Email' },
-                  { value: 'text', label: 'Text Message' },
+                  { value: 'phone', label: t('options.contactMethods.phone') },
+                  { value: 'email', label: t('options.contactMethods.email') },
+                  { value: 'text', label: t('options.contactMethods.text') },
                 ]}
                 value={field.value}
                 onChange={field.onChange}
@@ -366,14 +370,14 @@ export function IntakeForm() {
             name="best_time_to_contact"
             render={({ field }) => (
               <Select
-                label="Best Time to Contact"
+                label={t('labels.bestTime')}
                 id="best_time_to_contact"
-                placeholder="Select a time..."
+                placeholder={t('placeholders.selectTime')}
                 options={[
-                  { value: 'morning', label: 'Morning' },
-                  { value: 'afternoon', label: 'Afternoon' },
-                  { value: 'evening', label: 'Evening' },
-                  { value: 'anytime', label: 'Anytime' },
+                  { value: 'morning', label: t('options.times.morning') },
+                  { value: 'afternoon', label: t('options.times.afternoon') },
+                  { value: 'evening', label: t('options.times.evening') },
+                  { value: 'anytime', label: t('options.times.anytime') },
                 ]}
                 value={field.value || ''}
                 onChange={(e) => field.onChange(e.target.value || undefined)}
@@ -381,7 +385,7 @@ export function IntakeForm() {
             )}
           />
           <Input
-            label="Street Address"
+            label={t('labels.streetAddress')}
             required
             id="street_address"
             error={errors.street_address?.message}
@@ -389,7 +393,7 @@ export function IntakeForm() {
           />
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <Input
-              label="City"
+              label={t('labels.city')}
               required
               id="city"
               error={errors.city?.message}
@@ -400,10 +404,10 @@ export function IntakeForm() {
               name="state"
               render={({ field }) => (
                 <Select
-                  label="State"
+                  label={t('labels.state')}
                   required
                   id="state"
-                  placeholder="Select state..."
+                  placeholder={t('placeholders.selectState')}
                   options={US_STATES.map((s) => ({ value: s.value, label: s.label }))}
                   value={field.value || ''}
                   onChange={(e) => {
@@ -417,7 +421,7 @@ export function IntakeForm() {
               )}
             />
             <Input
-              label="ZIP Code"
+              label={t('labels.zipCode')}
               required
               id="zip_code"
               maxLength={5}
@@ -430,17 +434,17 @@ export function IntakeForm() {
 
       {/* Step 1: Vehicle Information */}
       {step === 1 && (
-        <FormSection title="Vehicle Information" description="Tell us about the repossessed vehicle.">
+        <FormSection title={t('sections.vehicleInfo.title')} description={t('sections.vehicleInfo.description')}>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <Controller
               control={control}
               name="vehicle_year"
               render={({ field }) => (
                 <Select
-                  label="Vehicle Year"
+                  label={t('labels.vehicleYear')}
                   required
                   id="vehicle_year"
-                  placeholder="Select year..."
+                  placeholder={t('placeholders.selectYear')}
                   options={YEAR_OPTIONS}
                   value={field.value ? String(field.value) : ''}
                   onChange={(e) => field.onChange(Number(e.target.value))}
@@ -449,33 +453,33 @@ export function IntakeForm() {
               )}
             />
             <Input
-              label="Vehicle Make"
+              label={t('labels.vehicleMake')}
               required
               id="vehicle_make"
-              placeholder="e.g., Toyota"
+              placeholder={t('placeholders.vehicleMake')}
               error={errors.vehicle_make?.message}
               {...register('vehicle_make')}
             />
             <Input
-              label="Vehicle Model"
+              label={t('labels.vehicleModel')}
               required
               id="vehicle_model"
-              placeholder="e.g., Camry"
+              placeholder={t('placeholders.vehicleModel')}
               error={errors.vehicle_model?.message}
               {...register('vehicle_model')}
             />
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Input
-              label="Vehicle Color"
+              label={t('labels.vehicleColor')}
               id="vehicle_color"
               {...register('vehicle_color')}
             />
             <Input
-              label="VIN (if known)"
+              label={t('labels.vin')}
               id="vin"
               maxLength={17}
-              helperText="17-character Vehicle Identification Number"
+              helperText={t('helpers.vin')}
               error={errors.vin?.message}
               {...register('vin')}
             />
@@ -485,13 +489,13 @@ export function IntakeForm() {
             name="lease_or_finance"
             render={({ field }) => (
               <RadioGroup
-                label="Was this a leased or financed vehicle?"
+                label={t('questions.leaseOrFinance')}
                 name="lease_or_finance"
                 required
                 options={[
-                  { value: 'financed', label: 'Financed' },
-                  { value: 'leased', label: 'Leased' },
-                  { value: 'not_sure', label: 'Not Sure' },
+                  { value: 'financed', label: t('options.leaseOrFinance.financed') },
+                  { value: 'leased', label: t('options.leaseOrFinance.leased') },
+                  { value: 'not_sure', label: t('options.leaseOrFinance.notSure') },
                 ]}
                 value={field.value}
                 onChange={field.onChange}
@@ -504,17 +508,17 @@ export function IntakeForm() {
 
       {/* Step 2: Lender / Creditor Information */}
       {step === 2 && (
-        <FormSection title="Lender / Creditor Information" description="Who held the loan or lease on your vehicle?">
+        <FormSection title={t('sections.lenderInfo.title')} description={t('sections.lenderInfo.description')}>
           <Controller
             control={control}
             name="lender_name"
             render={({ field }) => (
               <div>
                 <Select
-                  label="Lender / Finance Company Name"
+                  label={t('labels.lenderName')}
                   required
                   id="lender_name"
-                  placeholder="Select your lender..."
+                  placeholder={t('placeholders.selectLender')}
                   options={LENDER_OPTIONS}
                   value={field.value || ''}
                   onChange={(e) => field.onChange(e.target.value)}
@@ -523,7 +527,7 @@ export function IntakeForm() {
                 {watchLender === 'other' && (
                   <Input
                     className="mt-2"
-                    placeholder="Enter lender name..."
+                    placeholder={t('placeholders.enterLender')}
                     value={otherLender}
                     onChange={(e) => setOtherLender(e.target.value)}
                   />
@@ -532,7 +536,7 @@ export function IntakeForm() {
             )}
           />
           <Input
-            label="Repossession Company Name (if known)"
+            label={t('labels.repoCompanyName')}
             id="repo_company_name"
             {...register('repo_company_name')}
           />
@@ -541,13 +545,13 @@ export function IntakeForm() {
             name="behind_on_payments"
             render={({ field }) => (
               <RadioGroup
-                label="Were you behind on payments at the time of repossession?"
+                label={t('questions.behindOnPayments')}
                 name="behind_on_payments"
                 required
                 options={[
-                  { value: 'yes', label: 'Yes' },
-                  { value: 'no', label: 'No' },
-                  { value: 'not_sure', label: 'Not Sure' },
+                  { value: 'yes', label: tc('yes') },
+                  { value: 'no', label: tc('no') },
+                  { value: 'not_sure', label: tc('notSure') },
                 ]}
                 value={field.value}
                 onChange={field.onChange}
@@ -561,15 +565,15 @@ export function IntakeForm() {
               name="payments_behind"
               render={({ field }) => (
                 <Select
-                  label="How many payments behind?"
+                  label={t('questions.paymentsBehind')}
                   id="payments_behind"
-                  placeholder="Select..."
+                  placeholder={t('placeholders.select')}
                   options={[
                     { value: '1', label: '1' },
                     { value: '2', label: '2' },
                     { value: '3', label: '3' },
                     { value: '4', label: '4' },
-                    { value: '5', label: '5+' },
+                    { value: '5', label: t('options.paymentsBehind.5plus') },
                   ]}
                   value={field.value ? String(field.value) : ''}
                   onChange={(e) => field.onChange(Number(e.target.value))}
@@ -582,11 +586,11 @@ export function IntakeForm() {
             name="contacted_lender_about_arrangements"
             render={({ field }) => (
               <RadioGroup
-                label="Had you been in contact with your lender about payment arrangements?"
+                label={t('questions.contactedLender')}
                 name="contacted_lender"
                 options={[
-                  { value: 'true', label: 'Yes' },
-                  { value: 'false', label: 'No' },
+                  { value: 'true', label: tc('yes') },
+                  { value: 'false', label: tc('no') },
                 ]}
                 value={field.value}
                 onChange={field.onChange}
@@ -598,13 +602,13 @@ export function IntakeForm() {
             name="received_written_notice"
             render={({ field }) => (
               <RadioGroup
-                label="Did you receive any written notice before the repossession?"
+                label={t('questions.receivedWrittenNotice')}
                 name="received_written_notice"
                 required
                 options={[
-                  { value: 'yes', label: 'Yes' },
-                  { value: 'no', label: 'No' },
-                  { value: 'not_sure', label: 'Not Sure' },
+                  { value: 'yes', label: tc('yes') },
+                  { value: 'no', label: tc('no') },
+                  { value: 'not_sure', label: tc('notSure') },
                 ]}
                 value={field.value}
                 onChange={field.onChange}
@@ -617,10 +621,10 @@ export function IntakeForm() {
 
       {/* Step 3: Repossession Details */}
       {step === 3 && (
-        <FormSection title="Repossession Details" description="When and where did the repossession happen?">
+        <FormSection title={t('sections.repoDetails.title')} description={t('sections.repoDetails.description')}>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Input
-              label="Date of Repossession"
+              label={t('labels.repoDate')}
               type="date"
               required
               id="repo_date"
@@ -633,16 +637,16 @@ export function IntakeForm() {
               name="repo_time_of_day"
               render={({ field }) => (
                 <Select
-                  label="Approximate Time of Day"
+                  label={t('labels.repoTimeOfDay')}
                   required
                   id="repo_time_of_day"
-                  placeholder="Select..."
+                  placeholder={t('placeholders.select')}
                   options={[
-                    { value: 'early_morning', label: 'Early Morning (12am-6am)' },
-                    { value: 'morning', label: 'Morning (6am-12pm)' },
-                    { value: 'afternoon', label: 'Afternoon (12pm-6pm)' },
-                    { value: 'evening', label: 'Evening (6pm-12am)' },
-                    { value: 'not_sure', label: 'Not Sure' },
+                    { value: 'early_morning', label: t('options.repoTimes.earlyMorning') },
+                    { value: 'morning', label: t('options.repoTimes.morning') },
+                    { value: 'afternoon', label: t('options.repoTimes.afternoon') },
+                    { value: 'evening', label: t('options.repoTimes.evening') },
+                    { value: 'not_sure', label: t('options.repoTimes.notSure') },
                   ]}
                   value={field.value || ''}
                   onChange={(e) => field.onChange(e.target.value)}
@@ -653,7 +657,7 @@ export function IntakeForm() {
           </div>
           <div>
             <p className="block text-sm font-medium text-gray-700 mb-2">
-              Where was your vehicle when it was taken? <span className="text-red-500">*</span>
+              {t('questions.repoLocation')} <span className="text-red-500">*</span>
             </p>
             <div className="space-y-2">
               {REPO_LOCATIONS.map((loc) => (
@@ -681,7 +685,7 @@ export function IntakeForm() {
               {watchRepoLocation?.includes('other') && (
                 <Input
                   className="ml-4 sm:ml-8"
-                  placeholder="Please describe the location..."
+                  placeholder={t('placeholders.describeLocation')}
                   value={otherRepoLocation}
                   onChange={(e) => setOtherRepoLocation(e.target.value)}
                 />
@@ -696,10 +700,10 @@ export function IntakeForm() {
             name="repo_state"
             render={({ field }) => (
               <Select
-                label="State where repossession occurred"
+                label={t('labels.repoState')}
                 required
                 id="repo_state"
-                placeholder="Select state..."
+                placeholder={t('placeholders.selectState')}
                 options={US_STATES.map((s) => ({ value: s.value, label: s.label }))}
                 value={field.value || watchState || ''}
                 onChange={(e) => field.onChange(e.target.value)}
@@ -713,12 +717,12 @@ export function IntakeForm() {
       {/* Step 4: Breach of Peace Screening */}
       {step === 4 && (
         <FormSection
-          title="Breach of Peace Screening"
-          description="The law protects you from aggressive or unlawful behavior during a repossession. Please answer all questions below."
+          title={t('sections.breachOfPeace.title')}
+          description={t('sections.breachOfPeace.description')}
         >
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-blue-800">
             <AlertCircle className="inline h-4 w-4 mr-1 -mt-0.5" />
-            These questions are critical for evaluating your case. Please answer as accurately as possible.
+            {t('breachAlert')}
           </div>
 
           <Controller
@@ -726,13 +730,13 @@ export function IntakeForm() {
             name="verbally_objected"
             render={({ field }) => (
               <RadioGroup
-                label={"Did you verbally object to the repossession? (e.g., \"Stop,\" \"Leave my car,\" \"You can't take it\")"}
+                label={t('questions.verballyObjected')}
                 name="verbally_objected"
                 required
                 options={[
-                  { value: 'yes', label: 'Yes' },
-                  { value: 'no', label: 'No' },
-                  { value: 'not_sure', label: 'Not Sure' },
+                  { value: 'yes', label: tc('yes') },
+                  { value: 'no', label: tc('no') },
+                  { value: 'not_sure', label: tc('notSure') },
                 ]}
                 value={field.value}
                 onChange={field.onChange}
@@ -747,12 +751,12 @@ export function IntakeForm() {
               name="continued_after_objection"
               render={({ field }) => (
                 <RadioGroup
-                  label="Did the repo agent continue taking the vehicle AFTER you objected?"
+                  label={t('questions.continuedAfterObjection')}
                   name="continued_after_objection"
                   required
                   options={[
-                    { value: 'yes', label: 'Yes' },
-                    { value: 'no', label: 'No' },
+                    { value: 'yes', label: tc('yes') },
+                    { value: 'no', label: tc('no') },
                   ]}
                   value={field.value}
                   onChange={field.onChange}
@@ -766,12 +770,12 @@ export function IntakeForm() {
             name="physical_force_or_threats"
             render={({ field }) => (
               <RadioGroup
-                label="Did the repo agent use physical force, threats, or intimidation?"
+                label={t('questions.physicalForce')}
                 name="physical_force"
                 required
                 options={[
-                  { value: 'true', label: 'Yes' },
-                  { value: 'false', label: 'No' },
+                  { value: 'true', label: tc('yes') },
+                  { value: 'false', label: tc('no') },
                 ]}
                 value={field.value}
                 onChange={field.onChange}
@@ -784,12 +788,12 @@ export function IntakeForm() {
             name="excessive_noise"
             render={({ field }) => (
               <RadioGroup
-                label="Did the repo agent yell, cause a scene, or create excessive noise?"
+                label={t('questions.excessiveNoise')}
                 name="excessive_noise"
                 required
                 options={[
-                  { value: 'true', label: 'Yes' },
-                  { value: 'false', label: 'No' },
+                  { value: 'true', label: tc('yes') },
+                  { value: 'false', label: tc('no') },
                 ]}
                 value={field.value}
                 onChange={field.onChange}
@@ -802,12 +806,12 @@ export function IntakeForm() {
             name="entered_locked_area"
             render={({ field }) => (
               <RadioGroup
-                label="Did the repo agent enter a locked or gated area without permission? (e.g., closed garage, gated yard, gated community)"
+                label={t('questions.enteredLockedArea')}
                 name="entered_locked_area"
                 required
                 options={[
-                  { value: 'true', label: 'Yes' },
-                  { value: 'false', label: 'No' },
+                  { value: 'true', label: tc('yes') },
+                  { value: 'false', label: tc('no') },
                 ]}
                 value={field.value}
                 onChange={field.onChange}
@@ -820,12 +824,12 @@ export function IntakeForm() {
             name="property_damage"
             render={({ field }) => (
               <RadioGroup
-                label="Did the repo agent damage your property during the repossession? (e.g., broke a lock, damaged gate, scratched another vehicle)"
+                label={t('questions.propertyDamage')}
                 name="property_damage"
                 required
                 options={[
-                  { value: 'true', label: 'Yes' },
-                  { value: 'false', label: 'No' },
+                  { value: 'true', label: tc('yes') },
+                  { value: 'false', label: tc('no') },
                 ]}
                 value={field.value}
                 onChange={field.onChange}
@@ -838,12 +842,12 @@ export function IntakeForm() {
             name="police_present"
             render={({ field }) => (
               <RadioGroup
-                label="Were police called or present during the repossession?"
+                label={t('questions.policePresent')}
                 name="police_present"
                 required
                 options={[
-                  { value: 'true', label: 'Yes' },
-                  { value: 'false', label: 'No' },
+                  { value: 'true', label: tc('yes') },
+                  { value: 'false', label: tc('no') },
                 ]}
                 value={field.value}
                 onChange={field.onChange}
@@ -857,12 +861,12 @@ export function IntakeForm() {
               name="police_assisted"
               render={({ field }) => (
                 <RadioGroup
-                  label="If police were present, did they assist or encourage the repo agent?"
+                  label={t('questions.policeAssisted')}
                   name="police_assisted"
                   options={[
-                    { value: 'yes', label: 'Yes' },
-                    { value: 'no', label: 'No' },
-                    { value: 'not_sure', label: 'Not Sure' },
+                    { value: 'yes', label: tc('yes') },
+                    { value: 'no', label: tc('no') },
+                    { value: 'not_sure', label: tc('notSure') },
                   ]}
                   value={field.value}
                   onChange={field.onChange}
@@ -876,12 +880,12 @@ export function IntakeForm() {
             name="repo_at_workplace"
             render={({ field }) => (
               <RadioGroup
-                label="Did the repo agent come to your workplace?"
+                label={t('questions.repoAtWorkplace')}
                 name="repo_at_workplace"
                 required
                 options={[
-                  { value: 'true', label: 'Yes' },
-                  { value: 'false', label: 'No' },
+                  { value: 'true', label: tc('yes') },
+                  { value: 'false', label: tc('no') },
                 ]}
                 value={field.value}
                 onChange={field.onChange}
@@ -894,12 +898,12 @@ export function IntakeForm() {
             name="public_embarrassment"
             render={({ field }) => (
               <RadioGroup
-                label="Did the repossession happen in a way that caused public embarrassment or humiliation?"
+                label={t('questions.publicEmbarrassment')}
                 name="public_embarrassment"
                 required
                 options={[
-                  { value: 'true', label: 'Yes' },
-                  { value: 'false', label: 'No' },
+                  { value: 'true', label: tc('yes') },
+                  { value: 'false', label: tc('no') },
                 ]}
                 value={field.value}
                 onChange={field.onChange}
@@ -908,10 +912,10 @@ export function IntakeForm() {
           />
 
           <Textarea
-            label="Describe what happened in your own words"
+            label={t('questions.narrative')}
             required
             id="narrative"
-            placeholder="Please describe the repossession in as much detail as possible. Include what the repo agent said or did, where you were, who witnessed it, and anything else you remember."
+            placeholder={t('placeholders.narrative')}
             error={errors.narrative?.message}
             className="min-h-[150px]"
             {...register('narrative')}
@@ -921,18 +925,18 @@ export function IntakeForm() {
 
       {/* Step 5: Personal Belongings */}
       {step === 5 && (
-        <FormSection title="Personal Belongings" description="Were your personal items affected?">
+        <FormSection title={t('sections.belongings.title')} description={t('sections.belongings.description')}>
           <Controller
             control={control}
             name="had_belongings"
             render={({ field }) => (
               <RadioGroup
-                label="Did you have personal belongings in the vehicle at the time?"
+                label={t('questions.hadBelongings')}
                 name="had_belongings"
                 required
                 options={[
-                  { value: 'true', label: 'Yes' },
-                  { value: 'false', label: 'No' },
+                  { value: 'true', label: tc('yes') },
+                  { value: 'false', label: tc('no') },
                 ]}
                 value={field.value}
                 onChange={field.onChange}
@@ -947,13 +951,13 @@ export function IntakeForm() {
                 name="belongings_returned"
                 render={({ field }) => (
                   <RadioGroup
-                    label="Were your belongings returned to you?"
+                    label={t('questions.belongingsReturned')}
                     name="belongings_returned"
                     required
                     options={[
-                      { value: 'yes', label: 'Yes' },
-                      { value: 'no', label: 'No' },
-                      { value: 'some', label: 'Some were returned' },
+                      { value: 'yes', label: t('options.belongingsReturned.yes') },
+                      { value: 'no', label: t('options.belongingsReturned.no') },
+                      { value: 'some', label: t('options.belongingsReturned.some') },
                     ]}
                     value={field.value}
                     onChange={field.onChange}
@@ -964,16 +968,16 @@ export function IntakeForm() {
               {(watchBelongingsReturned === 'no' || watchBelongingsReturned === 'some') && (
                 <>
                   <Textarea
-                    label="What items were in the vehicle?"
+                    label={t('labels.belongingsList')}
                     id="belongings_list"
-                    placeholder="List all personal items (laptops, phones, tools, car seats, medications, documents, etc.)"
+                    placeholder={t('placeholders.belongingsList')}
                     {...register('belongings_list')}
                   />
                   <Input
-                    label="Estimated value of unreturned belongings"
+                    label={t('labels.belongingsValue')}
                     type="number"
                     id="belongings_value"
-                    placeholder="$"
+                    placeholder={t('placeholders.dollarSign')}
                     {...register('belongings_value')}
                   />
                 </>
@@ -984,11 +988,11 @@ export function IntakeForm() {
                 name="charged_fee_for_belongings"
                 render={({ field }) => (
                   <RadioGroup
-                    label="Did the lender or repo company charge you a fee to retrieve your belongings?"
+                    label={t('questions.chargedFee')}
                     name="charged_fee"
                     options={[
-                      { value: 'true', label: 'Yes' },
-                      { value: 'false', label: 'No' },
+                      { value: 'true', label: tc('yes') },
+                      { value: 'false', label: tc('no') },
                     ]}
                     value={field.value === undefined ? undefined : String(field.value)}
                     onChange={(v) => field.onChange(v === 'true')}
@@ -1002,19 +1006,19 @@ export function IntakeForm() {
 
       {/* Step 6: Post-Repossession */}
       {step === 6 && (
-        <FormSection title="Post-Repossession" description="What happened after the repossession?">
+        <FormSection title={t('sections.postRepo.title')} description={t('sections.postRepo.description')}>
           <Controller
             control={control}
             name="received_notice_of_sale"
             render={({ field }) => (
               <RadioGroup
-                label="Have you received a Notice of Sale (notice that your vehicle will be sold at auction)?"
+                label={t('questions.receivedNoticeOfSale')}
                 name="received_notice_of_sale"
                 required
                 options={[
-                  { value: 'yes', label: 'Yes' },
-                  { value: 'no', label: 'No' },
-                  { value: 'not_sure', label: 'Not Sure' },
+                  { value: 'yes', label: tc('yes') },
+                  { value: 'no', label: tc('no') },
+                  { value: 'not_sure', label: tc('notSure') },
                 ]}
                 value={field.value}
                 onChange={field.onChange}
@@ -1027,13 +1031,13 @@ export function IntakeForm() {
             name="deficiency_balance_contact"
             render={({ field }) => (
               <RadioGroup
-                label="Have you been contacted about a deficiency balance (remaining loan amount after the vehicle is sold)?"
+                label={t('questions.deficiencyBalance')}
                 name="deficiency_balance_contact"
                 required
                 options={[
-                  { value: 'yes', label: 'Yes' },
-                  { value: 'no', label: 'No' },
-                  { value: 'not_sure', label: 'Not Sure' },
+                  { value: 'yes', label: tc('yes') },
+                  { value: 'no', label: tc('no') },
+                  { value: 'not_sure', label: tc('notSure') },
                 ]}
                 value={field.value}
                 onChange={field.onChange}
@@ -1043,7 +1047,7 @@ export function IntakeForm() {
           />
           <div>
             <p className="block text-sm font-medium text-gray-700 mb-2">
-              Have you experienced any of the following as a result of the repossession?
+              {t('questions.impactsLabel')}
             </p>
             <div className="space-y-2">
               {IMPACT_OPTIONS.map((impact) => (
@@ -1075,12 +1079,12 @@ export function IntakeForm() {
             name="credit_report_affected"
             render={({ field }) => (
               <RadioGroup
-                label="Has the repossession been reported on your credit report?"
+                label={t('questions.creditReport')}
                 name="credit_report_affected"
                 options={[
-                  { value: 'yes', label: 'Yes' },
-                  { value: 'no', label: 'No' },
-                  { value: 'not_sure', label: 'Not Sure' },
+                  { value: 'yes', label: tc('yes') },
+                  { value: 'no', label: tc('no') },
+                  { value: 'not_sure', label: tc('notSure') },
                 ]}
                 value={field.value}
                 onChange={field.onChange}
@@ -1092,18 +1096,18 @@ export function IntakeForm() {
 
       {/* Step 7: Military Service */}
       {step === 7 && (
-        <FormSection title="Military Service (SCRA Protection)" description="Active-duty military members have special federal protections.">
+        <FormSection title={t('sections.military.title')} description={t('sections.military.description')}>
           <Controller
             control={control}
             name="military_service"
             render={({ field }) => (
               <RadioGroup
-                label="Are you currently serving or have you recently served in the US military?"
+                label={t('questions.militaryService')}
                 name="military_service"
                 required
                 options={[
-                  { value: 'true', label: 'Yes' },
-                  { value: 'false', label: 'No' },
+                  { value: 'true', label: tc('yes') },
+                  { value: 'false', label: tc('no') },
                 ]}
                 value={field.value}
                 onChange={field.onChange}
@@ -1117,18 +1121,18 @@ export function IntakeForm() {
                 name="military_branch"
                 render={({ field }) => (
                   <Select
-                    label="Branch of Service"
+                    label={t('labels.militaryBranch')}
                     id="military_branch"
-                    placeholder="Select branch..."
+                    placeholder={t('placeholders.selectBranch')}
                     options={[
-                      { value: 'army', label: 'Army' },
-                      { value: 'navy', label: 'Navy' },
-                      { value: 'air_force', label: 'Air Force' },
-                      { value: 'marines', label: 'Marines' },
-                      { value: 'coast_guard', label: 'Coast Guard' },
-                      { value: 'space_force', label: 'Space Force' },
-                      { value: 'national_guard', label: 'National Guard' },
-                      { value: 'reserves', label: 'Reserves' },
+                      { value: 'army', label: t('options.militaryBranches.army') },
+                      { value: 'navy', label: t('options.militaryBranches.navy') },
+                      { value: 'air_force', label: t('options.militaryBranches.airForce') },
+                      { value: 'marines', label: t('options.militaryBranches.marines') },
+                      { value: 'coast_guard', label: t('options.militaryBranches.coastGuard') },
+                      { value: 'space_force', label: t('options.militaryBranches.spaceForce') },
+                      { value: 'national_guard', label: t('options.militaryBranches.nationalGuard') },
+                      { value: 'reserves', label: t('options.militaryBranches.reserves') },
                     ]}
                     value={field.value || ''}
                     onChange={(e) => field.onChange(e.target.value || undefined)}
@@ -1140,11 +1144,11 @@ export function IntakeForm() {
                 name="active_duty_at_repo"
                 render={({ field }) => (
                   <RadioGroup
-                    label="Were you on active duty at the time of the repossession?"
+                    label={t('questions.activeDuty')}
                     name="active_duty"
                     options={[
-                      { value: 'true', label: 'Yes' },
-                      { value: 'false', label: 'No' },
+                      { value: 'true', label: tc('yes') },
+                      { value: 'false', label: tc('no') },
                     ]}
                     value={field.value === undefined ? undefined : String(field.value)}
                     onChange={(v) => field.onChange(v === 'true')}
@@ -1157,12 +1161,12 @@ export function IntakeForm() {
                   name="loan_before_active_duty"
                   render={({ field }) => (
                     <RadioGroup
-                      label="Was your auto loan originated before your active duty service began?"
+                      label={t('questions.loanBeforeActiveDuty')}
                       name="loan_before_active"
                       options={[
-                        { value: 'yes', label: 'Yes' },
-                        { value: 'no', label: 'No' },
-                        { value: 'not_sure', label: 'Not Sure' },
+                        { value: 'yes', label: tc('yes') },
+                        { value: 'no', label: tc('no') },
+                        { value: 'not_sure', label: tc('notSure') },
                       ]}
                       value={field.value}
                       onChange={field.onChange}
@@ -1177,18 +1181,18 @@ export function IntakeForm() {
 
       {/* Step 8: FDCPA Violations */}
       {step === 8 && (
-        <FormSection title="Illegal Debt Collection (FDCPA)" description="Federal law protects you from abusive debt collection practices.">
+        <FormSection title={t('sections.debtCollection.title')} description={t('sections.debtCollection.description')}>
           <Controller
             control={control}
             name="debt_collector_contact"
             render={({ field }) => (
               <RadioGroup
-                label="Has any debt collector contacted you about this vehicle?"
+                label={t('questions.debtCollectorContact')}
                 name="debt_collector_contact"
                 required
                 options={[
-                  { value: 'true', label: 'Yes' },
-                  { value: 'false', label: 'No' },
+                  { value: 'true', label: tc('yes') },
+                  { value: 'false', label: tc('no') },
                 ]}
                 value={field.value}
                 onChange={field.onChange}
@@ -1198,7 +1202,7 @@ export function IntakeForm() {
           {watchDebtCollector === 'true' && (
             <div>
               <p className="block text-sm font-medium text-gray-700 mb-2">
-                Have they done any of the following? (Check all that apply)
+                {t('questions.fdcpaLabel')}
               </p>
               <div className="space-y-2">
                 {FDCPA_VIOLATION_OPTIONS.map((violation) => (
@@ -1231,17 +1235,17 @@ export function IntakeForm() {
 
       {/* Step 9: Evidence & Documents */}
       {step === 9 && (
-        <FormSection title="Evidence & Documents" description="Supporting evidence strengthens your case.">
+        <FormSection title={t('sections.evidence.title')} description={t('sections.evidence.description')}>
           <Controller
             control={control}
             name="has_photos_videos"
             render={({ field }) => (
               <RadioGroup
-                label="Do you have any photos or videos of the repossession?"
+                label={t('questions.hasPhotosVideos')}
                 name="has_photos_videos"
                 options={[
-                  { value: 'true', label: 'Yes' },
-                  { value: 'false', label: 'No' },
+                  { value: 'true', label: tc('yes') },
+                  { value: 'false', label: tc('no') },
                 ]}
                 value={field.value}
                 onChange={field.onChange}
@@ -1253,11 +1257,11 @@ export function IntakeForm() {
             name="has_documents"
             render={({ field }) => (
               <RadioGroup
-                label="Do you have any documents related to your loan or repossession?"
+                label={t('questions.hasDocuments')}
                 name="has_documents"
                 options={[
-                  { value: 'true', label: 'Yes' },
-                  { value: 'false', label: 'No' },
+                  { value: 'true', label: tc('yes') },
+                  { value: 'false', label: tc('no') },
                 ]}
                 value={field.value}
                 onChange={field.onChange}
@@ -1269,11 +1273,11 @@ export function IntakeForm() {
             name="has_witnesses"
             render={({ field }) => (
               <RadioGroup
-                label="Do you have any witnesses to the repossession?"
+                label={t('questions.hasWitnesses')}
                 name="has_witnesses"
                 options={[
-                  { value: 'true', label: 'Yes' },
-                  { value: 'false', label: 'No' },
+                  { value: 'true', label: tc('yes') },
+                  { value: 'false', label: tc('no') },
                 ]}
                 value={field.value}
                 onChange={field.onChange}
@@ -1282,31 +1286,31 @@ export function IntakeForm() {
           />
           {watchHasWitnesses === 'true' && (
             <Textarea
-              label="Witness name(s) and contact info"
+              label={t('labels.witnessInfo')}
               id="witness_info"
-              placeholder="Please provide witness names and their phone numbers or email addresses"
+              placeholder={t('placeholders.witnessInfo')}
               {...register('witness_info')}
             />
           )}
           <p className="text-sm text-gray-500">
-            You will be able to upload photos, videos, and documents after submitting this form.
+            {t('uploadNote')}
           </p>
         </FormSection>
       )}
 
       {/* Step 10: Consent & Submission */}
       {step === 10 && (
-        <FormSection title="Consent & Submission" description="Please review and sign below to submit your case for review.">
+        <FormSection title={t('sections.consent.title')} description={t('sections.consent.description')}>
           <Input
-            label="Electronic Signature (Full Legal Name)"
+            label={t('labels.electronicSignature')}
             required
             id="electronic_signature"
-            placeholder="Type your full legal name"
+            placeholder={t('placeholders.signature')}
             error={errors.electronic_signature?.message}
             {...register('electronic_signature')}
           />
           <Input
-            label="Date"
+            label={t('labels.date')}
             type="date"
             id="consent_date"
             value={new Date().toISOString().split('T')[0]}
@@ -1320,7 +1324,7 @@ export function IntakeForm() {
               render={({ field }) => (
                 <Checkbox
                   id="consent_accurate_info"
-                  label="I certify that the information provided is true and accurate to the best of my knowledge."
+                  label={t('consent.accurateInfo')}
                   required
                   checked={!!field.value}
                   onChange={(e) => field.onChange(e.target.checked)}
@@ -1334,7 +1338,7 @@ export function IntakeForm() {
               render={({ field }) => (
                 <Checkbox
                   id="consent_not_legal_advice"
-                  label="I understand that submitting this form does not create an attorney-client relationship. This is not legal advice."
+                  label={t('consent.notLegalAdvice')}
                   required
                   checked={!!field.value}
                   onChange={(e) => field.onChange(e.target.checked)}
@@ -1348,7 +1352,7 @@ export function IntakeForm() {
               render={({ field }) => (
                 <Checkbox
                   id="consent_contact"
-                  label="I consent to being contacted by Repo911 and its network of attorneys via phone, email, or text message regarding my case."
+                  label={t('consent.contact')}
                   required
                   checked={!!field.value}
                   onChange={(e) => field.onChange(e.target.checked)}
@@ -1372,15 +1376,14 @@ export function IntakeForm() {
               )}
             />
             <label htmlFor="consent_privacy_policy" className="text-sm text-gray-700 -mt-2 block ml-4 sm:ml-8 cursor-pointer">
-              I have read and agree to the{' '}
-              <Link href="/privacy" target="_blank" className="text-[#3474BA] dark:text-blue-300 underline">
-                Privacy Policy
-              </Link>{' '}
-              and{' '}
-              <Link href="/terms" target="_blank" className="text-[#3474BA] dark:text-blue-300 underline">
-                Terms of Service
-              </Link>
-              .
+              {t.rich('consent.privacyConsent', {
+                privacyLink: (chunks) => (
+                  <Link href="/privacy" target="_blank" className="text-[#3474BA] dark:text-blue-300 underline">{chunks}</Link>
+                ),
+                termsLink: (chunks) => (
+                  <Link href="/terms" target="_blank" className="text-[#3474BA] dark:text-blue-300 underline">{chunks}</Link>
+                ),
+              })}
             </label>
           </div>
 
@@ -1398,7 +1401,7 @@ export function IntakeForm() {
         {step > 0 ? (
           <Button type="button" variant="outline" size="lg" onClick={goBack}>
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Back
+            {t('buttons.back')}
           </Button>
         ) : (
           <div />
@@ -1412,7 +1415,7 @@ export function IntakeForm() {
             loading={submitting}
             className="flex-1 max-w-sm text-lg py-4"
           >
-            Submit My Case for Free Review
+            {t('buttons.submitFull')}
           </Button>
         ) : (
           <Button
@@ -1422,7 +1425,7 @@ export function IntakeForm() {
             onClick={goNext}
             className="flex-1 max-w-sm"
           >
-            Continue
+            {t('buttons.continue')}
             <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         )}
@@ -1430,8 +1433,7 @@ export function IntakeForm() {
 
       {isLastStep && (
         <p className="text-xs text-gray-400 text-center">
-          By submitting, you agree to our Privacy Policy and Terms of Service.
-          This is not legal advice and does not create an attorney-client relationship.
+          {t('submitDisclaimer')}
         </p>
       )}
     </form>

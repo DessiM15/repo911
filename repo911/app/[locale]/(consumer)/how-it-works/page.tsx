@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { ClipboardList, Search, Scale, ArrowRight, Shield, Clock, DollarSign } from 'lucide-react';
+import { getTranslations } from 'next-intl/server';
+import { Link } from '@/i18n/navigation';
 import { Button } from '@/components/ui/button';
 
 export const metadata: Metadata = {
@@ -8,73 +9,54 @@ export const metadata: Metadata = {
   description: 'Learn how Repo911 helps you fight wrongful vehicle repossession in 3 simple steps: submit your case, get reviewed, and connect with an attorney.',
 };
 
-const steps = [
-  {
-    icon: ClipboardList,
-    number: '1',
-    title: 'Tell Us What Happened',
-    description:
-      'Fill out our simple questionnaire about your repossession experience. It takes about 5 minutes. We will ask about the circumstances of your repossession, how the repo company behaved, and whether your rights may have been violated.',
-    details: [
-      'Describe the circumstances of your repossession',
-      'Tell us about any aggressive or illegal behavior',
-      'Upload any evidence you have (photos, documents, videos)',
-      'Provide your contact information so an attorney can reach you',
-    ],
-  },
-  {
-    icon: Search,
-    number: '2',
-    title: 'We Review Your Case',
-    description:
-      'Our system analyzes your situation against federal and state repossession laws to determine if your rights were violated. We check for violations of the UCC, FDCPA, SCRA, and state consumer protection laws.',
-    details: [
-      'Your case is evaluated for breach of peace violations',
-      'We check for FDCPA and debt collection violations',
-      'Military service members are screened for SCRA protections',
-      'Your case is assigned a qualification tier based on violation strength',
-    ],
-  },
-  {
-    icon: Scale,
-    number: '3',
-    title: 'Get Connected to an Attorney',
-    description:
-      'If your case shows signs of legal violations, we connect you with a licensed attorney in your state who specializes in consumer protection law. They will review your case and fight for your compensation.',
-    details: [
-      'A licensed attorney in your state reviews your case',
-      'The attorney contacts you directly to discuss next steps',
-      'You pay nothing unless the attorney wins your case',
-      'The attorney handles all legal proceedings on your behalf',
-    ],
-  },
-];
+export default async function HowItWorksPage() {
+  const t = await getTranslations('howItWorks');
 
-const trustPoints = [
-  {
-    icon: Shield,
-    title: 'Free Case Review',
-    description: 'There is no cost to submit your case for review. You only pay if an attorney takes your case and wins.',
-  },
-  {
-    icon: Clock,
-    title: 'Fast Response',
-    description: 'Qualified cases are matched with attorneys quickly. Most consumers hear back within 24-48 hours.',
-  },
-  {
-    icon: DollarSign,
-    title: 'No Upfront Fees',
-    description: 'Attorneys in our network work on contingency. You pay nothing out of pocket — they only get paid if you win.',
-  },
-];
+  const steps = [
+    {
+      icon: ClipboardList,
+      number: '1',
+      title: t('step1Title'),
+      description: t('step1Description'),
+      details: [t('step1Detail1'), t('step1Detail2'), t('step1Detail3'), t('step1Detail4')],
+    },
+    {
+      icon: Search,
+      number: '2',
+      title: t('step2Title'),
+      description: t('step2Description'),
+      details: [t('step2Detail1'), t('step2Detail2'), t('step2Detail3'), t('step2Detail4')],
+    },
+    {
+      icon: Scale,
+      number: '3',
+      title: t('step3Title'),
+      description: t('step3Description'),
+      details: [t('step3Detail1'), t('step3Detail2'), t('step3Detail3'), t('step3Detail4')],
+    },
+  ];
 
-export default function HowItWorksPage() {
+  const trustPoints = [
+    { icon: Shield, title: t('trustFreeTitle'), description: t('trustFreeDescription') },
+    { icon: Clock, title: t('trustFastTitle'), description: t('trustFastDescription') },
+    { icon: DollarSign, title: t('trustNoFeesTitle'), description: t('trustNoFeesDescription') },
+  ];
+
+  const violations = [
+    { quote: t('violation1Quote'), title: t('violation1Title'), description: t('violation1Description') },
+    { quote: t('violation2Quote'), title: t('violation2Title'), description: t('violation2Description') },
+    { quote: t('violation3Quote'), title: t('violation3Title'), description: t('violation3Description') },
+    { quote: t('violation4Quote'), title: t('violation4Title'), description: t('violation4Description') },
+    { quote: t('violation5Quote'), title: t('violation5Title'), description: t('violation5Description') },
+    { quote: t('violation6Quote'), title: t('violation6Title'), description: t('violation6Description') },
+  ];
+
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
       <div className="text-center mb-12">
-        <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">How Repo911 Works</h1>
+        <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">{t('title')}</h1>
         <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-          We make it easy to find out if your vehicle was wrongfully repossessed and connect you with an attorney who can help — all in three simple steps.
+          {t('subtitle')}
         </p>
       </div>
 
@@ -90,7 +72,7 @@ export default function HowItWorksPage() {
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-2">
-                    <span className="text-sm font-semibold text-[#3474BA] dark:text-blue-300 uppercase tracking-wide">Step {step.number}</span>
+                    <span className="text-sm font-semibold text-[#3474BA] dark:text-blue-300 uppercase tracking-wide">{t('stepLabel', { number: step.number })}</span>
                   </div>
                   <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100 mb-3">{step.title}</h2>
                   <p className="text-gray-600 dark:text-gray-400 mb-4 leading-relaxed">{step.description}</p>
@@ -125,43 +107,12 @@ export default function HowItWorksPage() {
 
       {/* Common Violations */}
       <div className="mb-16">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 text-center mb-8">Common Repossession Violations</h2>
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 text-center mb-8">{t('violationsTitle')}</h2>
         <div className="grid sm:grid-cols-2 gap-4">
-          {[
-            {
-              quote: '"The repo man broke into my garage"',
-              violation: 'Illegal Entry',
-              description: 'Repo agents cannot enter locked structures like garages, gated properties, or closed buildings to seize a vehicle.',
-            },
-            {
-              quote: '"I told them to stop but they took it anyway"',
-              violation: 'Breach of Peace',
-              description: 'If you verbally object to the repossession and the agent continues, it may constitute an illegal breach of peace.',
-            },
-            {
-              quote: '"They kept all my personal belongings"',
-              violation: 'Property Violation',
-              description: 'Your personal property inside the vehicle must be returned to you. Charging fees to return belongings may also be illegal.',
-            },
-            {
-              quote: '"I was on active military duty"',
-              violation: 'SCRA Violation',
-              description: 'The Servicemembers Civil Relief Act provides special protections for active duty military. Repossession without a court order may be illegal.',
-            },
-            {
-              quote: '"They called me at 3am threatening me"',
-              violation: 'FDCPA Violation',
-              description: 'The Fair Debt Collection Practices Act prohibits harassment, threats, and calls at unreasonable hours by debt collectors.',
-            },
-            {
-              quote: '"I never received any written notice"',
-              violation: 'Notice Violation',
-              description: 'Many states require lenders to send a right-to-cure notice before repossession. Failing to do so may make the repo illegal.',
-            },
-          ].map((item) => (
-            <div key={item.violation} className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-5">
+          {violations.map((item) => (
+            <div key={item.title} className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-5">
               <p className="text-sm italic text-gray-500 dark:text-gray-400 mb-2">{item.quote}</p>
-              <p className="font-semibold text-gray-900 dark:text-gray-100 mb-1">{item.violation}</p>
+              <p className="font-semibold text-gray-900 dark:text-gray-100 mb-1">{item.title}</p>
               <p className="text-sm text-gray-600 dark:text-gray-400">{item.description}</p>
             </div>
           ))}
@@ -170,20 +121,19 @@ export default function HowItWorksPage() {
 
       {/* CTA */}
       <div className="text-center bg-[#3474BA] rounded-xl p-8 sm:p-10">
-        <h2 className="text-2xl font-bold text-white mb-3">Think Your Rights Were Violated?</h2>
+        <h2 className="text-2xl font-bold text-white mb-3">{t('ctaTitle')}</h2>
         <p className="text-white mb-6 max-w-lg mx-auto">
-          It only takes 5 minutes to find out if you have a case. Our free case review costs you nothing and could be worth thousands.
+          {t('ctaDescription')}
         </p>
         <Link href="/claim">
           <Button variant="secondary" size="lg">
-            Check My Case Now <ArrowRight className="ml-2 h-4 w-4" />
+            {t('ctaButton')} <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </Link>
       </div>
 
       <p className="text-xs text-gray-500 dark:text-gray-400 text-center mt-8">
-        This is not legal advice. Repo911 is not a law firm and does not provide legal representation.
-        Results vary based on individual circumstances and applicable law.
+        {t('disclaimer')}
       </p>
     </div>
   );

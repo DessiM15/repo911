@@ -25,28 +25,181 @@
     "legalNotice": "This website is not a law firm and does not provide legal advice. The information provided is for general informational purposes only. No attorney-client relationship is formed by using this site."
   },
   "home": {
-    "heroTitle": "Was Your Car Wrongfully Repossessed?",
-    "heroSubtitle": "Even if you missed payments, the repo company may have broken the law. You could be owed $10,000–$100,000+.",
-    "ctaButton": "Get My Free Case Review",
+    "heroTitle": "Was Your Car <highlight>Wrongfully Repossessed?</highlight>",
+    "heroAmount": "You May Be Owed $10,000–$100,000+",
+    "heroDescription": "Even if you missed payments, the repo company may have broken the law. Find out in 5 minutes — it's 100% free.",
+    "ctaButton": "Check My Case Now",
+    "badgeFreeReview": "Free Case Review",
+    "badgeNoObligation": "No Obligation",
+    "badgeNationwide": "Nationwide Coverage",
+    "stat1Value": "100%",
+    "stat1Label": "Free Case Review",
+    "stat2Value": "50",
+    "stat2Label": "States Covered",
+    "stat3Value": "5 Min",
+    "stat3Label": "Quick Questionnaire",
+    "stat4Value": "24-48 Hr",
+    "stat4Label": "Attorney Response",
     "howItWorksTitle": "How It Works",
+    "howItWorksSubtitle": "Three simple steps to find out if you have a case",
     "step1Title": "Tell Us What Happened",
-    "step1Description": "Answer a few questions about your repossession. Takes about 5 minutes.",
+    "step1Description": "Fill out our simple questionnaire about your repossession experience. It takes about 5 minutes.",
     "step2Title": "We Review Your Case",
-    "step2Description": "Our system evaluates your situation for potential legal violations.",
-    "step3Title": "Connect with an Attorney",
-    "step3Description": "If you have a case, a licensed attorney in your state will reach out.",
-    "statsTitle": "Fighting for Your Rights",
-    "statsLeads": "Cases Reviewed",
-    "statsAttorneys": "Licensed Attorneys",
-    "statsStates": "States Covered"
+    "step2Description": "Our system analyzes your situation against federal and state repossession laws to determine if your rights were violated.",
+    "step3Title": "Get Connected to an Attorney",
+    "step3Description": "If you have a case, we connect you with a licensed attorney in your state who can fight for your compensation. No fees unless you win.",
+    "violationsTitle": "Did Any of This Happen to You?",
+    "violationsSubtitle": "These are common violations that may entitle you to compensation",
+    "violation1Quote": "\"The repo man broke into my garage\"",
+    "violation1Title": "Illegal Entry",
+    "violation1Description": "Entering a locked or gated area without permission is a breach of peace under UCC Article 9.",
+    "violation2Quote": "\"I told them to stop but they took it anyway\"",
+    "violation2Title": "Breach of Peace",
+    "violation2Description": "If you verbally objected and they continued, the repossession may be unlawful.",
+    "violation3Quote": "\"They kept all my personal belongings\"",
+    "violation3Title": "Property Violation",
+    "violation3Description": "Lenders and repo companies are required to return your personal belongings.",
+    "violation4Quote": "\"I was on active military duty\"",
+    "violation4Title": "SCRA Violation",
+    "violation4Description": "Active-duty military members have special protections against repossession under federal law.",
+    "violation5Quote": "\"They called me at 3am threatening me\"",
+    "violation5Title": "FDCPA Violation",
+    "violation5Description": "Debt collectors cannot call outside certain hours or use threats and harassment.",
+    "violation6Quote": "\"They caused a huge scene in front of everyone\"",
+    "violation6Title": "Public Embarrassment",
+    "violation6Description": "Creating a public disturbance during repossession can constitute a breach of peace.",
+    "urgencyTitle": "Time May Be Running Out on Your Claim",
+    "urgencyDescription": "Most states have a <strong>statute of limitations</strong> on wrongful repossession claims — typically 2-4 years from the date of repossession. Once this window closes, you may lose your right to compensation forever. The sooner you act, the stronger your case.",
+    "urgencyLink": "Check your case now before it's too late",
+    "trustTitle": "Why Consumers Trust Repo911",
+    "trustSubtitle": "We connect you with experienced attorneys who specialize in wrongful repossession and consumer protection law.",
+    "trustLicensedTitle": "Licensed Attorneys Only",
+    "trustLicensedDescription": "Every attorney in our network is licensed and verified in their state.",
+    "trustProtectedTitle": "Your Info Is Protected",
+    "trustProtectedDescription": "Your personal information is encrypted and only shared with your matched attorney.",
+    "trustNoFeeTitle": "No Win, No Fee",
+    "trustNoFeeDescription": "Attorneys typically work on contingency — you pay nothing unless you win your case.",
+    "trustProtectedBy": "Protected by",
+    "trustEnforcedBy": "Enforced by",
+    "trustMilitaryProtection": "Military Protection",
+    "faqPreviewTitle": "Frequently Asked Questions",
+    "faqPreview1Q": "Can I still have a case if I missed payments?",
+    "faqPreview1A": "Yes. Even if you were behind on payments, the repo company must follow the law. If they breached the peace, entered a locked area, or violated other rules, you may have a valid claim.",
+    "faqPreview2Q": "How much does it cost to use Repo911?",
+    "faqPreview2A": "Nothing. Our case review is 100% free. If an attorney takes your case, they typically work on a contingency basis — meaning no fees unless you win.",
+    "faqPreview3Q": "How long does the case review take?",
+    "faqPreview3A": "The online questionnaire takes about 5 minutes. Our system reviews your case immediately, and if qualified, an attorney could reach out within 24-48 hours.",
+    "faqPreview4Q": "What kind of compensation can I receive?",
+    "faqPreview4A": "Depending on the violations, you may be entitled to $1,000-$100,000+ in statutory damages, actual damages, and attorney's fees.",
+    "viewAllFaqs": "View all frequently asked questions",
+    "finalCtaTitle": "Ready to Find Out If You Have a Case?",
+    "finalCtaDescription": "It only takes 5 minutes and it's completely free. No obligation.",
+    "finalCtaButton": "Check My Case Now"
   },
   "howItWorks": {
-    "title": "How It Works",
-    "subtitle": "Three simple steps to find out if your rights were violated."
+    "title": "How Repo911 Works",
+    "subtitle": "We make it easy to find out if your vehicle was wrongfully repossessed and connect you with an attorney who can help — all in three simple steps.",
+    "stepLabel": "Step {number}",
+    "step1Title": "Tell Us What Happened",
+    "step1Description": "Fill out our simple questionnaire about your repossession experience. It takes about 5 minutes. We will ask about the circumstances of your repossession, how the repo company behaved, and whether your rights may have been violated.",
+    "step1Detail1": "Describe the circumstances of your repossession",
+    "step1Detail2": "Tell us about any aggressive or illegal behavior",
+    "step1Detail3": "Upload any evidence you have (photos, documents, videos)",
+    "step1Detail4": "Provide your contact information so an attorney can reach you",
+    "step2Title": "We Review Your Case",
+    "step2Description": "Our system analyzes your situation against federal and state repossession laws to determine if your rights were violated. We check for violations of the UCC, FDCPA, SCRA, and state consumer protection laws.",
+    "step2Detail1": "Your case is evaluated for breach of peace violations",
+    "step2Detail2": "We check for FDCPA and debt collection violations",
+    "step2Detail3": "Military service members are screened for SCRA protections",
+    "step2Detail4": "Your case is assigned a qualification tier based on violation strength",
+    "step3Title": "Get Connected to an Attorney",
+    "step3Description": "If your case shows signs of legal violations, we connect you with a licensed attorney in your state who specializes in consumer protection law. They will review your case and fight for your compensation.",
+    "step3Detail1": "A licensed attorney in your state reviews your case",
+    "step3Detail2": "The attorney contacts you directly to discuss next steps",
+    "step3Detail3": "You pay nothing unless the attorney wins your case",
+    "step3Detail4": "The attorney handles all legal proceedings on your behalf",
+    "trustFreeTitle": "Free Case Review",
+    "trustFreeDescription": "There is no cost to submit your case for review. You only pay if an attorney takes your case and wins.",
+    "trustFastTitle": "Fast Response",
+    "trustFastDescription": "Qualified cases are matched with attorneys quickly. Most consumers hear back within 24-48 hours.",
+    "trustNoFeesTitle": "No Upfront Fees",
+    "trustNoFeesDescription": "Attorneys in our network work on contingency. You pay nothing out of pocket — they only get paid if you win.",
+    "violationsTitle": "Common Repossession Violations",
+    "violation1Quote": "\"The repo man broke into my garage\"",
+    "violation1Title": "Illegal Entry",
+    "violation1Description": "Repo agents cannot enter locked structures like garages, gated properties, or closed buildings to seize a vehicle.",
+    "violation2Quote": "\"I told them to stop but they took it anyway\"",
+    "violation2Title": "Breach of Peace",
+    "violation2Description": "If you verbally object to the repossession and the agent continues, it may constitute an illegal breach of peace.",
+    "violation3Quote": "\"They kept all my personal belongings\"",
+    "violation3Title": "Property Violation",
+    "violation3Description": "Your personal property inside the vehicle must be returned to you. Charging fees to return belongings may also be illegal.",
+    "violation4Quote": "\"I was on active military duty\"",
+    "violation4Title": "SCRA Violation",
+    "violation4Description": "The Servicemembers Civil Relief Act provides special protections for active duty military. Repossession without a court order may be illegal.",
+    "violation5Quote": "\"They called me at 3am threatening me\"",
+    "violation5Title": "FDCPA Violation",
+    "violation5Description": "The Fair Debt Collection Practices Act prohibits harassment, threats, and calls at unreasonable hours by debt collectors.",
+    "violation6Quote": "\"I never received any written notice\"",
+    "violation6Title": "Notice Violation",
+    "violation6Description": "Many states require lenders to send a right-to-cure notice before repossession. Failing to do so may make the repo illegal.",
+    "ctaTitle": "Think Your Rights Were Violated?",
+    "ctaDescription": "It only takes 5 minutes to find out if you have a case. Our free case review costs you nothing and could be worth thousands.",
+    "ctaButton": "Check My Case Now",
+    "disclaimer": "This is not legal advice. Repo911 is not a law firm and does not provide legal representation. Results vary based on individual circumstances and applicable law."
   },
   "faq": {
     "title": "Frequently Asked Questions",
-    "subtitle": "Common questions about wrongful repossession and how Repo911 can help."
+    "subtitle": "Find answers to common questions about wrongful repossession and how Repo911 can help.",
+    "cat1Title": "About Repo911",
+    "cat1Q1": "What is Repo911?",
+    "cat1A1": "Repo911 is a free service that helps people who have experienced wrongful vehicle repossession. We screen your case to identify potential legal violations, then connect you with a licensed attorney in your state who specializes in consumer protection law.",
+    "cat1Q2": "Is Repo911 a law firm?",
+    "cat1A2": "No. Repo911 is not a law firm and does not provide legal advice. We are a lead generation and attorney matching service. We help you understand whether your rights may have been violated and connect you with independent licensed attorneys who can provide legal representation.",
+    "cat1Q3": "Does it cost me anything to submit my case?",
+    "cat1A3": "No. Submitting your case through our intake form is completely free. There is no cost or obligation. If an attorney reviews your case and agrees to represent you, most work on a contingency basis, meaning you pay nothing unless they win your case.",
+    "cat2Title": "Wrongful Repossession",
+    "cat2Q1": "What is wrongful repossession?",
+    "cat2A1": "Wrongful repossession occurs when a lender or repo company violates federal or state laws during the process of repossessing your vehicle. This can include breaching the peace, entering locked property, keeping your personal belongings, failing to provide required notices, or violating debt collection laws.",
+    "cat2Q2": "What is a \"breach of peace\" during repossession?",
+    "cat2A2": "A breach of peace occurs when a repo agent uses force, threats, or intimidation during repossession, continues after you verbally object, enters a locked garage or gated area, causes excessive noise or disturbance, damages your property, or causes a public scene. Under UCC Article 9, repossession must be conducted peacefully.",
+    "cat2Q3": "Can the repo company take my personal belongings?",
+    "cat2A3": "No. Your personal property inside the vehicle (tools, electronics, clothing, child car seats, etc.) must be returned to you. If the repo company kept your belongings, refused to return them, or charged you a fee to get them back, that may be a violation of your rights.",
+    "cat2Q4": "Do I have to be behind on payments for my car to be repossessed?",
+    "cat2A4": "In most states, a lender can initiate repossession after a single missed payment if the loan agreement allows it. However, many states require the lender to send you a \"right to cure\" notice first, giving you an opportunity to catch up on payments before repossession. If you did not receive this notice, the repossession may have been wrongful.",
+    "cat2Q5": "What if I was on active military duty when my car was repossessed?",
+    "cat2A5": "The Servicemembers Civil Relief Act (SCRA) provides special protections for active duty military members. If your vehicle loan was taken out before you entered active duty, the lender generally cannot repossess your vehicle without a court order. Violations of the SCRA can result in significant penalties.",
+    "cat2Q6": "What is the FDCPA and how does it apply to repossession?",
+    "cat2A6": "The Fair Debt Collection Practices Act (FDCPA) prohibits debt collectors from using abusive, unfair, or deceptive practices. If a debt collector or repo company called you at unreasonable hours, used threats or profanity, contacted your employer, misrepresented the amount owed, or harassed you, they may have violated the FDCPA.",
+    "cat3Title": "The Process",
+    "cat3Q1": "How does the case review process work?",
+    "cat3A1": "After you submit your information through our intake form, our system analyzes your responses to identify potential legal violations. Your case is assigned a qualification tier (based on the strength of the indicators), and qualified cases are made available to licensed attorneys in our network who specialize in your type of case.",
+    "cat3Q2": "How long does it take to hear back?",
+    "cat3A2": "For cases with strong indicators of legal violations, you can typically expect to hear from an attorney within 24 hours. For other cases, it may take 24-48 hours or longer. In some cases, an attorney may not claim the case, but we will let you know either way.",
+    "cat3Q3": "What happens after an attorney claims my case?",
+    "cat3A3": "The attorney will contact you directly using the contact information you provided. They will discuss the details of your situation, explain your legal options, and determine whether they can represent you. If you agree to move forward, the attorney will handle all legal proceedings on your behalf.",
+    "cat3Q4": "What if no attorney claims my case?",
+    "cat3A4": "Not every case will be claimed by an attorney. If your case is not claimed, it does not necessarily mean you do not have a valid claim. We recommend consulting with a local consumer protection attorney who can review your specific situation. Many attorneys offer free initial consultations.",
+    "cat4Title": "Legal & Compensation",
+    "cat4Q1": "What kind of compensation can I receive?",
+    "cat4A1": "Compensation varies depending on the type and severity of violations. You may be entitled to actual damages (value of the vehicle, lost property, expenses), statutory damages under the FDCPA (up to $1,000 per violation), punitive damages in some cases, and attorney fees. An attorney can give you a more specific estimate based on your situation.",
+    "cat4Q2": "Do I have to pay the attorney upfront?",
+    "cat4A2": "Most attorneys in our network work on a contingency fee basis, meaning they only get paid if they win your case. The attorney fee typically comes out of the settlement or judgment, so you pay nothing out of pocket. The specific fee arrangement is between you and the attorney.",
+    "cat4Q3": "Is there a time limit to file a wrongful repossession claim?",
+    "cat4A3": "Yes. Statutes of limitations vary by state and by the type of claim. FDCPA claims generally must be filed within one year of the violation. State law claims may have different time limits. It is important to act quickly — the sooner you submit your case, the better your chances of a successful outcome.",
+    "cat4Q4": "Does submitting a form create an attorney-client relationship?",
+    "cat4A4": "No. Submitting the intake form does not create an attorney-client relationship with Repo911 or with any attorney. An attorney-client relationship is only formed when you and a specific attorney mutually agree to representation, typically through a signed retainer agreement.",
+    "cat5Title": "Privacy & Data",
+    "cat5Q1": "How is my information protected?",
+    "cat5A1": "We take your privacy seriously. Your information is encrypted in transit and at rest, stored securely using industry-standard practices, and only shared with licensed attorneys who claim your case. We never sell your personal information for marketing purposes. See our Privacy Policy for full details.",
+    "cat5Q2": "Who will see my information?",
+    "cat5A2": "Your information is only shared with licensed attorneys in our network who are reviewing or claiming your case. Before an attorney claims your case, they see only anonymized details (no name, email, phone, or address). Full contact information is only revealed after an attorney claims the case.",
+    "cat5Q3": "Can I delete my information?",
+    "cat5A3": "Yes. You have the right to request deletion of your personal data at any time by contacting us at privacy@repo911.com. Some information may be retained as required by law or for ongoing legal matters.",
+    "ctaTitle": "Still Have Questions?",
+    "ctaDescription": "The best way to find out if you have a case is to submit our free intake form. It only takes 5 minutes.",
+    "ctaButton": "Start Your Free Case Review",
+    "contactText": "For other questions, contact us at <email>support@repo911.com</email>."
   },
   "track": {
     "title": "Track Your Case",
@@ -67,11 +220,82 @@
     "notYet": "Not yet",
     "claimed": "An attorney has claimed your case. They will reach out to you using the contact information you provided.",
     "available": "Your case is available for attorney review. You will be contacted when an attorney claims your case.",
-    "returnHome": "Return to Homepage"
+    "returnHome": "Return to Homepage",
+    "caseStatus": "Case Status",
+    "tierHot": "High Priority",
+    "tierWarm": "Under Review",
+    "tierCold": "Pending Review",
+    "uploadTitle": "Evidence & Documents",
+    "uploadDescription": "Upload photos, videos, or documents related to your case. Max 5 files, 10MB each.",
+    "previouslyUploaded": "Previously Uploaded",
+    "dropZoneText": "Drag and drop files here, or <browse>browse</browse>",
+    "fileTypes": "JPG, PNG, WebP, or PDF up to 10MB",
+    "uploadButton": "{count, plural, one {Upload # File} other {Upload # Files}}",
+    "uploading": "Uploading...",
+    "uploadSuccess": "{count, plural, one {# file uploaded successfully.} other {# files uploaded successfully.}}",
+    "uploadError": "Upload failed. Please try again.",
+    "uploadErrorConnection": "Upload failed. Please check your connection and try again.",
+    "maxFilesError": "You can upload a maximum of {max} files total. You already have {existing} uploaded.",
+    "unsupportedFileType": "\"{name}\" is not a supported file type. Please upload images (JPG, PNG, WebP) or PDFs.",
+    "fileTooLarge": "\"{name}\" exceeds the 10MB limit.",
+    "connectionError": "Unable to connect. Please check your internet and try again.",
+    "genericError": "Something went wrong. Please try again.",
+    "emailPlaceholder": "you@example.com",
+    "caseIdPlaceholder": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+    "phonePlaceholder": "(555) 555-5555",
+    "lastNamePlaceholder": "Enter your last name"
   },
   "claim": {
     "title": "Free Case Review",
     "subtitle": "Find out if your rights were violated during your vehicle repossession.",
+    "pageDescription": "Tell us about your repossession experience. This takes about 5 minutes.",
+    "requiredFieldsNote": "All fields marked with <red>*</red> are required.",
+    "sections": {
+      "contactInfo": {
+        "title": "Contact Information",
+        "description": "How can we reach you?"
+      },
+      "vehicleInfo": {
+        "title": "Vehicle Information",
+        "description": "Tell us about the repossessed vehicle."
+      },
+      "lenderInfo": {
+        "title": "Lender / Creditor Information",
+        "description": "Who held the loan or lease on your vehicle?"
+      },
+      "repoDetails": {
+        "title": "Repossession Details",
+        "description": "When and where did the repossession happen?"
+      },
+      "breachOfPeace": {
+        "title": "Breach of Peace Screening",
+        "description": "The law protects you from aggressive or unlawful behavior during a repossession. Please answer all questions below."
+      },
+      "belongings": {
+        "title": "Personal Belongings",
+        "description": "Were your personal items affected?"
+      },
+      "postRepo": {
+        "title": "Post-Repossession",
+        "description": "What happened after the repossession?"
+      },
+      "military": {
+        "title": "Military Service (SCRA Protection)",
+        "description": "Active-duty military members have special federal protections."
+      },
+      "debtCollection": {
+        "title": "Illegal Debt Collection (FDCPA)",
+        "description": "Federal law protects you from abusive debt collection practices."
+      },
+      "evidence": {
+        "title": "Evidence & Documents",
+        "description": "Supporting evidence strengthens your case."
+      },
+      "consent": {
+        "title": "Consent & Submission",
+        "description": "Please review and sign below to submit your case for review."
+      }
+    },
     "labels": {
       "firstName": "First Name",
       "lastName": "Last Name",
@@ -82,12 +306,179 @@
       "streetAddress": "Street Address",
       "city": "City",
       "state": "State",
-      "zipCode": "ZIP Code"
+      "zipCode": "ZIP Code",
+      "vehicleYear": "Vehicle Year",
+      "vehicleMake": "Vehicle Make",
+      "vehicleModel": "Vehicle Model",
+      "vehicleColor": "Vehicle Color",
+      "vin": "VIN (if known)",
+      "lenderName": "Lender / Finance Company Name",
+      "repoCompanyName": "Repossession Company Name (if known)",
+      "repoDate": "Date of Repossession",
+      "repoTimeOfDay": "Approximate Time of Day",
+      "repoState": "State where repossession occurred",
+      "militaryBranch": "Branch of Service",
+      "witnessInfo": "Witness name(s) and contact info",
+      "electronicSignature": "Electronic Signature (Full Legal Name)",
+      "date": "Date",
+      "belongingsList": "What items were in the vehicle?",
+      "belongingsValue": "Estimated value of unreturned belongings"
+    },
+    "placeholders": {
+      "phone": "(555) 555-5555",
+      "selectTime": "Select a time...",
+      "selectState": "Select state...",
+      "selectYear": "Select year...",
+      "vehicleMake": "e.g., Toyota",
+      "vehicleModel": "e.g., Camry",
+      "selectLender": "Select your lender...",
+      "enterLender": "Enter lender name...",
+      "select": "Select...",
+      "selectBranch": "Select branch...",
+      "describeLocation": "Please describe the location...",
+      "narrative": "Please describe the repossession in as much detail as possible. Include what the repo agent said or did, where you were, who witnessed it, and anything else you remember.",
+      "belongingsList": "List all personal items (laptops, phones, tools, car seats, medications, documents, etc.)",
+      "witnessInfo": "Please provide witness names and their phone numbers or email addresses",
+      "signature": "Type your full legal name",
+      "dollarSign": "$"
+    },
+    "helpers": {
+      "vin": "17-character Vehicle Identification Number"
+    },
+    "questions": {
+      "leaseOrFinance": "Was this a leased or financed vehicle?",
+      "behindOnPayments": "Were you behind on payments at the time of repossession?",
+      "paymentsBehind": "How many payments behind?",
+      "contactedLender": "Had you been in contact with your lender about payment arrangements?",
+      "receivedWrittenNotice": "Did you receive any written notice before the repossession?",
+      "repoLocation": "Where was your vehicle when it was taken?",
+      "verballyObjected": "Did you verbally object to the repossession? (e.g., \"Stop,\" \"Leave my car,\" \"You can't take it\")",
+      "continuedAfterObjection": "Did the repo agent continue taking the vehicle AFTER you objected?",
+      "physicalForce": "Did the repo agent use physical force, threats, or intimidation?",
+      "excessiveNoise": "Did the repo agent yell, cause a scene, or create excessive noise?",
+      "enteredLockedArea": "Did the repo agent enter a locked or gated area without permission? (e.g., closed garage, gated yard, gated community)",
+      "propertyDamage": "Did the repo agent damage your property during the repossession? (e.g., broke a lock, damaged gate, scratched another vehicle)",
+      "policePresent": "Were police called or present during the repossession?",
+      "policeAssisted": "If police were present, did they assist or encourage the repo agent?",
+      "repoAtWorkplace": "Did the repo agent come to your workplace?",
+      "publicEmbarrassment": "Did the repossession happen in a way that caused public embarrassment or humiliation?",
+      "narrative": "Describe what happened in your own words",
+      "hadBelongings": "Did you have personal belongings in the vehicle at the time?",
+      "belongingsReturned": "Were your belongings returned to you?",
+      "chargedFee": "Did the lender or repo company charge you a fee to retrieve your belongings?",
+      "receivedNoticeOfSale": "Have you received a Notice of Sale (notice that your vehicle will be sold at auction)?",
+      "deficiencyBalance": "Have you been contacted about a deficiency balance (remaining loan amount after the vehicle is sold)?",
+      "impactsLabel": "Have you experienced any of the following as a result of the repossession?",
+      "creditReport": "Has the repossession been reported on your credit report?",
+      "militaryService": "Are you currently serving or have you recently served in the US military?",
+      "activeDuty": "Were you on active duty at the time of the repossession?",
+      "loanBeforeActiveDuty": "Was your auto loan originated before your active duty service began?",
+      "debtCollectorContact": "Has any debt collector contacted you about this vehicle?",
+      "fdcpaLabel": "Have they done any of the following? (Check all that apply)",
+      "hasPhotosVideos": "Do you have any photos or videos of the repossession?",
+      "hasDocuments": "Do you have any documents related to your loan or repossession?",
+      "hasWitnesses": "Do you have any witnesses to the repossession?"
+    },
+    "options": {
+      "contactMethods": {
+        "phone": "Phone",
+        "email": "Email",
+        "text": "Text Message"
+      },
+      "times": {
+        "morning": "Morning",
+        "afternoon": "Afternoon",
+        "evening": "Evening",
+        "anytime": "Anytime"
+      },
+      "leaseOrFinance": {
+        "financed": "Financed",
+        "leased": "Leased",
+        "notSure": "Not Sure"
+      },
+      "repoTimes": {
+        "earlyMorning": "Early Morning (12am-6am)",
+        "morning": "Morning (6am-12pm)",
+        "afternoon": "Afternoon (12pm-6pm)",
+        "evening": "Evening (6pm-12am)",
+        "notSure": "Not Sure"
+      },
+      "repoLocations": {
+        "driveway": "Driveway",
+        "streetFront": "Street in front of home",
+        "closedGarage": "Closed/locked garage",
+        "gatedCommunity": "Gated community or gated property",
+        "privateParking": "Private parking lot",
+        "workplaceParking": "Workplace parking lot",
+        "publicParking": "Public parking lot",
+        "other": "Other"
+      },
+      "impacts": {
+        "lostJob": "Lost job or missed work",
+        "missedMedical": "Missed medical appointments",
+        "childrenSchool": "Children couldn't get to school",
+        "emotionalDistress": "Emotional distress / anxiety / depression",
+        "creditScore": "Negative impact on credit score",
+        "harassment": "Harassment from lender or collections",
+        "other": "Other"
+      },
+      "fdcpaViolations": {
+        "calledOutsideHours": "Called before 8am or after 9pm",
+        "calledWorkplace": "Called your workplace after being told not to",
+        "abusiveLanguage": "Used abusive or profane language",
+        "threatenedArrest": "Threatened arrest or jail",
+        "toldOthers": "Told friends/family/employer about your debt",
+        "continuedCalling": "Continued calling after you requested they stop in writing",
+        "misrepresentedAmount": "Misrepresented the amount you owe",
+        "noValidation": "Failed to send written validation of the debt"
+      },
+      "militaryBranches": {
+        "army": "Army",
+        "navy": "Navy",
+        "airForce": "Air Force",
+        "marines": "Marines",
+        "coastGuard": "Coast Guard",
+        "spaceForce": "Space Force",
+        "nationalGuard": "National Guard",
+        "reserves": "Reserves"
+      },
+      "belongingsReturned": {
+        "yes": "Yes",
+        "no": "No",
+        "some": "Some were returned"
+      },
+      "paymentsBehind": {
+        "5plus": "5+"
+      }
+    },
+    "consent": {
+      "accurateInfo": "I certify that the information provided is true and accurate to the best of my knowledge.",
+      "notLegalAdvice": "I understand that submitting this form does not create an attorney-client relationship. This is not legal advice.",
+      "contact": "I consent to being contacted by Repo911 and its network of attorneys via phone, email, or text message regarding my case.",
+      "privacyConsent": "I have read and agree to the <privacyLink>Privacy Policy</privacyLink> and <termsLink>Terms of Service</termsLink>."
     },
     "buttons": {
       "next": "Next",
       "back": "Back",
-      "submit": "Submit My Case"
+      "submit": "Submit My Case",
+      "continue": "Continue",
+      "submitFull": "Submit My Case for Free Review"
+    },
+    "draft": {
+      "restored": "Draft restored.",
+      "restoredWithDate": "Draft restored from {date}.",
+      "discard": "Discard draft"
+    },
+    "breachAlert": "These questions are critical for evaluating your case. Please answer as accurately as possible.",
+    "uploadNote": "You will be able to upload photos, videos, and documents after submitting this form.",
+    "submitDisclaimer": "By submitting, you agree to our Privacy Policy and Terms of Service. This is not legal advice and does not create an attorney-client relationship.",
+    "errors": {
+      "submitError": "Something went wrong. Please try again.",
+      "generic": "Something went wrong"
+    },
+    "progress": {
+      "stepOf": "Step {current} of {total}: {name}",
+      "complete": "{percent}% complete"
     },
     "steps": {
       "contactInfo": "Contact Info",
@@ -101,7 +492,229 @@
       "debtCollection": "Debt Collection",
       "evidence": "Evidence",
       "consent": "Consent"
+    },
+    "stepsShort": {
+      "contactInfo": "Contact Info",
+      "vehicleInfo": "Vehicle",
+      "lenderInfo": "Lender",
+      "repoDetails": "Repo Details",
+      "breachOfPeace": "Breach of Peace",
+      "belongings": "Belongings",
+      "postRepo": "Post-Repo",
+      "military": "Military",
+      "debtCollection": "Debt Collection",
+      "evidence": "Evidence",
+      "consent": "Consent"
     }
+  },
+  "confirmation": {
+    "hot": {
+      "title": "Great News — You Likely Have a Strong Case!",
+      "description": "Based on the information you provided, your situation shows strong indicators of legal violations. An attorney from our network will be reaching out to you shortly to discuss your case.",
+      "step1": "A licensed attorney in your state will contact you within 24 hours.",
+      "step2": "Have your loan documents and any evidence ready to share.",
+      "step3": "The attorney consultation is free — you pay nothing unless they win your case."
+    },
+    "warm": {
+      "title": "Your Case Shows Promise!",
+      "description": "Based on the information you provided, your situation shows potential legal violations that an attorney should review. We are working to connect you with a licensed attorney in your state.",
+      "step1": "An attorney will review your case and may reach out within 24-48 hours.",
+      "step2": "Gather any documents related to your loan and the repossession.",
+      "step3": "If an attorney takes your case, you pay nothing unless they win."
+    },
+    "cold": {
+      "title": "Your Case Has Been Submitted for Review",
+      "description": "Thank you for sharing your experience. While the initial indicators are less clear, an attorney may still find violations that warrant legal action. We will be in touch if an attorney is interested in reviewing your case further.",
+      "step1": "Your case will be available for attorney review.",
+      "step2": "If an attorney is interested, they will contact you directly.",
+      "step3": "In the meantime, keep all documents and evidence related to your repossession."
+    },
+    "default": {
+      "title": "Thank You for Your Submission",
+      "description": "Based on the information you provided, your situation may not meet the typical criteria for a wrongful repossession claim. However, every case is different, and we recommend consulting with a local attorney for a personalized review of your situation.",
+      "step1": "Consider consulting with a local consumer protection attorney.",
+      "step2": "Many attorneys offer free initial consultations.",
+      "step3": "Keep all documents related to your repossession for your records."
+    },
+    "whatHappensNext": "What Happens Next",
+    "importantReminders": "Important Reminders",
+    "reminder1": "Do not sign anything from your lender or repo company without consulting an attorney.",
+    "reminder2": "Keep records of all communication with your lender, repo company, and debt collectors.",
+    "reminder3": "If you receive a deficiency balance notice, do not pay it without legal advice.",
+    "reminder4": "Write down everything you remember about the repossession while it is still fresh.",
+    "uploadTitle": "Upload Your Evidence",
+    "uploadDescription": "Strengthen your case by uploading photos, videos, or documents related to your repossession. You can upload up to 5 files (images or PDFs, 10MB each).",
+    "caseIdLabel": "Your Case ID (save this)",
+    "uploadButton": "Upload Evidence & Track Your Case",
+    "returnHome": "Return Home",
+    "trackCase": "Upload Evidence & Track Case",
+    "disclaimer": "This is not legal advice. Submitting this form does not create an attorney-client relationship. Results vary based on individual circumstances and applicable law."
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "lastUpdated": "Last updated: February 2026",
+    "s1": {
+      "title": "1. Information We Collect",
+      "intro": "When you use Repo911, we collect the following types of information:",
+      "item1": "<strong>Personal Information:</strong> Name, email address, phone number, mailing address, and other contact details you provide through our intake form.",
+      "item2": "<strong>Case Information:</strong> Details about your vehicle, loan, repossession experience, military service status, and related circumstances.",
+      "item3": "<strong>Uploaded Files:</strong> Photos, videos, and documents you choose to upload as evidence.",
+      "item4": "<strong>Technical Information:</strong> IP address, browser type, device information, and cookies for website functionality and analytics.",
+      "item5": "<strong>Usage Data:</strong> Pages visited, time spent on site, and interaction patterns to improve our service."
+    },
+    "s2": {
+      "title": "2. How We Use Your Information",
+      "intro": "We use the information we collect to:",
+      "item1": "Evaluate your repossession case using our qualification system",
+      "item2": "Connect you with licensed attorneys in your state who may be able to assist with your case",
+      "item3": "Communicate with you about your case status and next steps",
+      "item4": "Process payments and manage attorney-client matching",
+      "item5": "Improve our services and user experience",
+      "item6": "Comply with legal obligations"
+    },
+    "s3": {
+      "title": "3. Information Sharing",
+      "intro": "We share your information only in the following circumstances:",
+      "item1": "<strong>With Licensed Attorneys:</strong> When an attorney claims your lead through our marketplace, they receive your contact information and case details to evaluate and potentially represent you. You consent to this sharing when submitting the intake form.",
+      "item2": "<strong>Service Providers:</strong> We use trusted third-party services including Supabase (database hosting), Stripe (payment processing), Vercel (website hosting), and Resend (email delivery). These providers only access data necessary to perform their services.",
+      "item3": "<strong>Legal Requirements:</strong> We may disclose information when required by law, court order, or government regulation.",
+      "closing": "We do not sell your personal information to third parties for marketing purposes."
+    },
+    "s4": {
+      "title": "4. Data Retention",
+      "body": "We retain your information for as long as necessary to provide our services and fulfill the purposes described in this policy. Lead data is retained for a minimum of 3 years to support ongoing legal matters. You may request deletion of your data at any time (see Your Rights below)."
+    },
+    "s5": {
+      "title": "5. Your Rights",
+      "intro": "You have the right to:",
+      "item1": "<strong>Access:</strong> Request a copy of the personal data we hold about you",
+      "item2": "<strong>Correction:</strong> Request correction of inaccurate or incomplete data",
+      "item3": "<strong>Deletion:</strong> Request deletion of your personal data, subject to legal retention requirements",
+      "item4": "<strong>Opt-Out:</strong> Unsubscribe from marketing communications at any time",
+      "closing": "To exercise these rights, contact us at privacy@repo911.com."
+    },
+    "s6": {
+      "title": "6. Data Security",
+      "body": "We implement industry-standard security measures to protect your information, including encryption in transit (TLS/SSL), encrypted database storage, access controls, and regular security audits. However, no method of transmission over the internet is 100% secure."
+    },
+    "s7": {
+      "title": "7. Cookies",
+      "body": "We use essential cookies for website functionality and authentication. We may also use analytics cookies to understand how visitors interact with our site. You can control cookie preferences through your browser settings."
+    },
+    "s8": {
+      "title": "8. California Consumer Privacy Act (CCPA)",
+      "body": "If you are a California resident, you have additional rights under the CCPA, including the right to know what personal information is collected, the right to request deletion, and the right to opt-out of the sale of personal information. We do not sell personal information. To exercise your CCPA rights, contact us at privacy@repo911.com."
+    },
+    "s9": {
+      "title": "9. Changes to This Policy",
+      "body": "We may update this Privacy Policy from time to time. We will notify you of material changes by posting the updated policy on this page with a revised date."
+    },
+    "s10": {
+      "title": "10. Contact Us",
+      "intro": "For privacy-related questions or requests, contact us at:",
+      "email": "Email: privacy@repo911.com"
+    }
+  },
+  "terms": {
+    "title": "Terms of Service",
+    "lastUpdated": "Last updated: February 2026",
+    "s1": {
+      "title": "1. About Repo911",
+      "body": "Repo911 is a lead generation and attorney matching service. <strong>Repo911 is not a law firm and does not provide legal advice.</strong> We connect consumers who may have experienced wrongful vehicle repossession with licensed attorneys who specialize in consumer protection law."
+    },
+    "s2": {
+      "title": "2. No Attorney-Client Relationship",
+      "body": "Submitting an intake form or using any part of this website does not create an attorney-client relationship between you and Repo911, or between you and any attorney in our network. An attorney-client relationship is only formed when you and a specific attorney mutually agree to representation, typically through a signed retainer or engagement agreement."
+    },
+    "s3": {
+      "title": "3. Consumer Responsibilities",
+      "item1": "You agree that all information submitted through the intake form is true and accurate to the best of your knowledge.",
+      "item2": "You consent to being contacted by Repo911 and attorneys in our network regarding your case.",
+      "item3": "You understand that case outcomes are not guaranteed and depend on individual circumstances and applicable law."
+    },
+    "s4": {
+      "title": "4. Attorney Matching",
+      "body": "When your case qualifies based on our screening criteria, it is made available to licensed attorneys in our network. An attorney may review and claim your case, at which point they will contact you directly. Repo911 does not guarantee that an attorney will claim your case or that your case has legal merit."
+    },
+    "s5": {
+      "title": "5. Attorney Fee Structure",
+      "body": "Attorneys in our network pay a lead purchase fee to Repo911 to claim and receive qualified leads. These arrangements are between Repo911 and the attorney and do not affect any fees or costs that may apply between you and your attorney."
+    },
+    "s6": {
+      "title": "6. Limitation of Liability",
+      "body": "Repo911 is not responsible for the actions, advice, or representation provided by any attorney in our network. We do not guarantee the outcome of any legal matter. Our liability is limited to the maximum extent permitted by law. In no event shall Repo911 be liable for indirect, incidental, special, or consequential damages arising from use of our service."
+    },
+    "s7": {
+      "title": "7. Dispute Resolution",
+      "body": "Any disputes arising from or related to these Terms of Service shall be resolved through binding arbitration in accordance with the rules of the American Arbitration Association. Both parties waive the right to a jury trial and the right to participate in class action lawsuits."
+    },
+    "s8": {
+      "title": "8. Account Termination",
+      "body": "Repo911 reserves the right to terminate or suspend access to our platform for any user or attorney who violates these terms, engages in fraudulent activity, or otherwise misuses the service."
+    },
+    "s9": {
+      "title": "9. Modifications",
+      "body": "We reserve the right to modify these Terms of Service at any time. Material changes will be communicated through the website. Continued use of the service after changes constitutes acceptance of the updated terms."
+    },
+    "s10": {
+      "title": "10. Governing Law",
+      "body": "These Terms of Service are governed by and construed in accordance with the laws of the State of Delaware, without regard to conflict of law principles."
+    },
+    "s11": {
+      "title": "11. Contact",
+      "body": "For questions about these Terms of Service, contact us at legal@repo911.com."
+    },
+    "s12": {
+      "title": "12. Language",
+      "body": "These Terms of Service may be provided in multiple languages for convenience. In the event of a conflict or inconsistency between the English version and any translated version, the English version shall control."
+    }
+  },
+  "disclaimer": {
+    "title": "Legal Disclaimer",
+    "noticeTitle": "Important Notice",
+    "noticeBody": "Repo911 is not a law firm and does not provide legal advice. The information on this website is for general informational purposes only and should not be construed as legal advice.",
+    "s1": {
+      "title": "No Attorney-Client Relationship",
+      "body": "No attorney-client relationship is formed by submitting an inquiry through this website, viewing content on this website, or using any of our services. An attorney-client relationship can only be established through a direct, mutual agreement between you and a licensed attorney."
+    },
+    "s2": {
+      "title": "General Information Only",
+      "body": "The information provided on this website, including information about wrongful repossession laws, the Fair Debt Collection Practices Act (FDCPA), the Servicemembers Civil Relief Act (SCRA), and UCC Article 9, is provided for general educational purposes only. Laws vary by state and change over time. This information may not reflect the current state of the law in your jurisdiction."
+    },
+    "s3": {
+      "title": "No Guarantee of Results",
+      "intro": "Past results do not guarantee future outcomes. Every case is unique, and the outcome of your case depends on the specific facts and circumstances involved, as well as the applicable laws in your state. Repo911 does not guarantee that:",
+      "item1": "Your case qualifies for legal representation",
+      "item2": "An attorney will review or claim your case",
+      "item3": "You will receive any particular outcome or compensation",
+      "item4": "Any legal action will be successful"
+    },
+    "s4": {
+      "title": "Consent to Contact",
+      "body": "By submitting your information through our intake form, you consent to being contacted by Repo911 and licensed attorneys in our network via phone, email, or text message regarding your potential case. You may opt out of communications at any time."
+    },
+    "s5": {
+      "title": "Third-Party Attorneys",
+      "body": "Attorneys in the Repo911 network are independent legal professionals. Repo911 does not control, supervise, or direct the legal services they provide. Any representation agreement is between you and the attorney directly."
+    },
+    "s6": {
+      "title": "Seek Professional Advice",
+      "body": "If you believe your vehicle was wrongfully repossessed, we strongly encourage you to consult with a licensed attorney in your state who can provide personalized legal advice based on the specific details of your situation."
+    },
+    "s7": {
+      "title": "Language",
+      "body": "This Legal Disclaimer may be provided in multiple languages for convenience. In the event of a conflict or inconsistency between the English version and any translated version, the English version shall control."
+    },
+    "moreInfo": "For more information, please review our <privacyLink>Privacy Policy</privacyLink> and <termsLink>Terms of Service</termsLink>."
+  },
+  "messages": {
+    "title": "Messages with Your Attorney",
+    "emptyState": "No messages yet. Send a message to your attorney below.",
+    "placeholder": "Type a message...",
+    "senderYou": "You",
+    "senderAttorney": "Attorney",
+    "sendError": "Failed to send message",
+    "sendErrorRetry": "Failed to send message. Please try again."
   },
   "blog": {
     "title": "Repossession Rights Blog",
@@ -117,6 +730,10 @@
     "loading": "Loading...",
     "error": "Something went wrong",
     "backToHome": "Return to Homepage",
-    "englishOnly": "This page is only available in English."
+    "englishOnly": "This page is only available in English.",
+    "yes": "Yes",
+    "no": "No",
+    "notSure": "Not Sure",
+    "other": "Other"
   }
 }
