@@ -164,7 +164,7 @@ NEXT_PUBLIC_APP_NAME=Repo911
 
 ```
 
-`next.config.ts` strips whitespace from env vars at build time.
+`next.config.ts` inlines only `NEXT_PUBLIC_` env vars at build time. Server-only secrets are accessed via `process.env` at runtime, with whitespace trimming at their usage sites.
 
 ## Important Patterns
 
@@ -182,19 +182,16 @@ NEXT_PUBLIC_APP_NAME=Repo911
 
 | Page | Performance | Accessibility | Best Practices | SEO |
 |------|:-----------:|:-------------:|:--------------:|:---:|
-| `/` | 86 | 100 | 100 | 100 |
-| `/claim` | 83 | 100 | 100 | 100 |
-| `/how-it-works` | 90 | 100 | 100 | 100 |
-| `/faq` | 96 | 100 | 100 | 100 |
-| `/track` | 92 | 100 | 100 | 100 |
-| `/privacy` | 94 | 100 | 100 | 100 |
-| `/terms` | 90 | 100 | 100 | 100 |
-| `/disclaimer` | 92 | 100 | 100 | 100 |
-| `/claim/confirmation` | 95 | 100 | 100 | 66* |
+| `/` | 69 | 100 | 100 | 100 |
+| `/claim` | 76 | 100 | 100 | 100 |
+| `/how-it-works` | 81 | 100 | 100 | 100 |
+| `/faq` | 79 | 100 | 100 | 100 |
+| `/track` | 83 | 100 | 100 | 100 |
+| `/privacy` | 85 | 100 | 100 | 100 |
+| `/terms` | 86 | 100 | 100 | 100 |
+| `/disclaimer` | 83 | 100 | 100 | 100 |
 
-*\* Intentional `noindex` on confirmation page — correct behavior, Lighthouse flags it.*
-
-Performance scores measured on localhost production build (`pnpm build && pnpm start`). Expect higher scores on Vercel with CDN edge caching.
+Performance scores measured on localhost production build (`pnpm build && pnpm start`) with Lighthouse mobile throttling. Expect higher scores on Vercel with CDN edge caching.
 
 ## Deployment
 

@@ -4,7 +4,7 @@ let _resend: Resend | null = null;
 
 function getResend(): Resend {
   if (!_resend) {
-    const key = process.env.RESEND_API_KEY;
+    const key = process.env.RESEND_API_KEY?.trim();
     if (!key) {
       throw new Error('RESEND_API_KEY environment variable is not set');
     }

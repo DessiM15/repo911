@@ -3,13 +3,13 @@ import Stripe from 'stripe';
 let _stripe: Stripe | null = null;
 
 export function isStripeConfigured(): boolean {
-  const key = process.env.STRIPE_SECRET_KEY;
+  const key = process.env.STRIPE_SECRET_KEY?.trim();
   return !!key && !key.includes('placeholder');
 }
 
 export function getStripe(): Stripe {
   if (!_stripe) {
-    const key = process.env.STRIPE_SECRET_KEY;
+    const key = process.env.STRIPE_SECRET_KEY?.trim();
     if (!key) {
       throw new Error('STRIPE_SECRET_KEY environment variable is not set');
     }
