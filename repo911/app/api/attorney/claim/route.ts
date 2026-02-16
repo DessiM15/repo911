@@ -9,6 +9,7 @@ import { captureServerException } from '@/lib/error-tracking/server-tracker';
 import { rateLimit } from '@/lib/rate-limit';
 import { attorneyClaimSchema } from '@/lib/validations/attorney';
 import { apiSuccess, apiError } from '@/lib/api-response';
+import { verifyAttorney } from '@/lib/auth/verify-attorney';
 import type { QualificationTier, SubscriptionPlan, SubscriptionStatus } from '@/types';
 
 export async function POST(request: NextRequest) {
@@ -28,20 +29,10 @@ export async function POST(request: NextRequest) {
 
     const supabase = await createClient();
 
-    // Verify attorney
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-      return apiError('Unauthorized', 401);
-    }
-
-    const { data: attorney } = await supabase
-      .from('attorneys')
-      .select('id, stripe_customer_id, status, subscription_plan, subscription_status, first_name, email, phone, referral_credits, sms_notifications')
-      .eq('supabase_auth_id', user.id)
-      .single();
-
-    if (!attorney || attorney.status !== 'active') {
-      return apiError('Attorney account is not active', 403);
+    // Verify attorney (all 4 checks: auth, table, fee agreement, status)
+    const { attorney, error: authError } = await verifyAttorney(supabase, 'id, stripe_customer_id, subscription_plan, subscription_status, first_name, email, phone, referral_credits, sms_notifications');
+    if (authError) {
+      return apiError(authError.message, authError.status);
     }
 
     // Rate limit: 20 claims per attorney per hour

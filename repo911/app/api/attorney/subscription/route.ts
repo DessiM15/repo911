@@ -4,24 +4,16 @@ import { stripe, isStripeConfigured } from '@/lib/stripe';
 import { SUBSCRIPTION_PRICE_ID } from '@/lib/subscription';
 import { rateLimit } from '@/lib/rate-limit';
 import { apiSuccess, apiError } from '@/lib/api-response';
+import { verifyAttorney } from '@/lib/auth/verify-attorney';
 
 // GET — Return attorney's subscription fields
 export async function GET() {
   try {
     const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-      return apiError('Unauthorized', 401);
-    }
 
-    const { data: attorney } = await supabase
-      .from('attorneys')
-      .select('subscription_plan, subscription_status, subscription_current_period_end, subscription_cancel_at_period_end')
-      .eq('supabase_auth_id', user.id)
-      .single();
-
-    if (!attorney) {
-      return apiError('Attorney not found', 404);
+    const { attorney, error: authError } = await verifyAttorney(supabase, 'subscription_plan, subscription_status, subscription_current_period_end, subscription_cancel_at_period_end');
+    if (authError) {
+      return apiError(authError.message, authError.status);
     }
 
     return apiSuccess({
@@ -48,19 +40,10 @@ export async function POST(request: NextRequest) {
     }
 
     const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-      return apiError('Unauthorized', 401);
-    }
 
-    const { data: attorney } = await supabase
-      .from('attorneys')
-      .select('id, stripe_customer_id, status, subscription_plan, subscription_status')
-      .eq('supabase_auth_id', user.id)
-      .single();
-
-    if (!attorney || attorney.status !== 'active') {
-      return apiError('Attorney account is not active', 403);
+    const { attorney, error: authError } = await verifyAttorney(supabase, 'id, stripe_customer_id, subscription_plan, subscription_status');
+    if (authError) {
+      return apiError(authError.message, authError.status);
     }
 
     if (attorney.subscription_status === 'active') {
@@ -113,19 +96,10 @@ export async function DELETE() {
     }
 
     const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-      return apiError('Unauthorized', 401);
-    }
 
-    const { data: attorney } = await supabase
-      .from('attorneys')
-      .select('id, stripe_subscription_id, subscription_status')
-      .eq('supabase_auth_id', user.id)
-      .single();
-
-    if (!attorney) {
-      return apiError('Attorney not found', 404);
+    const { attorney, error: authError } = await verifyAttorney(supabase, 'id, stripe_subscription_id, subscription_status');
+    if (authError) {
+      return apiError(authError.message, authError.status);
     }
 
     if (!attorney.stripe_subscription_id || attorney.subscription_status !== 'active') {

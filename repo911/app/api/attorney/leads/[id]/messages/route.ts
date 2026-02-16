@@ -5,6 +5,7 @@ import { rateLimit } from '@/lib/rate-limit';
 import { attorneyMessageSchema } from '@/lib/validations/attorney';
 import { sendAttorneyMessageToConsumer } from '@/lib/emails';
 import { apiSuccess, apiError } from '@/lib/api-response';
+import { verifyAttorney } from '@/lib/auth/verify-attorney';
 
 export async function GET(
   _request: NextRequest,
@@ -14,19 +15,9 @@ export async function GET(
     const { id: leadId } = await params;
     const supabase = await createClient();
 
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-      return apiError('Unauthorized', 401);
-    }
-
-    const { data: attorney } = await supabase
-      .from('attorneys')
-      .select('id')
-      .eq('supabase_auth_id', user.id)
-      .single();
-
-    if (!attorney) {
-      return apiError('Attorney not found', 404);
+    const { attorney, error: authError } = await verifyAttorney(supabase, 'id');
+    if (authError) {
+      return apiError(authError.message, authError.status);
     }
 
     // Verify lead ownership
@@ -73,19 +64,9 @@ export async function POST(
     const { id: leadId } = await params;
     const supabase = await createClient();
 
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-      return apiError('Unauthorized', 401);
-    }
-
-    const { data: attorney } = await supabase
-      .from('attorneys')
-      .select('id, first_name, last_name')
-      .eq('supabase_auth_id', user.id)
-      .single();
-
-    if (!attorney) {
-      return apiError('Attorney not found', 404);
+    const { attorney, error: authError } = await verifyAttorney(supabase, 'id, first_name, last_name, email');
+    if (authError) {
+      return apiError(authError.message, authError.status);
     }
 
     // Rate limit: 30 per attorney per hour

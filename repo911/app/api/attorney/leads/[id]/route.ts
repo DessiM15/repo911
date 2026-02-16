@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 import { getEstimatedValueRange } from '@/lib/utils';
 import { attorneyLeadUpdateSchema } from '@/lib/validations/attorney';
 import { apiSuccess, apiError } from '@/lib/api-response';
+import { verifyAttorney } from '@/lib/auth/verify-attorney';
 import type { QualificationBreakdown } from '@/types';
 
 export async function GET(
@@ -13,9 +14,9 @@ export async function GET(
     const { id } = await params;
     const supabase = await createClient();
 
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-      return apiError('Unauthorized', 401);
+    const { attorney, error: authError } = await verifyAttorney(supabase, 'id');
+    if (authError) {
+      return apiError(authError.message, authError.status);
     }
 
     const { data: lead, error } = await supabase
@@ -28,15 +29,8 @@ export async function GET(
       return apiError('Lead not found', 404);
     }
 
-    // Check if this attorney has claimed this lead
-    const { data: attorney } = await supabase
-      .from('attorneys')
-      .select('id')
-      .eq('supabase_auth_id', user.id)
-      .single();
-
     const isClaimed = lead.claimed_by !== null;
-    const isMyLead = attorney && lead.claimed_by === attorney.id;
+    const isMyLead = lead.claimed_by === attorney.id;
 
     if (isClaimed && !isMyLead) {
       return apiError('This lead has already been claimed', 403);
@@ -128,19 +122,9 @@ export async function PATCH(
     const { id } = await params;
     const supabase = await createClient();
 
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-      return apiError('Unauthorized', 401);
-    }
-
-    const { data: attorney } = await supabase
-      .from('attorneys')
-      .select('id')
-      .eq('supabase_auth_id', user.id)
-      .single();
-
-    if (!attorney) {
-      return apiError('Attorney not found', 403);
+    const { attorney, error: authError } = await verifyAttorney(supabase, 'id');
+    if (authError) {
+      return apiError(authError.message, authError.status);
     }
 
     // Verify this attorney owns this lead
