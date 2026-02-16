@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Scale } from 'lucide-react';
@@ -14,6 +14,15 @@ export default function AttorneyLoginPage() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
+
+  useEffect(() => {
+    const savedEmail = localStorage.getItem('attorney_remembered_email');
+    if (savedEmail) {
+      setEmail(savedEmail);
+      setRememberMe(true);
+    }
+  }, []);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -32,6 +41,11 @@ export default function AttorneyLoginPage() {
         return;
       }
 
+      if (rememberMe) {
+        localStorage.setItem('attorney_remembered_email', email);
+      } else {
+        localStorage.removeItem('attorney_remembered_email');
+      }
       sessionStorage.setItem('attorney_session_active', 'true');
       router.push('/attorney/dashboard');
       router.refresh();
@@ -79,14 +93,23 @@ export default function AttorneyLoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
-            <Button type="submit" variant="attorney" className="w-full" size="lg" loading={loading}>
-              Sign In
-            </Button>
-            <p className="text-right">
+            <div className="flex items-center justify-between">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  className="h-4 w-4 rounded border-gray-300 dark:border-slate-600 text-[#1B2A4A] focus:ring-[#1B2A4A] dark:bg-slate-700"
+                />
+                <span className="text-sm text-gray-600 dark:text-gray-400">Remember me</span>
+              </label>
               <Link href="/attorney/forgot-password" className="text-sm text-gray-500 dark:text-gray-400 hover:text-[#1B2A4A] dark:hover:text-gray-200 hover:underline">
                 Forgot password?
               </Link>
-            </p>
+            </div>
+            <Button type="submit" variant="attorney" className="w-full" size="lg" loading={loading}>
+              Sign In
+            </Button>
           </form>
         </div>
 
