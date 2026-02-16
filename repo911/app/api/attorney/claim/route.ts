@@ -70,61 +70,23 @@ export async function POST(request: NextRequest) {
     if (attorney.referral_credits > 0) {
       const adminSupabase = createAdminClient();
 
-      // Atomic update — only if still unclaimed
-      const { data: updatedLead, error: claimError } = await adminSupabase
-        .from('leads')
-        .update({
-          status: 'claimed',
-          claimed_by: attorney.id,
-          claimed_at: new Date().toISOString(),
-          claim_price: 0,
-          stripe_payment_id: null,
-        })
-        .eq('id', lead_id)
-        .is('claimed_by', null)
-        .select('id')
-        .single();
+      // Atomic transaction: claim lead + decrement credit + transaction + fee_tracking + notification
+      const { error: claimError } = await adminSupabase.rpc('claim_lead', {
+        p_lead_id: lead_id,
+        p_attorney_id: attorney.id,
+        p_claim_price: 0,
+        p_stripe_payment_id: null,
+        p_payment_type: 'per_lead',
+        p_description: `Lead claim — ${tier?.toUpperCase()} lead (referral credit)`,
+        p_notification_title: 'Lead Claimed with Referral Credit',
+        p_notification_message: `You used a referral credit to claim a ${tier?.toUpperCase()} lead in ${lead.repo_state}. Full contact info is now available.`,
+        p_notification_link: '/attorney/my-leads',
+        p_use_referral_credit: true,
+      });
 
-      if (claimError || !updatedLead) {
+      if (claimError) {
         return apiError('This lead has already been claimed', 409);
       }
-
-      // Decrement referral credits atomically
-      await adminSupabase.rpc('decrement_referral_credits', {
-        attorney_id: attorney.id,
-        amount: 1,
-      });
-
-      // Create $0 transaction record
-      await adminSupabase.from('transactions').insert({
-        attorney_id: attorney.id,
-        lead_id,
-        stripe_payment_intent_id: null,
-        amount: 0,
-        currency: 'usd',
-        status: 'succeeded',
-        description: `Lead claim — ${tier?.toUpperCase()} lead (referral credit)`,
-        receipt_url: null,
-        payment_type: 'per_lead',
-      });
-
-      // Create fee tracking record
-      await adminSupabase.from('fee_tracking').insert({
-        attorney_id: attorney.id,
-        lead_id,
-        transaction_id: null,
-        case_status: 'open',
-      });
-
-      // In-app notification
-      await adminSupabase.from('notifications').insert({
-        recipient_type: 'attorney',
-        recipient_id: attorney.id,
-        title: 'Lead Claimed with Referral Credit',
-        message: `You used a referral credit to claim a ${tier?.toUpperCase()} lead in ${lead.repo_state}. Full contact info is now available.`,
-        type: 'lead_claimed',
-        link: '/attorney/my-leads',
-      });
 
       // Emails (fire-and-forget)
       sendLeadClaimedToConsumer({
@@ -162,55 +124,23 @@ export async function POST(request: NextRequest) {
     )) {
       const adminSupabase = createAdminClient();
 
-      // Atomic update — only if still unclaimed
-      const { data: updatedLead, error: claimError } = await adminSupabase
-        .from('leads')
-        .update({
-          status: 'claimed',
-          claimed_by: attorney.id,
-          claimed_at: new Date().toISOString(),
-          claim_price: 0,
-          stripe_payment_id: null,
-        })
-        .eq('id', lead_id)
-        .is('claimed_by', null)
-        .select('id')
-        .single();
+      // Atomic transaction: claim lead + transaction + fee_tracking + notification
+      const { error: claimError } = await adminSupabase.rpc('claim_lead', {
+        p_lead_id: lead_id,
+        p_attorney_id: attorney.id,
+        p_claim_price: 0,
+        p_stripe_payment_id: null,
+        p_payment_type: 'subscription',
+        p_description: `Lead claim — ${tier?.toUpperCase()} lead (subscription)`,
+        p_notification_title: 'Lead Claimed Successfully',
+        p_notification_message: `You claimed a ${tier?.toUpperCase()} lead in ${lead.repo_state}. Full contact info is now available.`,
+        p_notification_link: '/attorney/my-leads',
+        p_use_referral_credit: false,
+      });
 
-      if (claimError || !updatedLead) {
+      if (claimError) {
         return apiError('This lead has already been claimed', 409);
       }
-
-      // Create $0 transaction record
-      await adminSupabase.from('transactions').insert({
-        attorney_id: attorney.id,
-        lead_id,
-        stripe_payment_intent_id: null,
-        amount: 0,
-        currency: 'usd',
-        status: 'succeeded',
-        description: `Lead claim — ${tier?.toUpperCase()} lead (subscription)`,
-        receipt_url: null,
-        payment_type: 'subscription',
-      });
-
-      // Create fee tracking record
-      await adminSupabase.from('fee_tracking').insert({
-        attorney_id: attorney.id,
-        lead_id,
-        transaction_id: null,
-        case_status: 'open',
-      });
-
-      // In-app notification
-      await adminSupabase.from('notifications').insert({
-        recipient_type: 'attorney',
-        recipient_id: attorney.id,
-        title: 'Lead Claimed Successfully',
-        message: `You claimed a ${tier?.toUpperCase()} lead in ${lead.repo_state}. Full contact info is now available.`,
-        type: 'lead_claimed',
-        link: '/attorney/my-leads',
-      });
 
       // Emails (fire-and-forget)
       sendLeadClaimedToConsumer({

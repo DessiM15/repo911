@@ -82,22 +82,38 @@ export async function POST(request: NextRequest) {
         : tier === 'warm' ? LEAD_PRICES.warm
         : LEAD_PRICES.cold;
 
-      // Update lead status — atomic check prevents double-claim
-      const { data: updatedLead, error: claimError } = await supabase
+      // Fetch lead + attorney info before claim (needed for notification message + emails)
+      const { data: lead } = await supabase
         .from('leads')
-        .update({
-          status: 'claimed',
-          claimed_by: attorney_id,
-          claimed_at: new Date().toISOString(),
-          claim_price: price,
-          stripe_payment_id: session.payment_intent as string,
-        })
+        .select('first_name, last_name, email, phone, repo_state, qualification_tier')
         .eq('id', lead_id)
-        .is('claimed_by', null)
-        .select('id')
         .single();
 
-      if (claimError || !updatedLead) {
+      const { data: attorney } = await supabase
+        .from('attorneys')
+        .select('first_name, email')
+        .eq('id', attorney_id)
+        .single();
+
+      const notificationMessage = lead
+        ? `You claimed a ${(lead.qualification_tier as QualificationTier)?.toUpperCase()} lead in ${lead.repo_state}. Full contact info is now available.`
+        : `You claimed a ${(tier as string)?.toUpperCase()} lead. Full contact info is now available.`;
+
+      // Atomic transaction: claim lead + transaction + fee_tracking + notification
+      const { error: claimError } = await supabase.rpc('claim_lead', {
+        p_lead_id: lead_id,
+        p_attorney_id: attorney_id,
+        p_claim_price: price,
+        p_stripe_payment_id: session.payment_intent as string,
+        p_payment_type: 'per_lead',
+        p_description: `Lead claim — ${(tier as string)?.toUpperCase()} lead`,
+        p_notification_title: 'Lead Claimed Successfully',
+        p_notification_message: notificationMessage,
+        p_notification_link: '/attorney/my-leads',
+        p_use_referral_credit: false,
+      });
+
+      if (claimError) {
         // Lead was already claimed by another attorney — refund will be needed
         console.error('Lead already claimed or not found:', lead_id, claimError);
         captureServerMessage(
@@ -108,60 +124,13 @@ export async function POST(request: NextRequest) {
         break;
       }
 
-      // Create transaction record
-      await supabase.from('transactions').insert({
-        attorney_id,
-        lead_id,
-        stripe_payment_intent_id: session.payment_intent as string,
-        amount: price,
-        currency: 'usd',
-        status: 'succeeded',
-        description: `Lead claim — ${(tier as string)?.toUpperCase()} lead`,
-        receipt_url: null,
-        payment_type: 'per_lead',
-      });
-
-      // Create fee tracking record
-      await supabase.from('fee_tracking').insert({
-        attorney_id,
-        lead_id,
-        transaction_id: null, // Will be linked by trigger or admin
-        case_status: 'open',
-      });
-
-      // Get lead info for notifications
-      const { data: lead } = await supabase
-        .from('leads')
-        .select('first_name, last_name, email, phone, repo_state, qualification_tier')
-        .eq('id', lead_id)
-        .single();
-
-      // Get attorney info for email
-      const { data: attorney } = await supabase
-        .from('attorneys')
-        .select('first_name, email')
-        .eq('id', attorney_id)
-        .single();
-
-      // Create notifications
+      // Emails (fire-and-forget, non-critical)
       if (lead) {
-        // In-app notification for attorney
-        await supabase.from('notifications').insert({
-          recipient_type: 'attorney',
-          recipient_id: attorney_id,
-          title: 'Lead Claimed Successfully',
-          message: `You claimed a ${(lead.qualification_tier as QualificationTier)?.toUpperCase()} lead in ${lead.repo_state}. Full contact info is now available.`,
-          type: 'lead_claimed',
-          link: `/attorney/my-leads`,
-        });
-
-        // Email to consumer
         sendLeadClaimedToConsumer({
           to: lead.email,
           firstName: lead.first_name,
         }).catch(() => { /* non-critical */ });
 
-        // Email to attorney with full lead details
         if (attorney) {
           sendLeadClaimedToAttorney({
             to: attorney.email,
@@ -176,7 +145,7 @@ export async function POST(request: NextRequest) {
         }
       }
 
-      // Log CRM activity
+      // CRM activity (non-critical, outside transaction)
       const { data: crmContact } = await supabase
         .from('crm_contacts')
         .select('id')
