@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { sanitizeSearchParam, isValidUUID } from '@/lib/sanitize';
 
 export async function GET(request: NextRequest) {
   try {
@@ -28,13 +29,14 @@ export async function GET(request: NextRequest) {
     const offset = (page - 1) * limit;
 
     // If searching, find matching attorney IDs first
+    const s = search ? sanitizeSearchParam(search) : '';
     let matchingAttorneyIds: string[] | null = null;
-    if (search) {
+    if (s) {
       const { data: matchedAttorneys } = await supabase
         .from('attorneys')
         .select('id')
-        .or(`first_name.ilike.%${search}%,last_name.ilike.%${search}%`);
-      matchingAttorneyIds = (matchedAttorneys || []).map((a) => a.id);
+        .or(`first_name.ilike.%${s}%,last_name.ilike.%${s}%`);
+      matchingAttorneyIds = (matchedAttorneys || []).map((a) => a.id).filter(isValidUUID);
     }
 
     // Build main query
@@ -45,11 +47,11 @@ export async function GET(request: NextRequest) {
 
     if (status) query = query.eq('status', status);
 
-    if (search) {
+    if (s) {
       if (matchingAttorneyIds && matchingAttorneyIds.length > 0) {
-        query = query.or(`stripe_payment_intent_id.ilike.%${search}%,attorney_id.in.(${matchingAttorneyIds.join(',')})`);
+        query = query.or(`stripe_payment_intent_id.ilike.%${s}%,attorney_id.in.(${matchingAttorneyIds.join(',')})`);
       } else {
-        query = query.ilike('stripe_payment_intent_id', `%${search}%`);
+        query = query.ilike('stripe_payment_intent_id', `%${s}%`);
       }
     }
 
@@ -60,11 +62,11 @@ export async function GET(request: NextRequest) {
 
     if (status) statsQuery = statsQuery.eq('status', status);
 
-    if (search) {
+    if (s) {
       if (matchingAttorneyIds && matchingAttorneyIds.length > 0) {
-        statsQuery = statsQuery.or(`stripe_payment_intent_id.ilike.%${search}%,attorney_id.in.(${matchingAttorneyIds.join(',')})`);
+        statsQuery = statsQuery.or(`stripe_payment_intent_id.ilike.%${s}%,attorney_id.in.(${matchingAttorneyIds.join(',')})`);
       } else {
-        statsQuery = statsQuery.ilike('stripe_payment_intent_id', `%${search}%`);
+        statsQuery = statsQuery.ilike('stripe_payment_intent_id', `%${s}%`);
       }
     }
 

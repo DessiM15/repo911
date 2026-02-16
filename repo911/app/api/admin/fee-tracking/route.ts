@@ -2,6 +2,7 @@ import { NextRequest } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { feeTrackingUpdateSchema } from '@/lib/validations/admin';
 import { apiSuccess, apiError } from '@/lib/api-response';
+import { sanitizeSearchParam, isValidUUID } from '@/lib/sanitize';
 
 export async function GET(request: NextRequest) {
   try {
@@ -30,13 +31,14 @@ export async function GET(request: NextRequest) {
     const offset = (page - 1) * limit;
 
     // If searching, find matching attorney IDs first
+    const s = search ? sanitizeSearchParam(search) : '';
     let matchingAttorneyIds: string[] | null = null;
-    if (search) {
+    if (s) {
       const { data: matchedAttorneys } = await supabase
         .from('attorneys')
         .select('id')
-        .or(`first_name.ilike.%${search}%,last_name.ilike.%${search}%`);
-      matchingAttorneyIds = (matchedAttorneys || []).map((a) => a.id);
+        .or(`first_name.ilike.%${s}%,last_name.ilike.%${s}%`);
+      matchingAttorneyIds = (matchedAttorneys || []).map((a) => a.id).filter(isValidUUID);
     }
 
     let query = supabase
@@ -46,11 +48,11 @@ export async function GET(request: NextRequest) {
 
     if (caseStatus) query = query.eq('case_status', caseStatus);
 
-    if (search) {
+    if (s) {
       if (matchingAttorneyIds && matchingAttorneyIds.length > 0) {
-        query = query.or(`notes.ilike.%${search}%,attorney_id.in.(${matchingAttorneyIds.join(',')})`);
+        query = query.or(`notes.ilike.%${s}%,attorney_id.in.(${matchingAttorneyIds.join(',')})`);
       } else {
-        query = query.ilike('notes', `%${search}%`);
+        query = query.ilike('notes', `%${s}%`);
       }
     }
 

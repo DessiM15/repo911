@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { sanitizeSearchParam } from '@/lib/sanitize';
 
 export async function GET(request: NextRequest) {
   try {
@@ -39,7 +40,8 @@ export async function GET(request: NextRequest) {
     if (tier) query = query.eq('qualification_tier', tier);
     if (state) query = query.eq('repo_state', state);
     if (search) {
-      query = query.or(`first_name.ilike.%${search}%,last_name.ilike.%${search}%,email.ilike.%${search}%`);
+      const s = sanitizeSearchParam(search);
+      query = query.or(`first_name.ilike.%${s}%,last_name.ilike.%${s}%,email.ilike.%${s}%`);
     }
 
     query = query.order(sort, { ascending: order === 'asc' }).range(offset, offset + limit - 1);

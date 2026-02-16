@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { sanitizeSearchParam } from '@/lib/sanitize';
 
 export async function GET(request: NextRequest) {
   try {
@@ -33,7 +34,8 @@ export async function GET(request: NextRequest) {
 
     if (status) query = query.eq('status', status);
     if (search) {
-      query = query.or(`first_name.ilike.%${search}%,last_name.ilike.%${search}%,email.ilike.%${search}%,firm_name.ilike.%${search}%`);
+      const s = sanitizeSearchParam(search);
+      query = query.or(`first_name.ilike.%${s}%,last_name.ilike.%${s}%,email.ilike.%${s}%,firm_name.ilike.%${s}%`);
     }
 
     query = query.order('created_at', { ascending: false }).range(offset, offset + limit - 1);

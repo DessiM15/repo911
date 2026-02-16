@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { sanitizeSearchParam } from '@/lib/sanitize';
 
 export async function GET(request: NextRequest) {
   try {
@@ -36,7 +37,8 @@ export async function GET(request: NextRequest) {
     if (type) query = query.eq('contact_type', type);
     if (stage) query = query.eq('lifecycle_stage', stage);
     if (search) {
-      query = query.or(`first_name.ilike.%${search}%,last_name.ilike.%${search}%,email.ilike.%${search}%`);
+      const s = sanitizeSearchParam(search);
+      query = query.or(`first_name.ilike.%${s}%,last_name.ilike.%${s}%,email.ilike.%${s}%`);
     }
     if (tag) {
       query = query.contains('tags', [tag]);
