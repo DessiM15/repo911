@@ -111,6 +111,7 @@ export function AttorneyNav() {
   }
 
   async function handleSignOut() {
+    sessionStorage.removeItem('attorney_session_active');
     const supabase = createClient();
     await supabase.auth.signOut();
     window.location.href = '/attorney/login';

@@ -32,6 +32,7 @@ export default function AttorneyLoginPage() {
         return;
       }
 
+      sessionStorage.setItem('attorney_session_active', 'true');
       router.push('/attorney/dashboard');
       router.refresh();
     } catch {
