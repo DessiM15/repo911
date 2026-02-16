@@ -26,7 +26,13 @@ export async function GET(request: NextRequest) {
     const tier = searchParams.get('tier');
     const state = searchParams.get('state');
     const search = searchParams.get('search');
-    const sort = searchParams.get('sort') || 'created_at';
+    const ALLOWED_SORT_COLUMNS = new Set([
+      'created_at', 'first_name', 'last_name', 'email', 'status',
+      'qualification_tier', 'qualification_score', 'repo_state', 'repo_date',
+      'claimed_at', 'lender_name',
+    ]);
+    const rawSort = searchParams.get('sort') || 'created_at';
+    const sort = ALLOWED_SORT_COLUMNS.has(rawSort) ? rawSort : 'created_at';
     const order = searchParams.get('order') || 'desc';
     const page = parseInt(searchParams.get('page') || '1');
     const limit = parseInt(searchParams.get('limit') || '25');
