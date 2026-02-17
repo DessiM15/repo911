@@ -1388,7 +1388,7 @@ export function IntakeForm() {
           </div>
 
           {submitError && (
-            <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-sm text-red-700">
+            <div role="alert" className="bg-red-50 border border-red-200 rounded-lg p-4 text-sm text-red-700">
               <AlertCircle className="inline h-4 w-4 mr-1 -mt-0.5" />
               {submitError}
             </div>
