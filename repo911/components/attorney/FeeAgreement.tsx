@@ -149,15 +149,72 @@ export function FeeAgreement({ onSign, loading }: FeeAgreementProps) {
         </p>
 
         <p>
-          <strong>2.4 Refund Policy.</strong> Lead purchase fees and subscription fees are
-          non-refundable except in the following circumstances: (a) the lead contains materially
-          false or fabricated contact information attributable to Platform error; (b) the lead is a
-          verified duplicate of a lead previously purchased by the same Attorney; or (c) the
-          consumer had already retained counsel at the time the lead was generated. Refund requests
-          must be submitted within seven (7) business days of lead purchase or discovery of the
-          issue, with supporting documentation. Company will review and respond to refund requests
-          within ten (10) business days. For subscription plan Attorneys, eligible refunds will be
-          issued as account credits applied to the next billing cycle unless otherwise agreed.
+          <strong>2.4 Lead Quality Guarantee.</strong> Company maintains strict quality assurance
+          standards for all leads delivered through the Platform. Lead purchase fees and subscription
+          fees are non-refundable.
+        </p>
+        <p>
+          <strong>2.4.1 Per-Lead Purchasers.</strong> Company will issue an account credit for any
+          individually purchased lead that meets one or more of the following criteria:
+        </p>
+        <p>
+          (a) The lead contains materially false or fabricated contact information attributable to
+          Platform error;
+        </p>
+        <p>
+          (b) The lead is a verified duplicate of a lead previously purchased by the same Attorney;
+        </p>
+        <p>
+          (c) The consumer had already retained counsel at the time the lead was generated; or
+        </p>
+        <p>
+          (d) The consumer confirms they did not submit an inquiry through the Platform.
+        </p>
+        <p>
+          Credit requests must be submitted in writing within seven (7) business days of lead
+          delivery or discovery of the qualifying issue, accompanied by reasonable supporting
+          documentation. Company will review and respond to all credit requests within ten (10)
+          business days.
+        </p>
+        <p>
+          Approved credits will be issued in the amount of the original lead purchase price and
+          applied to the Attorney&apos;s account. Credits may be used toward the purchase of any
+          available lead through the Platform at the Attorney&apos;s discretion. Credits may be
+          applied as full or partial payment toward any lead purchase. Any remaining balance not
+          covered by available credit will be charged to the Attorney&apos;s payment method on file.
+          Account credits are non-transferable, have no cash value, and are not redeemable for
+          refund. Credits expire twelve (12) months from the date of issuance if unused.
+        </p>
+        <p>
+          Leads not disputed within the seven (7) business day window are deemed accepted and are
+          not eligible for credit. Company reserves the right to deny credit requests that lack
+          sufficient documentation or do not meet the above criteria.
+        </p>
+        <p>
+          <strong>2.4.2 Subscription Plan Attorneys.</strong> Subscription plan Attorneys retain
+          unlimited access to available leads through the Platform for the duration of their active
+          subscription period. Leads meeting one or more of the qualifying criteria outlined in
+          Section 2.4.1(a) through (d) may be reported to Company in writing within seven (7)
+          business days of lead delivery or discovery of the qualifying issue, accompanied by
+          reasonable supporting documentation.
+        </p>
+        <p>
+          Subscription plan Attorneys may report a maximum of three (3) leads per billing cycle
+          under the qualifying criteria. Company will review all reported leads within ten (10)
+          business days. Claims exceeding the three (3) lead limit per billing cycle will be
+          reviewed at Company&apos;s sole discretion and are not guaranteed to be processed.
+        </p>
+        <p>
+          Leads confirmed by Company as meeting the qualifying criteria will be flagged and excluded
+          from the Attorney&apos;s claim history. As subscription plan Attorneys retain continuous
+          unlimited access to available leads through the Platform, no replacement, credit, or
+          refund will be issued for flagged leads.
+        </p>
+        <p>
+          Leads not reported within the seven (7) business day window are deemed accepted. Company
+          reserves the right to deny reported lead claims that lack sufficient documentation or do
+          not meet the qualifying criteria. Unused claims do not roll over to subsequent billing
+          cycles.
         </p>
 
         <p>

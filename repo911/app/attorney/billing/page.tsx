@@ -291,9 +291,12 @@ export default function BillingPage() {
         </CardHeader>
         <CardContent>
           <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
-            We stand behind every lead we deliver. If a lead has a disconnected number, denies submitting
-            an inquiry, or involves a voluntary surrender, we&apos;ll replace it at no cost within 7 business
-            days of delivery. Leads not disputed within this window are considered accepted.
+            We stand behind every lead we deliver. Per-lead purchasers may request an account credit
+            for leads with false contact info, verified duplicates, consumers who already retained
+            counsel, or consumers who deny submitting an inquiry. Credit requests must be submitted
+            within 7 business days of delivery. Subscription plan attorneys may report up to 3 leads
+            per billing cycle under the same criteria. Leads not disputed within this window are
+            considered accepted.
           </p>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-3">
             To dispute a lead, contact us at{' '}
