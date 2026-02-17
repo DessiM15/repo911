@@ -52,7 +52,7 @@ export default function ConsumerLayout({
   return (
     <div className="min-h-screen flex flex-col bg-white dark:bg-slate-900">
       <ConsumerHeader />
-      <main className="flex-1">{children}</main>
+      <main id="main-content" className="flex-1">{children}</main>
       <ConsumerFooter />
     </div>
   );

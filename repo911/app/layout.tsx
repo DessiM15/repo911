@@ -47,6 +47,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} antialiased`}
       >
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:bg-white focus:px-4 focus:py-2 focus:rounded focus:shadow-lg focus:text-gray-900"
+        >
+          Skip to main content
+        </a>
         <ThemeProvider>
           <LazyErrorTracking>{children}</LazyErrorTracking>
           <Toaster richColors position="top-right" />
