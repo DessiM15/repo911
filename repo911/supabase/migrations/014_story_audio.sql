@@ -10,3 +10,14 @@ ALTER TABLE leads
 CREATE INDEX IF NOT EXISTS idx_leads_story_recorded
   ON leads (story_recorded_at)
   WHERE story_recorded_at IS NOT NULL;
+
+-- Storage bucket for audio story uploads (private)
+INSERT INTO storage.buckets (id, name, public)
+VALUES ('lead-stories', 'lead-stories', false)
+ON CONFLICT (id) DO NOTHING;
+
+-- Allow service role to manage files in the lead-stories bucket
+CREATE POLICY "Service role can manage story files"
+  ON storage.objects FOR ALL TO service_role
+  USING (bucket_id = 'lead-stories')
+  WITH CHECK (bucket_id = 'lead-stories');
