@@ -55,7 +55,13 @@ export async function GET(
         .eq('attorney_id', attorney.id)
         .single();
 
-      return apiSuccess({ lead, violations, full_access: true, fee_tracking: feeTracking });
+      return apiSuccess({
+        lead,
+        violations,
+        full_access: true,
+        fee_tracking: feeTracking,
+        has_story: !!lead.story_recorded_at,
+      });
     }
 
     // Otherwise return anonymized version
@@ -98,12 +104,16 @@ export async function GET(
       narrative_preview: lead.narrative
         ? lead.narrative.substring(0, 200).replace(/[A-Z][a-z]+ [A-Z][a-z]+/g, '[Name]') + '...'
         : null,
+      has_story: !!lead.story_recorded_at,
+      story_transcript_preview: lead.story_transcript
+        ? lead.story_transcript.substring(0, 200).replace(/[A-Z][a-z]+ [A-Z][a-z]+/g, '[Name]') + (lead.story_transcript.length > 200 ? '...' : '')
+        : null,
       estimated_value_range: getEstimatedValueRange(lead.qualification_score),
       created_at: lead.created_at,
       status: lead.status,
     };
 
-    return apiSuccess({ lead: anonymized, violations, full_access: false });
+    return apiSuccess({ lead: anonymized, violations, full_access: false, has_story: !!lead.story_recorded_at });
   } catch (error) {
     console.error('Lead detail error:', error);
     return apiError('An unexpected error occurred', 500);

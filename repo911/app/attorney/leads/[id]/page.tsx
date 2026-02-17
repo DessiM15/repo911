@@ -6,8 +6,9 @@ import Link from 'next/link';
 import {
   ArrowLeft, MapPin, Calendar, Car, Shield, AlertTriangle,
   FileText, Camera, Users, Lock, DollarSign, CheckCircle,
-  Download, FileImage, File,
+  Download, FileImage, File, Mic,
 } from 'lucide-react';
+import { AudioPlayer } from '@/components/attorney/AudioPlayer';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -51,6 +52,7 @@ export default function LeadDetailPage() {
   const [claiming, setClaiming] = useState(false);
   const [error, setError] = useState('');
   const [isSubscribed, setIsSubscribed] = useState(false);
+  const [hasStory, setHasStory] = useState(false);
   const [evidenceFiles, setEvidenceFiles] = useState<EvidenceFile[]>([]);
   const [evidenceLoading, setEvidenceLoading] = useState(false);
 
@@ -70,6 +72,7 @@ export default function LeadDetailPage() {
         setLead(leadData.lead);
         setViolations(leadData.violations || []);
         setFullAccess(leadData.full_access);
+        setHasStory(leadData.has_story || false);
 
         if (subRes.ok) {
           const subData = await subRes.json();
@@ -387,6 +390,37 @@ export default function LeadDetailPage() {
                 <Camera className="h-4 w-4" />
                 {lead.uploaded_files.length} evidence file{lead.uploaded_files.length > 1 ? 's' : ''} available after claiming
               </p>
+            </div>
+          )}
+
+          {/* Story Audio */}
+          {hasStory && (
+            <div className="mt-4 pt-4 border-t border-gray-200 dark:border-slate-700">
+              <p className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-2 flex items-center gap-1">
+                <Mic className="h-4 w-4 text-[#3474BA]" /> Consumer Audio Story
+              </p>
+              {fullAccess ? (
+                <>
+                  {lead.story_transcript && (
+                    <p className="text-sm text-gray-600 dark:text-gray-400 italic leading-relaxed mb-3">
+                      &ldquo;{lead.story_transcript}&rdquo;
+                    </p>
+                  )}
+                  <AudioPlayer leadId={id} />
+                </>
+              ) : (
+                <>
+                  {lead.story_transcript_preview && (
+                    <p className="text-sm text-gray-600 dark:text-gray-400 italic leading-relaxed mb-2">
+                      &ldquo;{lead.story_transcript_preview}&rdquo;
+                    </p>
+                  )}
+                  <p className="text-xs text-gray-400 dark:text-gray-500 flex items-center gap-1">
+                    <Lock className="h-3 w-3" />
+                    Audio available after claiming
+                  </p>
+                </>
+              )}
             </div>
           )}
         </div>

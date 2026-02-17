@@ -48,7 +48,7 @@ export async function GET(request: NextRequest) {
         debt_collector_contact, fdcpa_violations,
         received_written_notice, received_notice_of_sale,
         has_photos_videos, has_documents, has_witnesses,
-        narrative
+        narrative, story_transcript, story_recorded_at
       `)
       .in('status', ['qualified_hot', 'qualified_warm', 'qualified_cold'])
       .is('claimed_by', null);
@@ -98,6 +98,10 @@ export async function GET(request: NextRequest) {
         ? lead.narrative.substring(0, 200).replace(/[A-Z][a-z]+ [A-Z][a-z]+/g, '[Name]') + (lead.narrative.length > 200 ? '...' : '')
         : null;
 
+      const storyTranscriptPreview = lead.story_transcript
+        ? lead.story_transcript.substring(0, 200).replace(/[A-Z][a-z]+ [A-Z][a-z]+/g, '[Name]') + (lead.story_transcript.length > 200 ? '...' : '')
+        : null;
+
       return {
         id: lead.id,
         qualification_tier: lead.qualification_tier,
@@ -111,6 +115,8 @@ export async function GET(request: NextRequest) {
         vehicle_make: lead.vehicle_make,
         vehicle_model: lead.vehicle_model,
         has_evidence: lead.has_photos_videos || lead.has_documents || lead.has_witnesses,
+        has_story: !!lead.story_recorded_at,
+        story_transcript_preview: storyTranscriptPreview,
         fdcpa_violation_count: lead.fdcpa_violations?.length || 0,
         narrative_preview: narrativePreview,
         qualification_breakdown: breakdown,

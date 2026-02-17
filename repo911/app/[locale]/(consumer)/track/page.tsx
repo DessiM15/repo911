@@ -4,10 +4,11 @@ import { useState, useRef, useCallback, useEffect, Suspense } from 'react';
 import { Link } from '@/i18n/navigation';
 import { useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { Search, Clock, CheckCircle, Shield, FileText, Upload, X, AlertTriangle, Loader2, Phone } from 'lucide-react';
+import { Search, Clock, CheckCircle, Shield, FileText, Upload, X, AlertTriangle, Loader2, Phone, Mic } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { MessageThread } from '@/components/consumer/MessageThread';
+import { StoryRecorderCTA } from '@/components/consumer/StoryRecorderCTA';
 import { formatDistanceToNow } from 'date-fns';
 
 interface TrackResult {
@@ -18,6 +19,7 @@ interface TrackResult {
   submittedAt: string;
   claimed: boolean;
   uploadedFiles: { name: string; url: string; uploadedAt: string }[];
+  hasStory?: boolean;
 }
 
 function getStatusIcon(status: string) {
@@ -360,6 +362,34 @@ export default function TrackPage() {
           {/* Messages Section — only shown when case is claimed and lookup by case_id */}
           {lookupMode === 'case_id' && result.claimed && (
             <MessageThread email={email} leadId={leadId} />
+          )}
+
+          {/* Story Recording Section — only shown for case_id lookup */}
+          {lookupMode === 'case_id' && (
+            <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-6 shadow-sm">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-1 flex items-center gap-2">
+                <Mic className="h-5 w-5 text-[#3474BA] dark:text-blue-400" />
+                {t('storyTitle')}
+              </h2>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+                {t('storyDescription')}
+              </p>
+              {result.hasStory && (
+                <div className="flex items-center gap-2 text-sm text-green-600 dark:text-green-400 mb-3">
+                  <CheckCircle className="h-4 w-4" />
+                  <span>{t('storyRecorded')}</span>
+                </div>
+              )}
+              <StoryRecorderCTA
+                email={email}
+                leadId={leadId}
+                hasExistingStory={result.hasStory}
+                onComplete={() => {
+                  // Refresh to update hasStory indicator
+                  setResult(prev => prev ? { ...prev, hasStory: true } : prev);
+                }}
+              />
+            </div>
           )}
 
           {/* File Upload Section — only shown for case_id lookup (upload API requires email+leadId) */}

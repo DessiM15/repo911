@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
       const { email, leadId } = parsed.data;
       const { data, error: leadError } = await supabase
         .from('leads')
-        .select('id, status, qualification_tier, created_at, claimed_by, uploaded_files')
+        .select('id, status, qualification_tier, created_at, claimed_by, uploaded_files, story_recorded_at')
         .eq('id', leadId)
         .eq('email', email.toLowerCase().trim())
         .single();
@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
       const normalizedPhone = phone.replace(/\D/g, '').slice(-10);
       const { data, error: leadError } = await supabase
         .from('leads')
-        .select('id, status, qualification_tier, created_at, claimed_by, uploaded_files')
+        .select('id, status, qualification_tier, created_at, claimed_by, uploaded_files, story_recorded_at')
         .eq('last_name', lastName.trim())
         .ilike('phone', `%${normalizedPhone}`)
         .order('created_at', { ascending: false })
@@ -83,6 +83,7 @@ export async function POST(request: NextRequest) {
       submittedAt: lead.created_at,
       claimed: !!lead.claimed_by,
       uploadedFiles: lead.uploaded_files || [],
+      hasStory: !!lead.story_recorded_at,
     });
   } catch (error) {
     console.error('Lead tracking error:', error);

@@ -1,8 +1,9 @@
 import type { Metadata } from 'next';
-import { CheckCircle, Clock, Phone, ArrowRight, Info, Upload } from 'lucide-react';
+import { CheckCircle, Clock, Phone, ArrowRight, Info, Upload, Mic } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 import { Button } from '@/components/ui/button';
+import { StoryRecorderCTAWrapper } from './StoryRecorderCTAWrapper';
 
 export const metadata: Metadata = {
   title: 'Submission Confirmed',
@@ -93,6 +94,19 @@ export default async function ConfirmationPage({
               {t('uploadButton')}
             </Button>
           </Link>
+        </div>
+      )}
+
+      {id && (
+        <div className="bg-blue-50/50 dark:bg-blue-950/30 rounded-xl border-2 border-[#3474BA] p-6 mb-8 shadow-sm">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2 flex items-center gap-2">
+            <Mic className="h-5 w-5 text-[#3474BA]" />
+            {t('storyTitle')}
+          </h3>
+          <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+            {t('storyDescription')}
+          </p>
+          <StoryRecorderCTAWrapper leadId={id} />
         </div>
       )}
 

@@ -5,8 +5,9 @@ import { useParams, useRouter } from 'next/navigation';
 import {
   ArrowLeft, User, Phone, Mail, MapPin, Car, Calendar,
   FileText, AlertTriangle, Shield, Camera, Notebook,
-  Download, FileImage, File,
+  Download, FileImage, File, Mic,
 } from 'lucide-react';
+import { AudioPlayer } from '@/components/attorney/AudioPlayer';
 import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -272,6 +273,21 @@ export default function MyLeadDetailPage() {
                   })}
                 </div>
               )}
+            </div>
+          )}
+
+          {/* Story Audio */}
+          {lead.story_recorded_at && (
+            <div className="border-t border-gray-200 dark:border-slate-700 pt-4">
+              <p className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-2 flex items-center gap-1">
+                <Mic className="h-4 w-4 text-[#3474BA]" /> Consumer Audio Story
+              </p>
+              {lead.story_transcript && (
+                <p className="text-sm text-gray-600 dark:text-gray-400 italic leading-relaxed mb-3 whitespace-pre-wrap">
+                  &ldquo;{lead.story_transcript}&rdquo;
+                </p>
+              )}
+              <AudioPlayer leadId={id} />
             </div>
           )}
         </div>

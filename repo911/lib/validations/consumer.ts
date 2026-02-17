@@ -18,6 +18,12 @@ export const leadUploadSchema = z.object({
   leadId: z.string().uuid('Invalid case ID format'),
 });
 
+export const leadStorySchema = z.object({
+  email: z.string().email('Please enter a valid email address'),
+  leadId: z.string().uuid('Invalid case ID format'),
+  transcript: z.string().max(10000, 'Transcript too long').optional().default(''),
+});
+
 export const consumerMessageSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
   leadId: z.string().uuid('Invalid case ID format'),

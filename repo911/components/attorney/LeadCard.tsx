@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { MapPin, Calendar, Car, Camera, DollarSign, Eye } from 'lucide-react';
+import { MapPin, Calendar, Car, Camera, DollarSign, Eye, Mic } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { formatDate, formatCurrency } from '@/lib/utils';
@@ -79,10 +79,20 @@ export function LeadCard({ lead, isSubscribed, onPreview }: LeadCardProps) {
         </div>
       </div>
 
-      {lead.has_evidence && (
-        <div className="flex items-center gap-1.5 text-xs text-green-600 mb-3">
-          <Camera className="h-3.5 w-3.5" />
-          Evidence available
+      {(lead.has_evidence || lead.has_story) && (
+        <div className="space-y-1 mb-3">
+          {lead.has_evidence && (
+            <div className="flex items-center gap-1.5 text-xs text-green-600">
+              <Camera className="h-3.5 w-3.5" />
+              Evidence available
+            </div>
+          )}
+          {lead.has_story && (
+            <div className="flex items-center gap-1.5 text-xs text-[#3474BA]">
+              <Mic className="h-3.5 w-3.5" />
+              Audio story recorded
+            </div>
+          )}
         </div>
       )}
 

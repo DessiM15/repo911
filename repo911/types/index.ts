@@ -177,6 +177,11 @@ export interface Lead {
   consent_contact: boolean;
   consent_privacy_policy: boolean;
 
+  // Story Audio
+  story_audio_path: string | null;
+  story_transcript: string | null;
+  story_recorded_at: string | null;
+
   // Metadata
   ip_address: string | null;
   user_agent: string | null;
@@ -448,6 +453,8 @@ export interface MarketplaceLead {
   vehicle_make: string | null;
   vehicle_model: string | null;
   has_evidence: boolean;
+  has_story: boolean;
+  story_transcript_preview: string | null;
   fdcpa_violation_count: number;
   narrative_preview: string | null;
   qualification_breakdown: QualificationBreakdown | null;
