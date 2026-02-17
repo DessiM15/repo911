@@ -100,10 +100,10 @@ export default function NotificationsPage() {
         </div>
       ) : notifications.length === 0 ? (
         <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-12 text-center">
-          <Bell className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-1">No Notifications</h3>
+          <CheckCheck className="h-12 w-12 text-gray-300 mx-auto mb-4" />
+          <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-1">You&apos;re all caught up!</h3>
           <p className="text-gray-500 dark:text-gray-400 text-sm">
-            You&apos;ll be notified when new leads match your preferences or when important updates occur.
+            No new notifications. We&apos;ll alert you when leads match your preferences.
           </p>
         </div>
       ) : (

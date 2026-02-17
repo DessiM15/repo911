@@ -110,11 +110,25 @@ export default function MarketplacePage() {
         <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-12 text-center">
           <ShoppingCart className="h-12 w-12 text-gray-300 mx-auto mb-4" />
           <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-1">No Leads Available</h3>
-          <p className="text-gray-500 dark:text-gray-400 text-sm">
-            {tier || state
-              ? 'No leads match your current filters. Try adjusting your criteria.'
-              : 'No qualified leads are available right now. Check back soon!'}
-          </p>
+          {tier || state ? (
+            <>
+              <p className="text-gray-500 dark:text-gray-400 text-sm mb-4">
+                No leads match your current filters. Try adjusting your criteria.
+              </p>
+              <Button variant="outline" size="sm" onClick={() => { setTier(''); setState(''); }}>
+                Clear Filters
+              </Button>
+            </>
+          ) : (
+            <>
+              <p className="text-gray-500 dark:text-gray-400 text-sm mb-4">
+                No leads match your preferences. Update your profile to expand your reach.
+              </p>
+              <Link href="/attorney/profile">
+                <Button variant="attorney">Update Profile</Button>
+              </Link>
+            </>
+          )}
         </div>
       ) : (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
