@@ -88,7 +88,10 @@ export function AudioRecorder({ email, leadId, onComplete }: AudioRecorderProps)
             ? 'audio/mp4'
             : '';
 
-      const recorder = new MediaRecorder(stream, mimeType ? { mimeType } : undefined);
+      const recorder = new MediaRecorder(stream, {
+        ...(mimeType ? { mimeType } : {}),
+        audioBitsPerSecond: 64000,
+      });
       mediaRecorderRef.current = recorder;
       chunksRef.current = [];
 
