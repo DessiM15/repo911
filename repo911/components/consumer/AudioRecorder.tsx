@@ -150,8 +150,13 @@ export function AudioRecorder({ email, leadId, onComplete }: AudioRecorderProps)
         recognition.start();
         recognitionRef.current = recognition;
       }
-    } catch {
-      setError(t('micPermissionError'));
+    } catch (err) {
+      console.error('Recording error:', err);
+      if (err instanceof DOMException && err.name === 'NotAllowedError') {
+        setError(t('micPermissionError'));
+      } else {
+        setError(String(err instanceof Error ? err.message : 'Failed to start recording. Please try again.'));
+      }
     }
   }, [t]);
 
