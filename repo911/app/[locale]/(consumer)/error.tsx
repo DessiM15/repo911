@@ -15,7 +15,6 @@ export default function ConsumerError({
 }) {
   useEffect(() => {
     captureException(error, { level: 'fatal', tags: ['error-boundary', 'consumer'] });
-    console.error(error);
   }, [error]);
 
   return (

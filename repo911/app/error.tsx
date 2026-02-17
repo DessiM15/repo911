@@ -14,7 +14,6 @@ export default function Error({
 }) {
   useEffect(() => {
     captureException(error, { level: 'fatal', tags: ['error-boundary'] });
-    console.error(error);
   }, [error]);
 
   return (

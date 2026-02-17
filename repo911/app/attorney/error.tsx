@@ -14,7 +14,6 @@ export default function AttorneyError({
 }) {
   useEffect(() => {
     captureException(error, { level: 'fatal', tags: ['error-boundary', 'attorney'] });
-    console.error(error);
   }, [error]);
 
   return (

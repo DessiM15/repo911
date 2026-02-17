@@ -14,7 +14,6 @@ export default function AdminError({
 }) {
   useEffect(() => {
     captureException(error, { level: 'fatal', tags: ['error-boundary', 'admin'] });
-    console.error(error);
   }, [error]);
 
   return (
