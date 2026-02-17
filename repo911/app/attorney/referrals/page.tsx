@@ -161,8 +161,7 @@ export default function ReferralsPage() {
         <ol className="space-y-1.5 text-sm text-blue-800 dark:text-blue-300">
           <li>1. Share your referral code or link with fellow attorneys.</li>
           <li>2. They register using your link or enter your code during sign-up.</li>
-          <li>3. Once their account is approved and activated, you earn <strong>1 free lead claim</strong>.</li>
-          <li>4. Free claims are automatically applied the next time you claim a lead.</li>
+          <li>3. Once they make their first purchase (a lead claim or subscription), your reward activates.</li>
         </ol>
       </div>
 
