@@ -66,3 +66,10 @@ html {
   outline: 2px solid var(--consumer-primary);
   outline-offset: 2px;
 }
+
+/* Referral tooltip (CSS-only) */
+.referral-tooltip-wrapper:hover .referral-tooltip {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+}

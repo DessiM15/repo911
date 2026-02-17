@@ -157,7 +157,43 @@ export default function ReferralsPage() {
 
       {/* How It Works */}
       <div className="bg-blue-50 dark:bg-blue-950 border border-blue-100 dark:border-blue-900 rounded-xl p-6 mb-4">
-        <h3 className="text-sm font-semibold text-blue-900 dark:text-blue-200 mb-2">How It Works</h3>
+        <h3 className="text-sm font-semibold text-blue-900 dark:text-blue-200 mb-2 flex items-center gap-1.5">
+          How It Works
+          <span className="referral-tooltip-wrapper relative inline-flex">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              className="h-4 w-4 text-blue-400 dark:text-blue-500 opacity-50 hover:opacity-100 transition-opacity cursor-help"
+              aria-label="Reward details"
+            >
+              <path
+                fillRule="evenodd"
+                d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Zm-7-4a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM9 9a.75.75 0 0 0 0 1.5h.253a.25.25 0 0 1 .244.304l-.459 2.066A1.75 1.75 0 0 0 10.747 15H11a.75.75 0 0 0 0-1.5h-.253a.25.25 0 0 1-.244-.304l.459-2.066A1.75 1.75 0 0 0 9.253 9H9Z"
+                clipRule="evenodd"
+              />
+            </svg>
+            <span
+              className="referral-tooltip pointer-events-none invisible opacity-0 absolute left-1/2 -translate-x-1/2 top-full mt-2 w-72 rounded-lg bg-[#1B2A4A] text-white text-xs leading-relaxed p-4 shadow-lg border border-slate-600 z-50 transition-all duration-200"
+              role="tooltip"
+            >
+              {/* Arrow */}
+              <span className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-3 h-3 rotate-45 bg-[#1B2A4A] border-l border-t border-slate-600" />
+              <span className="relative block">
+                <strong className="block mb-1.5 text-sm">How rewards work:</strong>
+                Once your referral makes their first purchase, your discount activates automatically.
+                <br /><br />
+                <strong>Pay-Per-Lead users:</strong> Choose between 20% off your next lead claim or 25% off one month of a subscription.
+                <br /><br />
+                <strong>Subscribers:</strong> 25% off your next monthly payment.
+                <br /><br />
+                <strong>Referred attorneys:</strong> They receive 10% off their first purchase — whether it&apos;s a lead claim or subscription.
+                <br /><br />
+                Discounts apply once per referral and cannot be combined or stacked. There is no limit to the number of attorneys you can refer.
+              </span>
+            </span>
+          </span>
+        </h3>
         <ol className="space-y-1.5 text-sm text-blue-800 dark:text-blue-300">
           <li>1. Share your referral code or link with fellow attorneys.</li>
           <li>2. They register using your link or enter your code during sign-up.</li>
