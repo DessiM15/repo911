@@ -42,7 +42,8 @@ export async function POST(request: NextRequest) {
     }
 
     // Validate audio type and size
-    if (!ALLOWED_AUDIO_TYPES.includes(audioFile.type)) {
+    const baseType = audioFile.type.split(';')[0].trim();
+    if (!ALLOWED_AUDIO_TYPES.includes(baseType)) {
       return apiError('Unsupported audio format. Please use WebM, OGG, MP4, or MPEG.', 400);
     }
     if (audioFile.size > MAX_AUDIO_SIZE) {
