@@ -30,7 +30,9 @@ export function MessageThread({ email, leadId }: MessageThreadProps) {
 
   async function fetchMessages() {
     try {
-      const res = await fetch(`/api/leads/messages?email=${encodeURIComponent(email)}&leadId=${leadId}`);
+      const res = await fetch(`/api/leads/messages?leadId=${leadId}`, {
+        headers: { 'x-consumer-email': email },
+      });
       if (res.ok) {
         const data = await res.json();
         setMessages(data.messages || []);

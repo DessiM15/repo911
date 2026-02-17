@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const email = request.nextUrl.searchParams.get('email');
+    const email = request.headers.get('x-consumer-email');
     const leadId = request.nextUrl.searchParams.get('leadId');
 
     if (!email || !leadId) {
