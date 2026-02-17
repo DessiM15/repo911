@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { CreditCard, DollarSign, Receipt, Calendar, Crown, AlertCircle, CheckCircle, XCircle } from 'lucide-react';
+import { CreditCard, DollarSign, Receipt, Calendar, Crown, AlertCircle, CheckCircle, XCircle, ShieldCheck } from 'lucide-react';
 import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -280,6 +280,28 @@ export default function BillingPage() {
               </Table>
             </div>
           )}
+        </CardContent>
+      </Card>
+      {/* Quality Assurance Standards */}
+      <Card className="mt-6">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <ShieldCheck className="h-5 w-5" /> Quality Assurance Standards
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+            We stand behind every lead we deliver. If a lead has a disconnected number, denies submitting
+            an inquiry, or involves a voluntary surrender, we&apos;ll replace it at no cost within 7 business
+            days of delivery. Leads not disputed within this window are considered accepted.
+          </p>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-3">
+            To dispute a lead, contact us at{' '}
+            <a href="mailto:support@repo911.com" className="text-blue-600 hover:underline">
+              support@repo911.com
+            </a>{' '}
+            with the lead details and reason for dispute.
+          </p>
         </CardContent>
       </Card>
     </div>
