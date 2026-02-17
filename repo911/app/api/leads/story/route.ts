@@ -75,7 +75,7 @@ export async function POST(request: NextRequest) {
 
     // Upload audio to Supabase Storage
     const timestamp = Date.now();
-    const ext = audioFile.type === 'audio/mpeg' ? 'mp3' : audioFile.type.split('/')[1];
+    const ext = baseType === 'audio/mpeg' ? 'mp3' : baseType.split('/')[1];
     const storagePath = `${parsed.data.leadId}/${timestamp}_story.${ext}`;
 
     const { error: uploadError } = await supabase.storage
