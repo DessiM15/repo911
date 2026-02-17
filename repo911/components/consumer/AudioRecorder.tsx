@@ -146,9 +146,22 @@ export function AudioRecorder({ email, leadId, onComplete }: AudioRecorderProps)
           }
         };
 
-        recognition.onerror = () => {
-          // Silently degrade — transcription is optional
+        recognition.onerror = (event: Event) => {
+          console.warn('[SpeechRecognition] error:', (event as ErrorEvent).message || event);
         };
+
+        (recognition as EventTarget).addEventListener('end', () => {
+          console.warn('[SpeechRecognition] session ended');
+          // Auto-restart if still recording
+          if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
+            console.info('[SpeechRecognition] restarting...');
+            try {
+              recognition.start();
+            } catch {
+              console.warn('[SpeechRecognition] failed to restart');
+            }
+          }
+        });
 
         recognition.start();
         recognitionRef.current = recognition;
