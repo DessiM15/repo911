@@ -11,7 +11,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
-import { formatCurrency, formatDate } from '@/lib/utils';
+import { formatCurrency, formatDollars, formatDate } from '@/lib/utils';
 
 interface DashboardData {
   available_leads: number;
@@ -21,6 +21,7 @@ interface DashboardData {
   avg_cost_per_lead: number;
   leads_by_tier: { hot: number; warm: number; cold: number };
   case_outcomes: { open: number; in_progress: number; settled: number; dismissed: number; closed: number; paid: number };
+  total_settlement_value: number;
   recent_leads: Array<{
     id: string;
     first_name: string;
@@ -243,6 +244,21 @@ export default function AttorneyDashboardPage() {
               </div>
             ) : (
               <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-4">No case data yet.</p>
+            )}
+            {data && (
+              <div className="mt-4 pt-4 border-t border-gray-100 dark:border-slate-700">
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-sm text-gray-500 dark:text-gray-400">Total Settlements</span>
+                  <span className="text-lg font-bold text-green-700 dark:text-green-300">
+                    {formatDollars(data.total_settlement_value ?? 0)}
+                  </span>
+                </div>
+                <Link href="/attorney/cases">
+                  <Button variant="outline" size="sm" className="w-full justify-between">
+                    View Case Tracker <ArrowRight className="h-4 w-4" />
+                  </Button>
+                </Link>
+              </div>
             )}
           </CardContent>
         </Card>

@@ -289,6 +289,13 @@ export interface Transaction {
   payment_type: 'per_lead' | 'subscription';
 }
 
+export interface StatusHistoryEntry {
+  from: CaseStatus;
+  to: CaseStatus;
+  changed_at: string;
+  note?: string;
+}
+
 export interface FeeTracking {
   id: string;
   created_at: string;
@@ -298,6 +305,10 @@ export interface FeeTracking {
   case_status: CaseStatus;
   attorney_total_fee: number | null;
   notes: string | null;
+  status_updated_at: string | null;
+  status_history: StatusHistoryEntry[];
+  settlement_amount: number | null;
+  outcome_notes: string | null;
 }
 
 export interface CrmContact {

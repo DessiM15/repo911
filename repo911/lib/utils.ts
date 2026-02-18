@@ -20,6 +20,13 @@ export function formatCurrency(cents: number): string {
   }).format(cents / 100);
 }
 
+export function formatDollars(amount: number): string {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  }).format(amount);
+}
+
 export function formatDate(date: string | Date): string {
   return new Intl.DateTimeFormat('en-US', {
     year: 'numeric',

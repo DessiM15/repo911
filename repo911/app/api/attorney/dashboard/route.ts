@@ -62,14 +62,18 @@ export async function GET() {
     // Case outcomes
     const { data: feeData } = await supabase
       .from('fee_tracking')
-      .select('case_status')
+      .select('case_status, settlement_amount')
       .eq('attorney_id', attorney.id);
 
     const case_outcomes = { open: 0, in_progress: 0, settled: 0, dismissed: 0, closed: 0, paid: 0 };
+    let total_settlement_value = 0;
     for (const fee of feeData || []) {
       const status = fee.case_status as keyof typeof case_outcomes;
       if (status in case_outcomes) {
         case_outcomes[status]++;
+      }
+      if (fee.settlement_amount) {
+        total_settlement_value += Number(fee.settlement_amount);
       }
     }
 
@@ -89,6 +93,7 @@ export async function GET() {
       avg_cost_per_lead,
       leads_by_tier,
       case_outcomes,
+      total_settlement_value,
       recent_leads: recent_leads || [],
     });
   } catch (error) {
