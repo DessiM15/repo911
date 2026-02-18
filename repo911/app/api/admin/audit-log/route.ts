@@ -22,26 +22,34 @@ export async function GET(request: NextRequest) {
 
     const { searchParams } = new URL(request.url);
     const entityType = searchParams.get('entity_type');
-    const limit = Math.min(Number(searchParams.get('limit')) || 50, 200);
+    const page = Math.max(1, parseInt(searchParams.get('page') || '1', 10));
+    const limit = Math.min(100, Math.max(1, parseInt(searchParams.get('limit') || '25', 10)));
+    const offset = (page - 1) * limit;
 
     let query = supabase
       .from('admin_audit_log')
-      .select('*')
-      .order('created_at', { ascending: false })
-      .limit(limit);
+      .select('*', { count: 'exact' })
+      .order('created_at', { ascending: false });
 
     if (entityType) {
       query = query.eq('entity_type', entityType);
     }
 
-    const { data: entries, error } = await query;
+    query = query.range(offset, offset + limit - 1);
+
+    const { data: entries, count, error } = await query;
 
     if (error) {
       console.error('Audit log query error:', error);
       return NextResponse.json({ error: 'Failed to fetch audit log' }, { status: 500 });
     }
 
-    return NextResponse.json({ entries: entries || [] });
+    const total = count || 0;
+
+    return NextResponse.json({
+      entries: entries || [],
+      pagination: { page, limit, total, totalPages: Math.ceil(total / limit) },
+    });
   } catch (error) {
     console.error('Audit log error:', error);
     return NextResponse.json({ error: 'An unexpected error occurred' }, { status: 500 });

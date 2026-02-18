@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { ClipboardList, Filter } from 'lucide-react';
+import { ClipboardList, Filter, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { formatDate } from '@/lib/utils';
 import type { AuditLogEntry } from '@/types';
@@ -12,13 +12,16 @@ export default function AuditLogPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [entityFilter, setEntityFilter] = useState('');
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const limit = 25;
 
   useEffect(() => {
     async function fetchAuditLog() {
+      setLoading(true);
       try {
-        const params = new URLSearchParams();
+        const params = new URLSearchParams({ page: page.toString(), limit: limit.toString() });
         if (entityFilter) params.set('entity_type', entityFilter);
-        params.set('limit', '50');
 
         const res = await fetch(`/api/admin/audit-log?${params}`);
         if (!res.ok) {
@@ -27,6 +30,7 @@ export default function AuditLogPage() {
         }
         const data = await res.json();
         setEntries(data.entries);
+        setTotalPages(data.pagination?.totalPages || 1);
       } catch {
         setError('Failed to load audit log');
       } finally {
@@ -34,7 +38,7 @@ export default function AuditLogPage() {
       }
     }
     fetchAuditLog();
-  }, [entityFilter]);
+  }, [entityFilter, page]);
 
   function entityLink(entry: AuditLogEntry) {
     if (!entry.entity_id) return null;
@@ -81,8 +85,8 @@ export default function AuditLogPage() {
           <select
             value={entityFilter}
             onChange={(e) => {
-              setLoading(true);
               setEntityFilter(e.target.value);
+              setPage(1);
             }}
             className="px-3 py-1.5 border border-gray-300 dark:border-slate-600 rounded-lg text-sm dark:bg-slate-800 dark:text-gray-100"
           >
@@ -153,6 +157,32 @@ export default function AuditLogPage() {
             </tbody>
           </table>
         </div>
+
+        {totalPages > 1 && (
+          <nav aria-label="Pagination" className="flex items-center justify-between px-4 py-3 border-t border-gray-200 dark:border-slate-700">
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              Page {page} of {totalPages}
+            </p>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                disabled={page === 1}
+                aria-label="Previous page"
+                className="p-1.5 rounded-lg border border-gray-300 dark:border-slate-600 hover:bg-gray-50 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </button>
+              <button
+                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                disabled={page === totalPages}
+                aria-label="Next page"
+                className="p-1.5 rounded-lg border border-gray-300 dark:border-slate-600 hover:bg-gray-50 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </button>
+            </div>
+          </nav>
+        )}
       </div>
     </div>
   );
