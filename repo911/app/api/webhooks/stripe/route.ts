@@ -145,6 +145,26 @@ export async function POST(request: NextRequest) {
         }
       }
 
+      // Enrich transaction with receipt_url from Stripe charge (non-critical)
+      try {
+        const pi = await stripe.paymentIntents.retrieve(session.payment_intent as string);
+        const chargeId = typeof pi.latest_charge === 'string'
+          ? pi.latest_charge
+          : pi.latest_charge?.id;
+        if (chargeId) {
+          const charge = await stripe.charges.retrieve(chargeId);
+          await supabase
+            .from('transactions')
+            .update({
+              receipt_url: charge.receipt_url ?? null,
+              stripe_charge_id: chargeId,
+            })
+            .eq('stripe_payment_intent_id', session.payment_intent as string);
+        }
+      } catch (receiptErr) {
+        console.error('Failed to enrich transaction with receipt_url:', receiptErr);
+      }
+
       // CRM activity (non-critical, outside transaction)
       const { data: crmContact } = await supabase
         .from('crm_contacts')

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { CreditCard, DollarSign, Receipt, Calendar, Crown, AlertCircle, CheckCircle, XCircle, ShieldCheck } from 'lucide-react';
+import { CreditCard, DollarSign, Receipt, Calendar, Crown, AlertCircle, CheckCircle, XCircle, ShieldCheck, ExternalLink } from 'lucide-react';
 import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -256,6 +256,7 @@ export default function BillingPage() {
                     <TableHead>Description</TableHead>
                     <TableHead>Amount</TableHead>
                     <TableHead>Status</TableHead>
+                    <TableHead>Receipt</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -273,6 +274,20 @@ export default function BillingPage() {
                         }>
                           {tx.status}
                         </Badge>
+                      </TableCell>
+                      <TableCell>
+                        {tx.receipt_url ? (
+                          <a
+                            href={tx.receipt_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 text-sm text-blue-600 hover:text-blue-800 hover:underline"
+                          >
+                            View <ExternalLink className="h-3.5 w-3.5" />
+                          </a>
+                        ) : (
+                          <span className="text-gray-400">&mdash;</span>
+                        )}
                       </TableCell>
                     </TableRow>
                   ))}
