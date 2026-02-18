@@ -4,6 +4,7 @@ import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 import { Button } from '@/components/ui/button';
 import { StoryRecorderCTAWrapper } from './StoryRecorderCTAWrapper';
+import { CopyIdButton } from '@/components/consumer/CopyIdButton';
 
 export const metadata: Metadata = {
   title: 'Submission Confirmed',
@@ -86,7 +87,10 @@ export default async function ConfirmationPage({
           </p>
           <div className="bg-white dark:bg-slate-800 rounded-lg px-4 py-3 mb-4">
             <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">{t('caseIdLabel')}</p>
-            <p className="font-mono text-sm text-gray-900 dark:text-gray-100 select-all break-all">{id}</p>
+            <div className="flex items-center gap-2">
+              <p className="font-mono text-sm text-gray-900 dark:text-gray-100 select-all break-all">{id}</p>
+              <CopyIdButton text={id} variant="orange" />
+            </div>
           </div>
           <Link href={`/track?id=${id}`}>
             <Button variant="consumer" size="lg" className="w-full">

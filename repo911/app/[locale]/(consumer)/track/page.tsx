@@ -4,7 +4,7 @@ import { useState, useRef, useCallback, useEffect, Suspense } from 'react';
 import { Link } from '@/i18n/navigation';
 import { useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { Search, Clock, CheckCircle, Shield, FileText, Upload, X, AlertTriangle, Loader2, Phone, Mic } from 'lucide-react';
+import { Search, Clock, CheckCircle, Shield, FileText, Upload, X, AlertTriangle, Loader2, Phone, Mic, Copy, Check } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { MessageThread } from '@/components/consumer/MessageThread';
@@ -55,6 +55,17 @@ export default function TrackPage() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<TrackResult | null>(null);
   const [error, setError] = useState('');
+
+  // Copy state
+  const [copied, setCopied] = useState(false);
+
+  function handleCopyId() {
+    if (!result) return;
+    navigator.clipboard.writeText(result.id);
+    toast.success('Copied!');
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }
 
   // Upload state
   const [files, setFiles] = useState<File[]>([]);
@@ -320,6 +331,20 @@ export default function TrackPage() {
             </h2>
 
             <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-500 dark:text-gray-400">{t('caseId')}</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-mono text-gray-900 dark:text-gray-100">{result.id}</span>
+                  <button
+                    onClick={handleCopyId}
+                    title="Copy Case ID"
+                    className="p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors"
+                  >
+                    {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                  </button>
+                </div>
+              </div>
+
               <div className="flex items-center justify-between">
                 <span className="text-sm text-gray-500 dark:text-gray-400">{t('status')}</span>
                 <div className="flex items-center gap-2">
