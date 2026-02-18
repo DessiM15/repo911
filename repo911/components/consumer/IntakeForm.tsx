@@ -22,9 +22,10 @@ const TOTAL_STEPS = 11;
 const DRAFT_KEY = 'repo911_intake_draft';
 const CONSENT_FIELDS = ['electronic_signature', 'consent_accurate_info', 'consent_not_legal_advice', 'consent_contact', 'consent_privacy_policy'];
 
-const YEAR_OPTIONS = Array.from({ length: 2026 - 1990 + 1 }, (_, i) => ({
-  value: String(2026 - i),
-  label: String(2026 - i),
+const MAX_YEAR = new Date().getFullYear() + 1;
+const YEAR_OPTIONS = Array.from({ length: MAX_YEAR - 1990 + 1 }, (_, i) => ({
+  value: String(MAX_YEAR - i),
+  label: String(MAX_YEAR - i),
 }));
 
 // Fields to validate per step (only required fields)
