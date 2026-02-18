@@ -89,11 +89,11 @@ export async function middleware(request: NextRequest) {
         return NextResponse.redirect(url);
       }
 
-      if (attorney.status === 'suspended' || attorney.status === 'deactivated') {
+      if (attorney.status !== 'active') {
         await supabase.auth.signOut();
         const url = request.nextUrl.clone();
         url.pathname = '/attorney/login';
-        url.searchParams.set('error', 'account_suspended');
+        url.searchParams.set('error', attorney.status === 'pending' ? 'account_pending' : 'account_suspended');
         return NextResponse.redirect(url);
       }
     }

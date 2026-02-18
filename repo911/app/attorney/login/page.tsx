@@ -1,18 +1,28 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Scale } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { createClient } from '@/lib/supabase/client';
 
 export default function AttorneyLoginPage() {
+  return (
+    <Suspense>
+      <AttorneyLoginForm />
+    </Suspense>
+  );
+}
+
+function AttorneyLoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [errorType, setErrorType] = useState<'error' | 'warning'>('error');
   const [loading, setLoading] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
 
@@ -23,6 +33,17 @@ export default function AttorneyLoginPage() {
       setRememberMe(true);
     }
   }, []);
+
+  useEffect(() => {
+    const errorParam = searchParams.get('error');
+    if (errorParam === 'account_pending') {
+      setError('Your application is under review. You\u2019ll receive an email once approved.');
+      setErrorType('warning');
+    } else if (errorParam === 'account_suspended') {
+      setError('Your account has been suspended. Please contact support for assistance.');
+      setErrorType('error');
+    }
+  }, [searchParams]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -71,7 +92,11 @@ export default function AttorneyLoginPage() {
         </div>
 
         {error && (
-          <div role="alert" className="bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 rounded-lg p-4 mb-6">
+          <div role="alert" className={`rounded-lg p-4 mb-6 border ${
+            errorType === 'warning'
+              ? 'bg-amber-50 dark:bg-amber-950 border-amber-200 dark:border-amber-800 text-amber-700 dark:text-amber-400'
+              : 'bg-red-50 dark:bg-red-950 border-red-200 dark:border-red-800 text-red-700 dark:text-red-400'
+          }`}>
             {error}
           </div>
         )}
