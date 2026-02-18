@@ -1,4 +1,4 @@
-import { Shield, FileSearch, UserCheck, ArrowRight, ChevronRight, Clock, Lock, Scale } from 'lucide-react';
+import { Shield, FileSearch, UserCheck, ArrowRight, ChevronRight, Clock, Lock, Scale, DollarSign } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 import { Button } from '@/components/ui/button';
@@ -140,26 +140,28 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Social Proof Stats */}
-      <section className="bg-[#1B2A4A] py-8" style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 120px' }}>
+      {/* Value Propositions */}
+      <section className="bg-[#1B2A4A] py-10" style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 160px' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-            <div>
-              <p className="text-2xl sm:text-3xl font-bold text-white">{t('stat1Value')}</p>
-              <p className="text-sm text-gray-300 mt-1">{t('stat1Label')}</p>
-            </div>
-            <div>
-              <p className="text-2xl sm:text-3xl font-bold text-white">{t('stat2Value')}</p>
-              <p className="text-sm text-gray-300 mt-1">{t('stat2Label')}</p>
-            </div>
-            <div>
-              <p className="text-2xl sm:text-3xl font-bold text-white">{t('stat3Value')}</p>
-              <p className="text-sm text-gray-300 mt-1">{t('stat3Label')}</p>
-            </div>
-            <div>
-              <p className="text-2xl sm:text-3xl font-bold text-white">{t('stat4Value')}</p>
-              <p className="text-sm text-gray-300 mt-1">{t('stat4Label')}</p>
-            </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-x-8 gap-y-6">
+            {[
+              { icon: DollarSign, titleKey: 'value1Title', descKey: 'value1Description' },
+              { icon: UserCheck, titleKey: 'value2Title', descKey: 'value2Description' },
+              { icon: Lock, titleKey: 'value3Title', descKey: 'value3Description' },
+              { icon: Shield, titleKey: 'value4Title', descKey: 'value4Description' },
+              { icon: Scale, titleKey: 'value5Title', descKey: 'value5Description' },
+              { icon: Clock, titleKey: 'value6Title', descKey: 'value6Description' },
+            ].map((item) => (
+              <div key={item.titleKey} className="flex items-start gap-3">
+                <div className="flex-shrink-0 mt-0.5">
+                  <item.icon className="h-5 w-5 text-[#F5A623]" />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-white">{t(item.titleKey)}</p>
+                  <p className="text-xs text-gray-400 mt-0.5">{t(item.descKey)}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
