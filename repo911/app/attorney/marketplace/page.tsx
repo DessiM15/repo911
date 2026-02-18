@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import Link from 'next/link';
-import { ShoppingCart, AlertCircle, MapPin, Calendar, Car, Camera, DollarSign } from 'lucide-react';
+import { ShoppingCart, AlertCircle, MapPin, Calendar, Car, Camera, DollarSign, ChevronLeft, ChevronRight } from 'lucide-react';
 import { MarketplaceFilters } from '@/components/attorney/MarketplaceFilters';
 import { LeadCard } from '@/components/attorney/LeadCard';
 import { SkeletonCard } from '@/components/ui/skeleton';
@@ -29,8 +29,12 @@ export default function MarketplacePage() {
   const [tier, setTier] = useState('');
   const [state, setState] = useState('');
   const [sort, setSort] = useState('newest');
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [previewLead, setPreviewLead] = useState<MarketplaceLead | null>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
+  const LEADS_PER_PAGE = 20;
 
   // Fetch subscription status once on mount
   useEffect(() => {
@@ -55,6 +59,8 @@ export default function MarketplacePage() {
       if (tier) params.set('tier', tier);
       if (state) params.set('state', state);
       if (sort) params.set('sort', sort);
+      params.set('page', String(page));
+      params.set('limit', String(LEADS_PER_PAGE));
 
       const res = await fetch(`/api/attorney/marketplace?${params}`);
       const data = await res.json();
@@ -65,12 +71,13 @@ export default function MarketplacePage() {
       }
 
       setLeads(data.leads || []);
+      setTotal(data.total || 0);
     } catch {
       setError('Failed to load marketplace leads.');
     } finally {
       setLoading(false);
     }
-  }, [tier, state, sort]);
+  }, [tier, state, sort, page]);
 
   useEffect(() => {
     fetchLeads();
@@ -87,9 +94,9 @@ export default function MarketplacePage() {
           tier={tier}
           state={state}
           sort={sort}
-          onTierChange={setTier}
-          onStateChange={setState}
-          onSortChange={setSort}
+          onTierChange={(v) => { setTier(v); setPage(1); }}
+          onStateChange={(v) => { setState(v); setPage(1); }}
+          onSortChange={(v) => { setSort(v); setPage(1); }}
         />
       </div>
 
@@ -106,7 +113,7 @@ export default function MarketplacePage() {
             <SkeletonCard key={i} />
           ))}
         </div>
-      ) : leads.length === 0 ? (
+      ) : leads.length === 0 && page === 1 ? (
         <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-12 text-center">
           <ShoppingCart className="h-12 w-12 text-gray-300 mx-auto mb-4" />
           <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-1">No Leads Available</h3>
@@ -131,11 +138,56 @@ export default function MarketplacePage() {
           )}
         </div>
       ) : (
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {leads.map((lead) => (
-            <LeadCard key={lead.id} lead={lead} isSubscribed={isSubscribed} onPreview={setPreviewLead} />
-          ))}
-        </div>
+        <>
+          <div ref={gridRef} className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {leads.map((lead) => (
+              <LeadCard key={lead.id} lead={lead} isSubscribed={isSubscribed} onPreview={setPreviewLead} />
+            ))}
+          </div>
+
+          {/* Pagination */}
+          {total > LEADS_PER_PAGE && (() => {
+            const totalPages = Math.ceil(total / LEADS_PER_PAGE);
+            const rangeStart = (page - 1) * LEADS_PER_PAGE + 1;
+            const rangeEnd = Math.min(page * LEADS_PER_PAGE, total);
+
+            const goToPage = (p: number) => {
+              setPage(p);
+              gridRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            };
+
+            return (
+              <div className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-3 bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 px-4 py-3">
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  Showing {rangeStart}–{rangeEnd} of {total} leads
+                </p>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    disabled={page <= 1}
+                    onClick={() => goToPage(page - 1)}
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                    Previous
+                  </Button>
+                  <span className="text-sm text-gray-700 dark:text-gray-300 px-2">
+                    Page {page} of {totalPages}
+                  </span>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    disabled={page >= totalPages}
+                    onClick={() => goToPage(page + 1)}
+                  >
+                    Next
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            );
+          })()}
+        </>
       )}
 
       {/* Lead Preview Modal */}

@@ -33,6 +33,9 @@ export async function GET(request: NextRequest) {
     const tier = searchParams.get('tier');
     const state = searchParams.get('state');
     const sort = searchParams.get('sort') || 'newest';
+    const page = Math.max(1, parseInt(searchParams.get('page') || '1') || 1);
+    const limit = Math.min(50, Math.max(1, parseInt(searchParams.get('limit') || '20') || 20));
+    const offset = (page - 1) * limit;
 
     // Build query — only show qualified, unclaimed leads
     let query = supabase
@@ -49,7 +52,7 @@ export async function GET(request: NextRequest) {
         received_written_notice, received_notice_of_sale,
         has_photos_videos, has_documents, has_witnesses,
         narrative, story_transcript, story_recorded_at
-      `)
+      `, { count: 'exact' })
       .in('status', ['qualified_hot', 'qualified_warm', 'qualified_cold'])
       .is('claimed_by', null);
 
@@ -74,7 +77,7 @@ export async function GET(request: NextRequest) {
         query = query.order('created_at', { ascending: false });
     }
 
-    const { data: leads, error } = await query.limit(50);
+    const { data: leads, count, error } = await query.range(offset, offset + limit - 1);
 
     if (error) {
       console.error('Marketplace query error:', error);
@@ -124,7 +127,7 @@ export async function GET(request: NextRequest) {
       };
     });
 
-    return NextResponse.json({ leads: marketplaceLeads });
+    return NextResponse.json({ leads: marketplaceLeads, total: count || 0, page, limit });
   } catch (error) {
     console.error('Marketplace error:', error);
     return NextResponse.json({ error: 'An unexpected error occurred' }, { status: 500 });
