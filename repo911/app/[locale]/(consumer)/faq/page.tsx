@@ -3,6 +3,7 @@ import { ArrowRight } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 import { Button } from '@/components/ui/button';
+import FaqSearch from '@/components/consumer/FaqSearch';
 
 export const metadata: Metadata = {
   title: 'Frequently Asked Questions',
@@ -40,23 +41,7 @@ export default async function FAQPage() {
         </p>
       </div>
 
-      <div className="space-y-10">
-        {faqs.map((section) => (
-          <div key={section.category}>
-            <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4 pb-2 border-b border-gray-200 dark:border-slate-700">
-              {section.category}
-            </h2>
-            <div className="space-y-6">
-              {section.questions.map((faq) => (
-                <div key={faq.q}>
-                  <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-2">{faq.q}</h3>
-                  <p className="text-gray-600 dark:text-gray-400 leading-relaxed">{faq.a}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
+      <FaqSearch faqs={faqs} />
 
       {/* CTA */}
       <div className="mt-12 text-center bg-blue-50 dark:bg-blue-950 rounded-xl border border-blue-100 dark:border-blue-800 p-8">
