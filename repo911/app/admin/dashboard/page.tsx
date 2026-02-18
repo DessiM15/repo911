@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import {
   AreaChart, Area, BarChart, Bar, XAxis, YAxis,
@@ -8,7 +8,7 @@ import {
 } from 'recharts';
 import {
   FileText, Users, DollarSign, TrendingUp, ArrowRight,
-  Flame, Thermometer, XCircle,
+  Flame, Thermometer, XCircle, Calendar,
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -39,6 +39,66 @@ interface DashboardData {
   recent_transactions: Pick<Transaction, 'id' | 'amount' | 'status' | 'created_at' | 'attorney_id' | 'lead_id'>[];
 }
 
+type RangePreset = '7d' | '30d' | '90d' | '6mo' | '1yr' | 'all' | 'custom';
+
+function getPresetDates(preset: Exclude<RangePreset, 'custom' | 'all'>): { from: string; to: string } {
+  const to = new Date();
+  const from = new Date();
+  switch (preset) {
+    case '7d':
+      from.setDate(from.getDate() - 7);
+      break;
+    case '30d':
+      from.setDate(from.getDate() - 30);
+      break;
+    case '90d':
+      from.setDate(from.getDate() - 90);
+      break;
+    case '6mo':
+      from.setMonth(from.getMonth() - 6);
+      break;
+    case '1yr':
+      from.setFullYear(from.getFullYear() - 1);
+      break;
+  }
+  return {
+    from: from.toISOString().split('T')[0],
+    to: to.toISOString().split('T')[0],
+  };
+}
+
+function getRangeLabel(preset: RangePreset, customFrom: string, customTo: string): string {
+  switch (preset) {
+    case '7d': return 'Last 7 Days';
+    case '30d': return 'Last 30 Days';
+    case '90d': return 'Last 90 Days';
+    case '6mo': return 'Last 6 Months';
+    case '1yr': return 'Last Year';
+    case 'all': return 'All Time';
+    case 'custom': {
+      if (!customFrom && !customTo) return 'Custom';
+      const fmtDate = (d: string) => {
+        const [y, m, day] = d.split('-');
+        const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+        return `${months[Number(m) - 1]} ${Number(day)}`;
+      };
+      if (customFrom && customTo) return `${fmtDate(customFrom)} \u2013 ${fmtDate(customTo)}`;
+      if (customFrom) return `From ${fmtDate(customFrom)}`;
+      return `Until ${fmtDate(customTo)}`;
+    }
+  }
+}
+
+const PRESETS: { key: RangePreset; label: string }[] = [
+  { key: '7d', label: '7d' },
+  { key: '30d', label: '30d' },
+  { key: '90d', label: '90d' },
+  { key: '6mo', label: '6mo' },
+  { key: '1yr', label: '1yr' },
+  { key: 'all', label: 'All' },
+  { key: 'custom', label: 'Custom' },
+];
+
 function StatCard({ label, value, icon: Icon, sub, color }: {
   label: string;
   value: string | number;
@@ -67,6 +127,11 @@ export default function AdminDashboardPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
+  // Date range state
+  const [activePreset, setActivePreset] = useState<RangePreset>('30d');
+  const [customFrom, setCustomFrom] = useState('');
+  const [customTo, setCustomTo] = useState('');
+
   useEffect(() => {
     async function fetchDashboard() {
       try {
@@ -85,21 +150,45 @@ export default function AdminDashboardPage() {
     fetchDashboard();
   }, []);
 
-  useEffect(() => {
-    async function fetchTrends() {
-      try {
-        const res = await fetch('/api/admin/dashboard/trends');
-        if (res.ok) {
-          setTrends(await res.json());
-        }
-      } catch {
-        // Non-blocking — charts simply won't render
-      } finally {
-        setTrendsLoading(false);
+  const fetchTrends = useCallback(async (preset: RangePreset, cFrom: string, cTo: string) => {
+    setTrendsLoading(true);
+    try {
+      const params = new URLSearchParams();
+      if (preset === 'custom') {
+        if (cFrom) params.set('from', cFrom);
+        if (cTo) params.set('to', cTo);
+      } else if (preset !== 'all') {
+        const { from, to } = getPresetDates(preset);
+        params.set('from', from);
+        params.set('to', to);
       }
+      // 'all' sends no params — API returns defaults for leads/revenue but funnel is all-time
+      const qs = params.toString();
+      const res = await fetch(`/api/admin/dashboard/trends${qs ? `?${qs}` : ''}`);
+      if (res.ok) {
+        setTrends(await res.json());
+      }
+    } catch {
+      // Non-blocking — charts simply won't render
+    } finally {
+      setTrendsLoading(false);
     }
-    fetchTrends();
   }, []);
+
+  // Initial fetch and refetch on preset/custom date change
+  useEffect(() => {
+    fetchTrends(activePreset, customFrom, customTo);
+  }, [activePreset, customFrom, customTo, fetchTrends]);
+
+  function handlePresetClick(preset: RangePreset) {
+    setActivePreset(preset);
+    if (preset !== 'custom') {
+      setCustomFrom('');
+      setCustomTo('');
+    }
+  }
+
+  const rangeLabel = getRangeLabel(activePreset, customFrom, customTo);
 
   if (loading) {
     return (
@@ -184,11 +273,53 @@ export default function AdminDashboardPage() {
         />
       </div>
 
+      {/* Date Range Selector */}
+      <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-4">
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+            <Calendar className="h-4 w-4" />
+            <span>Range</span>
+          </div>
+          <div className="flex flex-wrap gap-1.5">
+            {PRESETS.map(({ key, label }) => (
+              <button
+                key={key}
+                onClick={() => handlePresetClick(key)}
+                className={`px-3 py-1.5 text-sm rounded-lg font-medium transition-colors ${
+                  activePreset === key
+                    ? 'bg-[#1B2A4A] text-white'
+                    : 'bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-600'
+                }`}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+          {activePreset === 'custom' && (
+            <div className="flex items-center gap-2 ml-auto">
+              <input
+                type="date"
+                value={customFrom}
+                onChange={(e) => setCustomFrom(e.target.value)}
+                className="px-2.5 py-1.5 text-sm rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#3474BA]"
+              />
+              <span className="text-gray-400 dark:text-gray-500 text-sm">to</span>
+              <input
+                type="date"
+                value={customTo}
+                onChange={(e) => setCustomTo(e.target.value)}
+                className="px-2.5 py-1.5 text-sm rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#3474BA]"
+              />
+            </div>
+          )}
+        </div>
+      </div>
+
       {/* Trend Charts */}
       <div className="grid lg:grid-cols-3 gap-6">
         {/* Leads Over Time */}
         <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-5">
-          <h2 className="font-semibold text-gray-900 dark:text-gray-100 mb-4">Leads (Last 30 Days)</h2>
+          <h2 className="font-semibold text-gray-900 dark:text-gray-100 mb-4">Leads ({rangeLabel})</h2>
           {trendsLoading ? (
             <Skeleton className="h-48 w-full" />
           ) : trends?.leads_over_time ? (
@@ -222,7 +353,7 @@ export default function AdminDashboardPage() {
 
         {/* Conversion Funnel */}
         <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-5">
-          <h2 className="font-semibold text-gray-900 dark:text-gray-100 mb-4">Conversion Funnel</h2>
+          <h2 className="font-semibold text-gray-900 dark:text-gray-100 mb-4">Conversion Funnel ({rangeLabel})</h2>
           {trendsLoading ? (
             <Skeleton className="h-48 w-full" />
           ) : trends?.conversion_funnel ? (
@@ -242,7 +373,7 @@ export default function AdminDashboardPage() {
 
         {/* Revenue Trend */}
         <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-5">
-          <h2 className="font-semibold text-gray-900 dark:text-gray-100 mb-4">Revenue (Last 6 Months)</h2>
+          <h2 className="font-semibold text-gray-900 dark:text-gray-100 mb-4">Revenue ({rangeLabel})</h2>
           {trendsLoading ? (
             <Skeleton className="h-48 w-full" />
           ) : trends?.revenue_trend ? (
