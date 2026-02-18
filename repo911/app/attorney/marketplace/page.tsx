@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, Suspense } from 'react';
 import Link from 'next/link';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { ShoppingCart, AlertCircle, MapPin, Calendar, Car, Camera, DollarSign, ChevronLeft, ChevronRight } from 'lucide-react';
 import { MarketplaceFilters } from '@/components/attorney/MarketplaceFilters';
 import { LeadCard } from '@/components/attorney/LeadCard';
@@ -23,13 +24,58 @@ function getTierPrice(tier: QualificationTier | null): number {
 }
 
 export default function MarketplacePage() {
+  return (
+    <Suspense fallback={
+      <div>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Lead Marketplace</h1>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Browse and claim qualified leads</p>
+          </div>
+        </div>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <SkeletonCard key={i} />
+          ))}
+        </div>
+      </div>
+    }>
+      <MarketplaceContent />
+    </Suspense>
+  );
+}
+
+function MarketplaceContent() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  const tier = searchParams.get('tier') ?? '';
+  const state = searchParams.get('state') ?? '';
+  const sort = searchParams.get('sort') ?? 'newest';
+  const page = Number(searchParams.get('page') ?? '1') || 1;
+
+  const updateParams = useCallback((updates: Record<string, string | number>) => {
+    const params = new URLSearchParams(searchParams.toString());
+    for (const [key, value] of Object.entries(updates)) {
+      const strVal = String(value);
+      const isDefault =
+        (key === 'tier' && strVal === '') ||
+        (key === 'state' && strVal === '') ||
+        (key === 'sort' && strVal === 'newest') ||
+        (key === 'page' && strVal === '1');
+      if (isDefault) {
+        params.delete(key);
+      } else {
+        params.set(key, strVal);
+      }
+    }
+    const qs = params.toString();
+    router.replace(qs ? `?${qs}` : '?', { scroll: false });
+  }, [searchParams, router]);
+
   const [leads, setLeads] = useState<MarketplaceLead[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [tier, setTier] = useState('');
-  const [state, setState] = useState('');
-  const [sort, setSort] = useState('newest');
-  const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [previewLead, setPreviewLead] = useState<MarketplaceLead | null>(null);
@@ -94,9 +140,9 @@ export default function MarketplacePage() {
           tier={tier}
           state={state}
           sort={sort}
-          onTierChange={(v) => { setTier(v); setPage(1); }}
-          onStateChange={(v) => { setState(v); setPage(1); }}
-          onSortChange={(v) => { setSort(v); setPage(1); }}
+          onTierChange={(v) => updateParams({ tier: v, page: 1 })}
+          onStateChange={(v) => updateParams({ state: v, page: 1 })}
+          onSortChange={(v) => updateParams({ sort: v, page: 1 })}
         />
       </div>
 
@@ -122,7 +168,7 @@ export default function MarketplacePage() {
               <p className="text-gray-500 dark:text-gray-400 text-sm mb-4">
                 No leads match your current filters. Try adjusting your criteria.
               </p>
-              <Button variant="outline" size="sm" onClick={() => { setTier(''); setState(''); }}>
+              <Button variant="outline" size="sm" onClick={() => updateParams({ tier: '', state: '' })}>
                 Clear Filters
               </Button>
             </>
@@ -152,7 +198,7 @@ export default function MarketplacePage() {
             const rangeEnd = Math.min(page * LEADS_PER_PAGE, total);
 
             const goToPage = (p: number) => {
-              setPage(p);
+              updateParams({ page: p });
               gridRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
             };
 
