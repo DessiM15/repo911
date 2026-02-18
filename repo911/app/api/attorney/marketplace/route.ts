@@ -70,6 +70,18 @@ export async function GET(request: NextRequest) {
       case 'score_asc':
         query = query.order('qualification_score', { ascending: true });
         break;
+      case 'price_desc':
+        query = query.order('qualification_score', { ascending: false }).order('created_at', { ascending: false });
+        break;
+      case 'price_asc':
+        query = query.order('qualification_score', { ascending: true }).order('created_at', { ascending: false });
+        break;
+      case 'state_asc':
+        query = query.order('repo_state', { ascending: true }).order('created_at', { ascending: false });
+        break;
+      case 'state_desc':
+        query = query.order('repo_state', { ascending: false }).order('created_at', { ascending: false });
+        break;
       case 'oldest':
         query = query.order('created_at', { ascending: true });
         break;

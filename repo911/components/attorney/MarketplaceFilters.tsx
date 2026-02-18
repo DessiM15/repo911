@@ -47,6 +47,10 @@ export function MarketplaceFilters({
           { value: 'oldest', label: 'Oldest First' },
           { value: 'score_desc', label: 'Highest Score' },
           { value: 'score_asc', label: 'Lowest Score' },
+          { value: 'price_desc', label: 'Price: High to Low' },
+          { value: 'price_asc', label: 'Price: Low to High' },
+          { value: 'state_asc', label: 'State: A → Z' },
+          { value: 'state_desc', label: 'State: Z → A' },
         ]}
       />
     </div>
