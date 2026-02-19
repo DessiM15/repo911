@@ -78,12 +78,16 @@ export async function PATCH(
 
     const { data: admin } = await supabase
       .from('admins')
-      .select('id, email')
+      .select('id, email, role')
       .eq('supabase_auth_id', user.id)
       .single();
 
     if (!admin) {
       return apiError('Forbidden', 403);
+    }
+
+    if (admin.role !== 'super_admin' && admin.role !== 'admin') {
+      return apiError('Insufficient permissions', 403);
     }
 
     const body = await request.json();
