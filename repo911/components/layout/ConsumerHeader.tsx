@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { MobileMenuToggle } from './MobileMenuToggle';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { ThemeToggle } from './ThemeToggle';
+import { ConsumerAuthNav } from '@/components/consumer/ConsumerAuthNav';
 import { getTranslations } from 'next-intl/server';
 
 export async function ConsumerHeader() {
@@ -41,6 +42,7 @@ export async function ConsumerHeader() {
             ))}
             <LanguageSwitcher />
             <ThemeToggle />
+            <ConsumerAuthNav />
             <Link href="/claim">
               <Button variant="consumer" size="sm">
                 {t('checkCase')}
@@ -49,7 +51,9 @@ export async function ConsumerHeader() {
           </nav>
 
           {/* Mobile Menu (client component) */}
-          <MobileMenuToggle navLinks={navLinks} />
+          <MobileMenuToggle navLinks={navLinks}>
+            <ConsumerAuthNav />
+          </MobileMenuToggle>
         </div>
       </div>
     </header>

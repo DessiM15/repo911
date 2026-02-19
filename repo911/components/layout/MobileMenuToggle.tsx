@@ -10,7 +10,7 @@ interface NavLink {
   label: string;
 }
 
-export function MobileMenuToggle({ navLinks }: { navLinks: NavLink[] }) {
+export function MobileMenuToggle({ navLinks, children }: { navLinks: NavLink[]; children?: React.ReactNode }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
@@ -38,6 +38,7 @@ export function MobileMenuToggle({ navLinks }: { navLinks: NavLink[] }) {
                 {link.label}
               </Link>
             ))}
+            {children && <div className="px-3 py-2">{children}</div>}
             <Link href="/claim" onClick={() => setMobileMenuOpen(false)}>
               <Button variant="consumer" className="w-full mt-2">
                 Check My Case Now

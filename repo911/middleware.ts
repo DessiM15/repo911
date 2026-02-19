@@ -142,6 +142,65 @@ export async function middleware(request: NextRequest) {
     return supabaseResponse;
   }
 
+  // ---- Consumer Portal Route Protection ----
+  // Handles both /portal/... and /{locale}/portal/...
+  const portalMatch = pathname.match(/^(?:\/(en|es))?\/portal(\/.*)?$/);
+  const isPortalRoute = !!portalMatch;
+
+  if (isPortalRoute) {
+    const portalPath = portalMatch![2] || '';
+    const isPortalLogin = portalPath.startsWith('/login');
+    const matchedLocale = portalMatch![1] || 'en';
+
+    // Create Supabase server client with persistent cookies (not session-scoped)
+    let supabaseResponse = NextResponse.next({ request });
+
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          getAll() {
+            return request.cookies.getAll();
+          },
+          setAll(cookiesToSet) {
+            cookiesToSet.forEach(({ name, value }) =>
+              request.cookies.set(name, value)
+            );
+            supabaseResponse = NextResponse.next({ request });
+            cookiesToSet.forEach(({ name, value, options }) => {
+              // Persistent cookies for consumer portal (not session-scoped)
+              supabaseResponse.cookies.set(name, value, options);
+            });
+          },
+        },
+      }
+    );
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (isPortalLogin) {
+      // If already authenticated, redirect to dashboard
+      if (user) {
+        const url = request.nextUrl.clone();
+        url.pathname = matchedLocale === 'en' ? '/portal/dashboard' : `/${matchedLocale}/portal/dashboard`;
+        return NextResponse.redirect(url);
+      }
+      // Not authenticated — fall through to i18n middleware
+    } else {
+      // Protected portal route — require auth
+      if (!user) {
+        const url = request.nextUrl.clone();
+        url.pathname = matchedLocale === 'en' ? '/portal/login' : `/${matchedLocale}/portal/login`;
+        return NextResponse.redirect(url);
+      }
+    }
+
+    return intlMiddleware(request);
+  }
+
   // For consumer routes, run i18n middleware
   return intlMiddleware(request);
 }

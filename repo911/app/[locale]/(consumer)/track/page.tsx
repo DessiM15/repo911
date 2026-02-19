@@ -9,6 +9,7 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { MessageThread } from '@/components/consumer/MessageThread';
 import { StoryRecorderCTA } from '@/components/consumer/StoryRecorderCTA';
+import { createClient } from '@/lib/supabase/client';
 import { formatDistanceToNow } from 'date-fns';
 
 interface TrackResult {
@@ -55,6 +56,22 @@ export default function TrackPage() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<TrackResult | null>(null);
   const [error, setError] = useState('');
+
+  // Auth state for banners
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    async function checkAuth() {
+      try {
+        const supabase = createClient();
+        const { data: { user } } = await supabase.auth.getUser();
+        setIsAuthenticated(!!user);
+      } catch {
+        setIsAuthenticated(false);
+      }
+    }
+    checkAuth();
+  }, []);
 
   // Copy state
   const [copied, setCopied] = useState(false);
@@ -208,6 +225,18 @@ export default function TrackPage() {
       <Suspense>
         <SearchParamReader onId={setLeadId} />
       </Suspense>
+      {/* Auth-aware banner: signed in */}
+      {isAuthenticated && (
+        <div className="mb-6 bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-lg p-4 flex items-center justify-between gap-4">
+          <p className="text-sm text-blue-700 dark:text-blue-300">
+            You&apos;re signed in. View all your cases on your dashboard.
+          </p>
+          <Link href="/portal/dashboard" className="text-sm font-medium text-[#3474BA] dark:text-blue-300 whitespace-nowrap hover:underline">
+            Go to Dashboard &rarr;
+          </Link>
+        </div>
+      )}
+
       <div className="text-center mb-8">
         <Search className="h-12 w-12 mx-auto mb-4 text-[#3474BA] dark:text-blue-400" />
         <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-gray-100">{t('title')}</h1>
@@ -323,6 +352,17 @@ export default function TrackPage() {
           {t('lookUp')}
         </Button>
       </form>
+
+      {result && !isAuthenticated && (
+        <div className="mt-6 bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 rounded-lg p-4 flex items-center justify-between gap-4">
+          <p className="text-sm text-green-700 dark:text-green-300">
+            Sign in to see all your cases in one place and get updates.
+          </p>
+          <Link href="/portal/login" className="text-sm font-medium text-green-700 dark:text-green-300 whitespace-nowrap hover:underline">
+            Sign In &rarr;
+          </Link>
+        </div>
+      )}
 
       {result && (
         <div className="mt-8 space-y-6">
