@@ -54,7 +54,8 @@ export async function GET(request: NextRequest) {
         narrative, story_transcript, story_recorded_at
       `, { count: 'exact' })
       .in('status', ['qualified_hot', 'qualified_warm', 'qualified_cold'])
-      .is('claimed_by', null);
+      .is('claimed_by', null)
+      .eq('email_verified', true);
 
     if (tier) {
       query = query.eq('qualification_tier', tier);

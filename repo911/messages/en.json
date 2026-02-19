@@ -224,6 +224,7 @@
     "notYet": "Not yet",
     "claimed": "An attorney has claimed your case. They will reach out to you using the contact information you provided.",
     "available": "Your case is available for attorney review. You will be contacted when an attorney claims your case.",
+    "emailNotVerified": "Your email has not been verified yet. Please check your inbox for the verification email and click the link to activate your case.",
     "returnHome": "Return to Homepage",
     "caseStatus": "Case Status",
     "tierHot": "High Priority",
@@ -543,6 +544,8 @@
       "step2": "Many attorneys offer free initial consultations.",
       "step3": "Keep all documents related to your repossession for your records."
     },
+    "verifyEmailTitle": "Check Your Email to Activate Your Case",
+    "verifyEmailDescription": "We've sent a verification email to your address. Click the link to make your case visible to attorneys. The link expires in 24 hours.",
     "whatHappensNext": "What Happens Next",
     "importantReminders": "Important Reminders",
     "reminder1": "Do not sign anything from your lender or repo company without consulting an attorney.",
@@ -758,6 +761,24 @@
     "micPermissionError": "Microphone access is required. Please allow microphone access in your browser settings and try again.",
     "storyRecorded": "Audio story recorded",
     "storyRecordedDescription": "You have already recorded your story. You can re-record it if you'd like."
+  },
+  "verify": {
+    "successTitle": "Email Verified!",
+    "successDescription": "Your email has been verified. Your case is now visible to attorneys in our network.",
+    "alreadyVerifiedTitle": "Already Verified",
+    "alreadyVerifiedDescription": "Your email has already been verified. No further action is needed.",
+    "expiredTitle": "Link Expired",
+    "expiredDescription": "This verification link has expired. Enter your email below to receive a new one.",
+    "invalidTitle": "Invalid Link",
+    "invalidDescription": "This verification link is invalid or has already been used. If you need help, please contact support.",
+    "checkEmailTitle": "Check Your Email",
+    "checkEmailDescription": "We sent a verification email to the address you provided. Click the link in the email to make your case visible to attorneys. The link expires in 24 hours.",
+    "trackCase": "Track My Case",
+    "returnHome": "Return Home",
+    "resendButton": "Resend Verification Email",
+    "resendSuccess": "Verification email sent. Please check your inbox.",
+    "resendError": "Failed to resend. Please try again.",
+    "emailPlaceholder": "Enter your email address"
   },
   "common": {
     "loading": "Loading...",

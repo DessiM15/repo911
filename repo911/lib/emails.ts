@@ -64,6 +64,30 @@ function btn(label: string, url: string): string {
 // ============================================================
 
 /**
+ * Sent to the consumer after lead submission to verify their email.
+ */
+export async function sendEmailVerification(opts: {
+  to: string;
+  firstName: string;
+  verificationUrl: string;
+}) {
+  const html = wrap('Verify Your Email', [
+    p(`Hi ${escapeHtml(opts.firstName)},`),
+    p(`Thank you for submitting your case to ${APP_NAME}. To make your case visible to attorneys, please verify your email address by clicking the button below.`),
+    btn('Verify My Email', opts.verificationUrl),
+    p('This link expires in <strong>24 hours</strong>. If you did not submit a case on Repo911, you can safely ignore this email.'),
+    p(`&mdash; The ${APP_NAME} Team`),
+  ].join(''));
+
+  return resend.emails.send({
+    from: EMAIL_FROM,
+    to: opts.to,
+    subject: `Verify Your Email — ${APP_NAME}`,
+    html,
+  });
+}
+
+/**
  * Sent to the consumer after lead submission.
  */
 export async function sendLeadSubmissionConfirmation(opts: {

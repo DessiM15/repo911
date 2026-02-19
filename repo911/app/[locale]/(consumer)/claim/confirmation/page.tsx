@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { CheckCircle, Clock, Phone, ArrowRight, Info, Upload, Mic } from 'lucide-react';
+import { CheckCircle, Clock, Phone, ArrowRight, Info, Upload, Mic, Mail } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 import { Button } from '@/components/ui/button';
@@ -48,6 +48,18 @@ export default async function ConfirmationPage({
         <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-gray-100">{tierTitle}</h1>
         <p className="mt-4 text-lg text-gray-600 dark:text-gray-400 leading-relaxed">{tierDescription}</p>
       </div>
+
+      {tier !== 'disqualified' && (
+        <div className="bg-amber-50 dark:bg-amber-950 border-2 border-amber-400 dark:border-amber-600 rounded-xl p-5 mb-8">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-1 flex items-center gap-2">
+            <Mail className="h-5 w-5 text-amber-500" />
+            {t('verifyEmailTitle')}
+          </h3>
+          <p className="text-sm text-gray-600 dark:text-gray-400">
+            {t('verifyEmailDescription')}
+          </p>
+        </div>
+      )}
 
       <div className={`rounded-xl border p-6 mb-8 ${config.bgColor}`}>
         <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center gap-2">

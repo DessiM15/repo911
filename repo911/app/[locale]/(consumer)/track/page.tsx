@@ -21,6 +21,7 @@ interface TrackResult {
   claimed: boolean;
   uploadedFiles: { name: string; url: string; uploadedAt: string }[];
   hasStory?: boolean;
+  emailVerified?: boolean;
 }
 
 function getStatusIcon(status: string) {
@@ -423,6 +424,13 @@ export default function TrackPage() {
             {!result.claimed && result.tier !== 'disqualified' && (
               <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-lg text-sm text-blue-700 dark:text-blue-300">
                 {t('available')}
+              </div>
+            )}
+
+            {!result.emailVerified && result.status !== 'disqualified' && (
+              <div className="mt-4 p-3 bg-amber-50 dark:bg-amber-950 border border-amber-300 dark:border-amber-700 rounded-lg text-sm text-amber-700 dark:text-amber-300 flex items-start gap-2">
+                <AlertTriangle className="h-4 w-4 mt-0.5 flex-shrink-0" />
+                <span>{t('emailNotVerified')}</span>
               </div>
             )}
           </div>

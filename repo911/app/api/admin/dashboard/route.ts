@@ -106,6 +106,15 @@ export async function GET() {
       .select('*', { count: 'exact', head: true })
       .eq('qualification_tier', 'cold');
 
+    // Unverified leads within 48hr window
+    const fortyEightHoursAgo = new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString();
+    const { count: unverified_leads } = await supabase
+      .from('leads')
+      .select('*', { count: 'exact', head: true })
+      .eq('email_verified', false)
+      .in('qualification_tier', ['hot', 'warm', 'cold'])
+      .gte('created_at', fortyEightHoursAgo);
+
     return NextResponse.json({
       total_leads: total_leads || 0,
       qualified_leads: qualifiedCount,
@@ -120,6 +129,7 @@ export async function GET() {
       hot_leads: hot_leads || 0,
       warm_leads: warm_leads || 0,
       cold_leads: cold_leads || 0,
+      unverified_leads: unverified_leads || 0,
       recent_leads: recent_leads || [],
       recent_transactions: recent_transactions || [],
     });

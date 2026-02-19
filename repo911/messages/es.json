@@ -224,6 +224,7 @@
     "notYet": "Aún no",
     "claimed": "Un abogado ha tomado su caso. Se comunicarán con usted usando la información de contacto que proporcionó.",
     "available": "Su caso está disponible para revisión por abogados. Se le contactará cuando un abogado tome su caso.",
+    "emailNotVerified": "Su correo electrónico aún no ha sido verificado. Revise su bandeja de entrada para el correo de verificación y haga clic en el enlace para activar su caso.",
     "returnHome": "Volver a la Página Principal",
     "caseStatus": "Estado del Caso",
     "tierHot": "Alta Prioridad",
@@ -543,6 +544,8 @@
       "step2": "Muchos abogados ofrecen consultas iniciales gratuitas.",
       "step3": "Conserve todos los documentos relacionados con su reposesión para sus registros."
     },
+    "verifyEmailTitle": "Revise Su Correo para Activar Su Caso",
+    "verifyEmailDescription": "Hemos enviado un correo de verificación a su dirección. Haga clic en el enlace para hacer visible su caso a los abogados. El enlace expira en 24 horas.",
     "whatHappensNext": "Qué Sucede Después",
     "importantReminders": "Recordatorios Importantes",
     "reminder1": "No firme nada de su prestamista o empresa de reposesión sin consultar con un abogado.",
@@ -758,6 +761,24 @@
     "micPermissionError": "Se requiere acceso al micrófono. Por favor permita el acceso al micrófono en la configuración de su navegador e intente de nuevo.",
     "storyRecorded": "Historia de audio grabada",
     "storyRecordedDescription": "Ya ha grabado su historia. Puede volver a grabarla si lo desea."
+  },
+  "verify": {
+    "successTitle": "Correo Verificado!",
+    "successDescription": "Su correo ha sido verificado. Su caso ahora es visible para los abogados de nuestra red.",
+    "alreadyVerifiedTitle": "Ya Verificado",
+    "alreadyVerifiedDescription": "Su correo ya ha sido verificado. No se necesita ninguna acción adicional.",
+    "expiredTitle": "Enlace Expirado",
+    "expiredDescription": "Este enlace de verificación ha expirado. Ingrese su correo electrónico abajo para recibir uno nuevo.",
+    "invalidTitle": "Enlace Inválido",
+    "invalidDescription": "Este enlace de verificación es inválido o ya ha sido utilizado. Si necesita ayuda, comuníquese con soporte.",
+    "checkEmailTitle": "Revise Su Correo",
+    "checkEmailDescription": "Enviamos un correo de verificación a la dirección que proporcionó. Haga clic en el enlace del correo para hacer visible su caso a los abogados. El enlace expira en 24 horas.",
+    "trackCase": "Seguir Mi Caso",
+    "returnHome": "Volver al Inicio",
+    "resendButton": "Reenviar Correo de Verificación",
+    "resendSuccess": "Correo de verificación enviado. Revise su bandeja de entrada.",
+    "resendError": "Error al reenviar. Intente de nuevo.",
+    "emailPlaceholder": "Ingrese su correo electrónico"
   },
   "common": {
     "loading": "Cargando...",

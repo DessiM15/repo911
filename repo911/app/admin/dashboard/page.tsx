@@ -8,7 +8,7 @@ import {
 } from 'recharts';
 import {
   FileText, Users, DollarSign, TrendingUp, ArrowRight,
-  Flame, Thermometer, XCircle, Calendar,
+  Flame, Thermometer, XCircle, Calendar, AlertTriangle,
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -35,6 +35,7 @@ interface DashboardData {
   hot_leads: number;
   warm_leads: number;
   cold_leads: number;
+  unverified_leads: number;
   recent_leads: Pick<Lead, 'id' | 'first_name' | 'last_name' | 'status' | 'qualification_tier' | 'qualification_score' | 'repo_state' | 'created_at'>[];
   recent_transactions: Pick<Transaction, 'id' | 'amount' | 'status' | 'created_at' | 'attorney_id' | 'lead_id'>[];
 }
@@ -270,6 +271,13 @@ export default function AdminDashboardPage() {
           value={`${data.warm_leads} / ${data.cold_leads}`}
           icon={Thermometer}
           color="bg-yellow-50 dark:bg-yellow-950 text-yellow-600 dark:text-yellow-400"
+        />
+        <StatCard
+          label="Unverified Leads"
+          value={data.unverified_leads}
+          icon={AlertTriangle}
+          sub="Within 48hr verification window"
+          color="bg-amber-50 dark:bg-amber-950 text-amber-600 dark:text-amber-400"
         />
       </div>
 

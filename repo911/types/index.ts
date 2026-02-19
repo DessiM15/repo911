@@ -178,6 +178,9 @@ export interface Lead {
   consent_contact: boolean;
   consent_privacy_policy: boolean;
 
+  // Email Verification
+  email_verified: boolean;
+
   // Story Audio
   story_audio_path: string | null;
   story_transcript: string | null;
@@ -212,6 +215,15 @@ export interface QualificationBreakdown {
   evidence: number;
   penalties: number;
   details: string[];
+}
+
+export interface LeadEmailVerification {
+  id: string;
+  created_at: string;
+  lead_id: string;
+  token: string;
+  expires_at: string;
+  used_at: string | null;
 }
 
 export interface Attorney {

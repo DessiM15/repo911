@@ -1,9 +1,10 @@
+import { randomUUID } from 'crypto';
 import { NextRequest } from 'next/server';
 import { intakeFormSchema } from '@/lib/validations/intake-form';
 import { qualifyLead } from '@/lib/qualification-engine';
 import { createAdminClient } from '@/lib/supabase/admin';
-import { sendLeadSubmissionConfirmation, sendHotLeadAlert, sendWarmLeadAlert } from '@/lib/emails';
-import { sendNewLeadSms, sendSubmissionConfirmationSms } from '@/lib/sms';
+import { sendLeadSubmissionConfirmation, sendEmailVerification } from '@/lib/emails';
+import { sendSubmissionConfirmationSms } from '@/lib/sms';
 import { rateLimit } from '@/lib/rate-limit';
 import { apiSuccess, apiError } from '@/lib/api-response';
 import type { LeadSubmission } from '@/types';
@@ -209,9 +210,27 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // Send email notifications (fire-and-forget, don't block the response)
+    // Create email verification token (24hr expiry)
+    const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://repo911.com';
+    const verificationToken = randomUUID();
+    const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
+
+    await supabase.from('lead_email_verifications').insert({
+      lead_id: lead.id,
+      token: verificationToken,
+      expires_at: expiresAt,
+    });
+
+    // Send emails/SMS (fire-and-forget, don't block the response)
     try {
-      // 1. Confirmation email to consumer
+      // 1. Verification email to consumer
+      sendEmailVerification({
+        to: data.email,
+        firstName: data.first_name,
+        verificationUrl: `${APP_URL}/verify?token=${verificationToken}`,
+      }).catch(() => { /* non-critical */ });
+
+      // 2. Confirmation email to consumer
       await sendLeadSubmissionConfirmation({
         to: data.email,
         firstName: data.first_name,
@@ -219,58 +238,13 @@ export async function POST(request: NextRequest) {
         score: qualification.score,
       });
 
-      // 2. SMS confirmation to consumer (fire-and-forget)
+      // 3. SMS confirmation to consumer (fire-and-forget)
       sendSubmissionConfirmationSms(
         { phone: data.phone, preferred_contact: data.preferred_contact },
         lead.id
       ).catch(() => { /* non-critical */ });
 
-      // 3. Alert matching attorneys for hot/warm leads
-      if (qualification.tier === 'hot' || qualification.tier === 'warm') {
-        const violationTypes: string[] = [];
-        if (qualification.breakdown.breach_of_peace > 0) violationTypes.push('Breach of Peace');
-        if (qualification.breakdown.belongings > 0) violationTypes.push('Property/Belongings');
-        if (qualification.breakdown.military > 0) violationTypes.push('SCRA/Military');
-        if (qualification.breakdown.fdcpa > 0) violationTypes.push('FDCPA');
-
-        // Find active attorneys who cover this state
-        const { data: matchingAttorneys } = await supabase
-          .from('attorneys')
-          .select('id, first_name, email, phone, preferred_states, email_notifications, sms_notifications')
-          .eq('status', 'active');
-
-        const attorneys = (matchingAttorneys || []).filter(
-          (a) => !a.preferred_states || a.preferred_states.length === 0 || a.preferred_states.includes(data.repo_state)
-        );
-
-        for (const atty of attorneys) {
-          // Email notifications
-          if (atty.email_notifications) {
-            if (qualification.tier === 'hot') {
-              sendHotLeadAlert({
-                to: atty.email,
-                attorneyName: atty.first_name,
-                state: data.repo_state,
-                violationTypes,
-              }).catch(() => { /* non-critical */ });
-            } else {
-              sendWarmLeadAlert({
-                to: atty.email,
-                attorneyName: atty.first_name,
-                state: data.repo_state,
-              }).catch(() => { /* non-critical */ });
-            }
-          }
-
-          // SMS notifications (fire-and-forget)
-          if (atty.sms_notifications && atty.phone) {
-            sendNewLeadSms(
-              { sms_notifications: true, phone: atty.phone },
-              { qualification_tier: qualification.tier, repo_state: data.repo_state }
-            ).catch(() => { /* non-critical */ });
-          }
-        }
-      }
+      // Attorney notifications are sent AFTER email verification (see /api/leads/verify)
     } catch {
       // Email failures should not block lead submission
       console.error('Email notification error (non-critical)');
