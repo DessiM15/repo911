@@ -166,44 +166,46 @@ export async function PATCH(
 
       // Complete referral and award credit when attorney becomes active
       if (parsed.data.status === 'active') {
-        // Check if this attorney was referred
-        supabase
+        const { data: atty } = await supabase
           .from('attorneys')
           .select('referred_by')
           .eq('id', id)
-          .single()
-          .then(({ data: atty }) => {
-            if (atty?.referred_by) {
-              // Complete the referral record
-              supabase
-                .from('referrals')
-                .update({
-                  status: 'completed',
-                  completed_at: new Date().toISOString(),
-                  credit_awarded: true,
-                  updated_at: new Date().toISOString(),
-                })
-                .eq('referred_id', id)
-                .eq('referrer_id', atty.referred_by)
-                .then(() => {});
+          .single();
 
-              // Award credit to referrer
-              supabase.rpc('increment_referral_credits', {
-                attorney_id: atty.referred_by,
-                amount: 1,
-              }).then(() => {});
+        if (atty?.referred_by) {
+          const [refUpdate, creditUpdate, notifInsert] = await Promise.allSettled([
+            supabase
+              .from('referrals')
+              .update({
+                status: 'completed',
+                completed_at: new Date().toISOString(),
+                credit_awarded: true,
+                updated_at: new Date().toISOString(),
+              })
+              .eq('referred_id', id)
+              .eq('referrer_id', atty.referred_by),
 
-              // Notify referrer
-              supabase.from('notifications').insert({
-                recipient_type: 'attorney',
-                recipient_id: atty.referred_by,
-                title: 'Referral Completed!',
-                message: 'An attorney you referred has been activated. You earned 1 free lead claim!',
-                type: 'system',
-                link: '/attorney/referrals',
-              }).then(() => {});
+            supabase.rpc('increment_referral_credits', {
+              attorney_id: atty.referred_by,
+              amount: 1,
+            }),
+
+            supabase.from('notifications').insert({
+              recipient_type: 'attorney',
+              recipient_id: atty.referred_by,
+              title: 'Referral Completed!',
+              message: 'An attorney you referred has been activated. You earned 1 free lead claim!',
+              type: 'system',
+              link: '/attorney/referrals',
+            }),
+          ]);
+
+          for (const result of [refUpdate, creditUpdate, notifInsert]) {
+            if (result.status === 'rejected') {
+              console.error('Referral completion step failed:', result.reason);
             }
-          });
+          }
+        }
       }
     }
 
