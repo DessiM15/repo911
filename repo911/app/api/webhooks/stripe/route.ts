@@ -114,13 +114,38 @@ export async function POST(request: NextRequest) {
       });
 
       if (claimError) {
-        // Lead was already claimed by another attorney — refund will be needed
+        // Lead was already claimed by another attorney — auto-refund
         console.error('Lead already claimed or not found:', lead_id, claimError);
         captureServerMessage(
           `Lead already claimed or not found: ${lead_id}`,
           'warning',
           { tags: ['stripe', 'webhook', 'claim-race'], extra: { lead_id, attorney_id } },
         );
+
+        // Issue automatic refund — charge.refunded webhook will clean up DB
+        try {
+          await stripe.refunds.create({
+            payment_intent: session.payment_intent as string,
+          });
+        } catch (refundErr) {
+          console.error('Auto-refund failed:', refundErr);
+          captureServerMessage(
+            `Auto-refund failed for payment_intent ${session.payment_intent}`,
+            'error',
+            { tags: ['stripe', 'webhook', 'refund-failed'], extra: { payment_intent: session.payment_intent, lead_id, attorney_id } },
+          );
+        }
+
+        // Notify attorney the lead was unavailable
+        await supabase.from('notifications').insert({
+          recipient_type: 'attorney',
+          recipient_id: attorney_id,
+          title: 'Lead No Longer Available',
+          message: 'This lead was claimed by another attorney before your payment completed. Your payment has been refunded.',
+          type: 'lead_claimed',
+          link: '/attorney/marketplace',
+        });
+
         break;
       }
 
