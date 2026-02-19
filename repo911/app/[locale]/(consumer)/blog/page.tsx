@@ -1,5 +1,6 @@
-import Link from 'next/link';
 import { BookOpen, Calendar, Clock, ArrowRight } from 'lucide-react';
+import { getTranslations } from 'next-intl/server';
+import { Link } from '@/i18n/navigation';
 import { getAllPosts } from '@/lib/blog';
 import type { Metadata } from 'next';
 
@@ -9,19 +10,19 @@ export const metadata: Metadata = {
     'Learn about your rights during vehicle repossession, breach of peace laws, FDCPA protections, and more from Repo911.',
 };
 
-export default function BlogListingPage() {
+export default async function BlogListingPage() {
   const posts = getAllPosts();
+  const t = await getTranslations('blog');
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
       <div className="text-center mb-12">
         <BookOpen className="h-12 w-12 mx-auto mb-4 text-[#3474BA] dark:text-blue-400" />
         <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-gray-100">
-          Repossession Rights Blog
+          {t('title')}
         </h1>
         <p className="mt-3 text-gray-600 dark:text-gray-400 max-w-xl mx-auto">
-          Know your rights. Expert articles on vehicle repossession law,
-          consumer protections, and what to do if your rights were violated.
+          {t('subtitle')}
         </p>
       </div>
 
@@ -51,7 +52,7 @@ export default function BlogListingPage() {
                   </span>
                   <span className="flex items-center gap-1">
                     <Clock className="h-3.5 w-3.5" />
-                    {post.readingTime} min read
+                    {t('minRead', { minutes: post.readingTime })}
                   </span>
                 </div>
                 <div className="mt-3 flex flex-wrap gap-2">

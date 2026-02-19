@@ -1,7 +1,8 @@
 import { notFound } from 'next/navigation';
-import Link from 'next/link';
 import { ArrowLeft, Calendar, Clock, User } from 'lucide-react';
 import { MDXRemote } from 'next-mdx-remote/rsc';
+import { getTranslations } from 'next-intl/server';
+import { Link } from '@/i18n/navigation';
 import { getAllSlugs, getPostBySlug } from '@/lib/blog';
 import type { Metadata } from 'next';
 
@@ -35,6 +36,7 @@ export default async function BlogPostPage({ params }: Props) {
   const { slug } = await params;
   const post = getPostBySlug(slug);
   if (!post) notFound();
+  const t = await getTranslations('blog');
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -57,7 +59,7 @@ export default async function BlogPostPage({ params }: Props) {
         className="inline-flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 hover:text-[#3474BA] dark:hover:text-blue-300 mb-8"
       >
         <ArrowLeft className="h-4 w-4" />
-        Back to Blog
+        {t('backToBlog')}
       </Link>
 
       <article>
@@ -81,7 +83,7 @@ export default async function BlogPostPage({ params }: Props) {
             </span>
             <span className="flex items-center gap-1">
               <Clock className="h-4 w-4" />
-              {post.readingTime} min read
+              {t('minRead', { minutes: post.readingTime })}
             </span>
           </div>
           <div className="mt-4 flex flex-wrap gap-2">
@@ -104,17 +106,16 @@ export default async function BlogPostPage({ params }: Props) {
       {/* CTA */}
       <div className="mt-12 bg-[#3474BA] rounded-xl p-8 text-center text-white">
         <h2 className="text-2xl font-bold mb-2">
-          Think Your Rights Were Violated?
+          {t('ctaTitle')}
         </h2>
         <p className="text-white/80 mb-6">
-          Get a free case review in just 5 minutes. Find out if you may be owed
-          $10,000&ndash;$100,000+.
+          {t('ctaDescription')}
         </p>
         <Link
           href="/claim"
           className="inline-block px-8 py-3 bg-white text-[#3474BA] font-semibold rounded-lg hover:bg-gray-100 dark:hover:bg-gray-200 transition-colors"
         >
-          Start My Free Case Review
+          {t('ctaButton')}
         </Link>
       </div>
     </div>
