@@ -14,7 +14,6 @@ import {
   XCircle,
   Clock,
 } from 'lucide-react';
-import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { TrackedError, ErrorOccurrence, ErrorLevel, ErrorStatus } from '@/types';
 

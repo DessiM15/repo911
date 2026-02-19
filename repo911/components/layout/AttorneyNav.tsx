@@ -41,6 +41,73 @@ interface Notification {
   created_at: string;
 }
 
+function NotificationDropdown({
+  notifications,
+  unreadCount,
+  onMarkAllRead,
+  onNotificationClick,
+  onClose,
+}: {
+  notifications: Notification[];
+  unreadCount: number;
+  onMarkAllRead: () => void;
+  onNotificationClick: (n: Notification) => void;
+  onClose: () => void;
+}) {
+  return (
+    <div role="menu" aria-label="Notifications" className="absolute right-0 top-full mt-2 w-[calc(100vw-2rem)] sm:w-80 max-w-sm bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 shadow-lg overflow-hidden z-50">
+      <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 dark:border-slate-700">
+        <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100">Notifications</h3>
+        {unreadCount > 0 && (
+          <button
+            onClick={onMarkAllRead}
+            className="text-xs text-[#3474BA] dark:text-blue-300 hover:underline flex items-center gap-1"
+          >
+            <CheckCheck className="h-3 w-3" />
+            Mark all read
+          </button>
+        )}
+      </div>
+      <div className="max-h-80 overflow-y-auto">
+        {notifications.length === 0 ? (
+          <div className="p-6 text-center text-sm text-gray-400 dark:text-gray-500">
+            No notifications yet.
+          </div>
+        ) : (
+          notifications.slice(0, 15).map((n) => (
+            <button
+              key={n.id}
+              onClick={() => onNotificationClick(n)}
+              className={cn(
+                'w-full text-left px-4 py-3 border-b border-gray-50 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors',
+                !n.read && 'bg-blue-50/50'
+              )}
+            >
+              <div className="flex items-start gap-2">
+                {!n.read && (
+                  <span className="mt-1.5 h-2 w-2 rounded-full bg-[#3474BA] shrink-0" />
+                )}
+                <div className={cn(!n.read ? '' : 'ml-4')}>
+                  <p className="text-sm font-medium text-gray-900 dark:text-gray-100">{n.title}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 line-clamp-2">{n.message}</p>
+                  <p className="text-[10px] text-gray-400 dark:text-gray-500 mt-1">{formatDate(n.created_at)}</p>
+                </div>
+              </div>
+            </button>
+          ))
+        )}
+      </div>
+      <Link
+        href="/attorney/notifications"
+        onClick={onClose}
+        className="block text-center text-xs text-[#3474BA] dark:text-blue-300 hover:underline px-4 py-2.5 border-t border-gray-100 dark:border-slate-700"
+      >
+        View all notifications
+      </Link>
+    </div>
+  );
+}
+
 export function AttorneyNav() {
   const pathname = usePathname();
   const router = useRouter();
@@ -64,6 +131,7 @@ export function AttorneyNav() {
   }, []);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- polling external API on mount
     fetchNotifications();
     // Poll every 60 seconds
     const interval = setInterval(fetchNotifications, 60000);
@@ -117,61 +185,6 @@ export function AttorneyNav() {
     const supabase = createClient();
     await supabase.auth.signOut();
     window.location.href = '/attorney/login';
-  }
-
-  function NotificationDropdown() {
-    return (
-      <div role="menu" aria-label="Notifications" className="absolute right-0 top-full mt-2 w-[calc(100vw-2rem)] sm:w-80 max-w-sm bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 shadow-lg overflow-hidden z-50">
-        <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 dark:border-slate-700">
-          <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100">Notifications</h3>
-          {unreadCount > 0 && (
-            <button
-              onClick={handleMarkAllRead}
-              className="text-xs text-[#3474BA] dark:text-blue-300 hover:underline flex items-center gap-1"
-            >
-              <CheckCheck className="h-3 w-3" />
-              Mark all read
-            </button>
-          )}
-        </div>
-        <div className="max-h-80 overflow-y-auto">
-          {notifications.length === 0 ? (
-            <div className="p-6 text-center text-sm text-gray-400 dark:text-gray-500">
-              No notifications yet.
-            </div>
-          ) : (
-            notifications.slice(0, 15).map((n) => (
-              <button
-                key={n.id}
-                onClick={() => handleNotificationClick(n)}
-                className={cn(
-                  'w-full text-left px-4 py-3 border-b border-gray-50 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors',
-                  !n.read && 'bg-blue-50/50'
-                )}
-              >
-                <div className="flex items-start gap-2">
-                  {!n.read && (
-                    <span className="mt-1.5 h-2 w-2 rounded-full bg-[#3474BA] shrink-0" />
-                  )}
-                  <div className={cn(!n.read ? '' : 'ml-4')}>
-                    <p className="text-sm font-medium text-gray-900 dark:text-gray-100">{n.title}</p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 line-clamp-2">{n.message}</p>
-                    <p className="text-[10px] text-gray-400 dark:text-gray-500 mt-1">{formatDate(n.created_at)}</p>
-                  </div>
-                </div>
-              </button>
-            ))
-          )}
-        </div>
-        <Link
-          href="/attorney/notifications"
-          onClick={() => setBellOpen(false)}
-          className="block text-center text-xs text-[#3474BA] dark:text-blue-300 hover:underline px-4 py-2.5 border-t border-gray-100 dark:border-slate-700"
-        >
-          View all notifications
-        </Link>
-      </div>
-    );
   }
 
   return (
@@ -239,7 +252,7 @@ export function AttorneyNav() {
               </span>
             )}
           </button>
-          {bellOpen && <NotificationDropdown />}
+          {bellOpen && <NotificationDropdown notifications={notifications} unreadCount={unreadCount} onMarkAllRead={handleMarkAllRead} onNotificationClick={handleNotificationClick} onClose={() => setBellOpen(false)} />}
         </div>
       </div>
 
@@ -267,7 +280,7 @@ export function AttorneyNav() {
                 </span>
               )}
             </button>
-            {bellOpen && <NotificationDropdown />}
+            {bellOpen && <NotificationDropdown notifications={notifications} unreadCount={unreadCount} onMarkAllRead={handleMarkAllRead} onNotificationClick={handleNotificationClick} onClose={() => setBellOpen(false)} />}
           </div>
           <button
             className="p-2.5 text-white/70 hover:text-white"

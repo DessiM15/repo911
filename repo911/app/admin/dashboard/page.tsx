@@ -78,7 +78,7 @@ function getRangeLabel(preset: RangePreset, customFrom: string, customTo: string
     case 'custom': {
       if (!customFrom && !customTo) return 'Custom';
       const fmtDate = (d: string) => {
-        const [y, m, day] = d.split('-');
+        const [, m, day] = d.split('-');
         const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
         return `${months[Number(m) - 1]} ${Number(day)}`;
       };

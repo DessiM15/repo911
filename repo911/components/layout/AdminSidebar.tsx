@@ -8,7 +8,6 @@ import {
   FileText,
   Users,
   Contact,
-  Kanban,
   Receipt,
   DollarSign,
   Settings,

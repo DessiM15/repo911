@@ -1,9 +1,8 @@
-import { NextRequest } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { apiSuccess, apiError } from '@/lib/api-response';
 import { verifyAttorney } from '@/lib/auth/verify-attorney';
 
-export async function GET(_request: NextRequest) {
+export async function GET() {
   try {
     const supabase = await createClient();
 

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import {
-  MapPin, Calendar, Car, Shield, AlertTriangle,
+  MapPin, Car, Shield, AlertTriangle,
   FileText, Camera, Users, DollarSign, User, Phone, Mail,
   Megaphone,
 } from 'lucide-react';

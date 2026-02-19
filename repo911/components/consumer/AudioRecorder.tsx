@@ -73,6 +73,20 @@ export function AudioRecorder({ email, leadId, onComplete }: AudioRecorderProps)
     return `${m}:${s.toString().padStart(2, '0')}`;
   };
 
+  const stopRecording = useCallback(() => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+    if (recognitionRef.current) {
+      recognitionRef.current.stop();
+      recognitionRef.current = null;
+    }
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
+      mediaRecorderRef.current.stop();
+    }
+  }, []);
+
   const startRecording = useCallback(async () => {
     setError('');
     try {
@@ -174,21 +188,7 @@ export function AudioRecorder({ email, leadId, onComplete }: AudioRecorderProps)
         setError(String(err instanceof Error ? err.message : 'Failed to start recording. Please try again.'));
       }
     }
-  }, [t]);
-
-  const stopRecording = useCallback(() => {
-    if (timerRef.current) {
-      clearInterval(timerRef.current);
-      timerRef.current = null;
-    }
-    if (recognitionRef.current) {
-      recognitionRef.current.stop();
-      recognitionRef.current = null;
-    }
-    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
-      mediaRecorderRef.current.stop();
-    }
-  }, []);
+  }, [t, stopRecording]);
 
   const reRecord = useCallback(() => {
     if (audioUrl) URL.revokeObjectURL(audioUrl);

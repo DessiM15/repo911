@@ -25,6 +25,7 @@ export function AttorneyLayoutWrapper({ children }: { children: React.ReactNode 
       return;
     }
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- syncing browser sessionStorage on mount
     setSessionChecked(true);
   }, [isAuthPage]);
 
