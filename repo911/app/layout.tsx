@@ -12,6 +12,7 @@ const geistSans = Geist({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://repo911.com'),
   title: {
     default: 'Repo911 — Fight Back Against Wrongful Repossession',
     template: '%s | Repo911',
