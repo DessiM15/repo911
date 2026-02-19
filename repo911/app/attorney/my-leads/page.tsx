@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef, Suspense } from 'react';
 import Link from 'next/link';
-import { FileText, MapPin, Calendar, Phone, Mail, Download } from 'lucide-react';
+import { useSearchParams, useRouter } from 'next/navigation';
+import { FileText, MapPin, Calendar, Phone, Mail, Download, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { SkeletonCard } from '@/components/ui/skeleton';
@@ -49,28 +50,78 @@ function exportLeadsCsv(leads: Lead[]) {
 }
 
 export default function MyLeadsPage() {
+  return (
+    <Suspense fallback={
+      <div>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">My Leads</h1>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">All leads you have claimed with full contact information</p>
+          </div>
+        </div>
+        <div className="grid sm:grid-cols-2 gap-4">
+          {Array.from({ length: 4 }).map((_, i) => <SkeletonCard key={i} />)}
+        </div>
+      </div>
+    }>
+      <MyLeadsContent />
+    </Suspense>
+  );
+}
+
+function MyLeadsContent() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  const page = Number(searchParams.get('page') ?? '1') || 1;
+  const LEADS_PER_PAGE = 20;
+
+  const updateParams = useCallback((updates: Record<string, string | number>) => {
+    const params = new URLSearchParams(searchParams.toString());
+    for (const [key, value] of Object.entries(updates)) {
+      const strVal = String(value);
+      if (key === 'page' && strVal === '1') {
+        params.delete(key);
+      } else {
+        params.set(key, strVal);
+      }
+    }
+    const qs = params.toString();
+    router.replace(qs ? `?${qs}` : '?', { scroll: false });
+  }, [searchParams, router]);
+
   const [leads, setLeads] = useState<Lead[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [total, setTotal] = useState(0);
+  const gridRef = useRef<HTMLDivElement>(null);
+
+  const fetchLeads = useCallback(async () => {
+    setLoading(true);
+    setError('');
+    try {
+      const params = new URLSearchParams();
+      params.set('page', String(page));
+      params.set('limit', String(LEADS_PER_PAGE));
+
+      const res = await fetch(`/api/attorney/my-leads?${params}`);
+      if (!res.ok) {
+        setError('Failed to load data. Please try again.');
+        return;
+      }
+      const data = await res.json();
+      setLeads(data.leads || []);
+      setTotal(data.total || 0);
+    } catch {
+      setError('Failed to load data. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  }, [page]);
 
   useEffect(() => {
-    async function fetchLeads() {
-      try {
-        const res = await fetch('/api/attorney/my-leads');
-        if (!res.ok) {
-          setError('Failed to load data. Please try again.');
-          return;
-        }
-        const data = await res.json();
-        setLeads(data.leads || []);
-      } catch {
-        setError('Failed to load data. Please try again.');
-      } finally {
-        setLoading(false);
-      }
-    }
     fetchLeads();
-  }, []);
+  }, [fetchLeads]);
 
   return (
     <div>
@@ -97,7 +148,7 @@ export default function MyLeadsPage() {
         <div className="grid sm:grid-cols-2 gap-4">
           {Array.from({ length: 4 }).map((_, i) => <SkeletonCard key={i} />)}
         </div>
-      ) : leads.length === 0 ? (
+      ) : leads.length === 0 && page === 1 ? (
         <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-12 text-center">
           <FileText className="h-12 w-12 text-gray-300 mx-auto mb-4" />
           <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-1">No Claimed Leads</h3>
@@ -107,48 +158,93 @@ export default function MyLeadsPage() {
           </Link>
         </div>
       ) : (
-        <div className="space-y-4">
-          {leads.map((lead) => (
-            <div key={lead.id} className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-5">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-3">
+        <>
+          <div ref={gridRef} className="space-y-4">
+            {leads.map((lead) => (
+              <div key={lead.id} className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-5">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-3">
+                  <div className="flex items-center gap-2">
+                    <Badge variant={lead.qualification_tier === 'hot' ? 'hot' : lead.qualification_tier === 'warm' ? 'warm' : 'cold'}>
+                      {lead.qualification_tier?.toUpperCase()}
+                    </Badge>
+                    <span className="font-semibold text-gray-900 dark:text-gray-100">{lead.first_name} {lead.last_name}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+                    <Calendar className="h-4 w-4" />
+                    Claimed {lead.claimed_at ? formatDate(lead.claimed_at) : 'N/A'}
+                  </div>
+                </div>
+
+                <div className="grid sm:grid-cols-3 gap-2 text-sm text-gray-600 dark:text-gray-400 mb-3">
+                  <div className="flex items-center gap-1.5">
+                    <Phone className="h-3.5 w-3.5 text-gray-400 dark:text-gray-500" />
+                    {formatPhone(lead.phone)}
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <Mail className="h-3.5 w-3.5 text-gray-400 dark:text-gray-500" />
+                    {lead.email}
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <MapPin className="h-3.5 w-3.5 text-gray-400 dark:text-gray-500" />
+                    {lead.city}, {lead.state}
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-gray-400 dark:text-gray-500">
+                    {[lead.vehicle_year, lead.vehicle_make, lead.vehicle_model].filter(Boolean).join(' ')} &bull; {lead.repo_state}
+                  </span>
+                  <Link href={`/attorney/my-leads/${lead.id}`}>
+                    <Button variant="outline" size="sm">View Full Details</Button>
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Pagination */}
+          {total > LEADS_PER_PAGE && (() => {
+            const totalPages = Math.ceil(total / LEADS_PER_PAGE);
+            const rangeStart = (page - 1) * LEADS_PER_PAGE + 1;
+            const rangeEnd = Math.min(page * LEADS_PER_PAGE, total);
+
+            const goToPage = (p: number) => {
+              updateParams({ page: p });
+              gridRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            };
+
+            return (
+              <div className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-3 bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 px-4 py-3">
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  Showing {rangeStart}–{rangeEnd} of {total} leads
+                </p>
                 <div className="flex items-center gap-2">
-                  <Badge variant={lead.qualification_tier === 'hot' ? 'hot' : lead.qualification_tier === 'warm' ? 'warm' : 'cold'}>
-                    {lead.qualification_tier?.toUpperCase()}
-                  </Badge>
-                  <span className="font-semibold text-gray-900 dark:text-gray-100">{lead.first_name} {lead.last_name}</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
-                  <Calendar className="h-4 w-4" />
-                  Claimed {lead.claimed_at ? formatDate(lead.claimed_at) : 'N/A'}
-                </div>
-              </div>
-
-              <div className="grid sm:grid-cols-3 gap-2 text-sm text-gray-600 dark:text-gray-400 mb-3">
-                <div className="flex items-center gap-1.5">
-                  <Phone className="h-3.5 w-3.5 text-gray-400 dark:text-gray-500" />
-                  {formatPhone(lead.phone)}
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <Mail className="h-3.5 w-3.5 text-gray-400 dark:text-gray-500" />
-                  {lead.email}
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <MapPin className="h-3.5 w-3.5 text-gray-400 dark:text-gray-500" />
-                  {lead.city}, {lead.state}
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    disabled={page <= 1}
+                    onClick={() => goToPage(page - 1)}
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                    Previous
+                  </Button>
+                  <span className="text-sm text-gray-700 dark:text-gray-300 px-2">
+                    Page {page} of {totalPages}
+                  </span>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    disabled={page >= totalPages}
+                    onClick={() => goToPage(page + 1)}
+                  >
+                    Next
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
                 </div>
               </div>
-
-              <div className="flex items-center justify-between">
-                <span className="text-xs text-gray-400 dark:text-gray-500">
-                  {[lead.vehicle_year, lead.vehicle_make, lead.vehicle_model].filter(Boolean).join(' ')} &bull; {lead.repo_state}
-                </span>
-                <Link href={`/attorney/my-leads/${lead.id}`}>
-                  <Button variant="outline" size="sm">View Full Details</Button>
-                </Link>
-              </div>
-            </div>
-          ))}
-        </div>
+            );
+          })()}
+        </>
       )}
     </div>
   );
