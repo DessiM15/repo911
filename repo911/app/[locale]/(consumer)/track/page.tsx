@@ -179,10 +179,13 @@ export default function TrackPage() {
       setFiles([]);
 
       // Refresh the result to show new uploads
+      const refetchPayload = lookupMode === 'case_id'
+        ? { mode: 'case_id' as const, email: email.trim(), leadId: leadId.trim() }
+        : { mode: 'phone' as const, phone: phone.trim(), lastName: lastName.trim() };
       const trackRes = await fetch('/api/leads/track', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email.trim(), leadId: leadId.trim() }),
+        body: JSON.stringify(refetchPayload),
       });
       if (trackRes.ok) {
         setResult(await trackRes.json());
