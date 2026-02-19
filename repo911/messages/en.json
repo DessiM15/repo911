@@ -4,7 +4,7 @@
     "blog": "Blog",
     "faq": "FAQ",
     "trackCase": "Track My Case",
-    "checkCase": "Check My Case Now"
+    "checkCase": "Do I Have a Case?"
   },
   "footer": {
     "brandDescription": "Helping victims of wrongful vehicle repossession connect with licensed attorneys who can fight for their rights.",
@@ -28,7 +28,7 @@
     "heroTitle": "Was Your Car <highlight>Wrongfully Repossessed?</highlight>",
     "heroAmount": "You May Be Owed $10,000–$100,000+",
     "heroDescription": "Even if you missed payments, the repo company may have broken the law. Find out in 5 minutes — it's 100% free.",
-    "ctaButton": "Check My Case Now",
+    "ctaButton": "Do I Have a Case?",
     "badgeFreeReview": "Free Case Review",
     "badgeNoObligation": "No Obligation",
     "badgeNationwide": "Nationwide Coverage",
@@ -98,7 +98,7 @@
     "viewAllFaqs": "View all frequently asked questions",
     "finalCtaTitle": "Ready to Find Out If You Have a Case?",
     "finalCtaDescription": "It only takes 5 minutes and it's completely free. No obligation.",
-    "finalCtaButton": "Check My Case Now"
+    "finalCtaButton": "Do I Have a Case?"
   },
   "howItWorks": {
     "title": "How Repo911 Works",
@@ -149,7 +149,7 @@
     "violation6Description": "Many states require lenders to send a right-to-cure notice before repossession. Failing to do so may make the repo illegal.",
     "ctaTitle": "Think Your Rights Were Violated?",
     "ctaDescription": "It only takes 5 minutes to find out if you have a case. Our free case review costs you nothing and could be worth thousands.",
-    "ctaButton": "Check My Case Now",
+    "ctaButton": "Do I Have a Case?",
     "disclaimer": "This is not legal advice. Repo911 is not a law firm and does not provide legal representation. Results vary based on individual circumstances and applicable law."
   },
   "faq": {
