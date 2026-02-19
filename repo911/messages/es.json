@@ -4,7 +4,7 @@
     "blog": "Blog",
     "faq": "Preguntas Frecuentes",
     "trackCase": "Seguir Mi Caso",
-    "checkCase": "Revisar Mi Caso Ahora"
+    "checkCase": "¿Tengo un Caso?"
   },
   "footer": {
     "brandDescription": "Ayudamos a víctimas de reposesión ilegal de vehículos a conectar con abogados licenciados que pueden luchar por sus derechos.",
@@ -28,7 +28,7 @@
     "heroTitle": "¿Le Reposeyeron Su Vehículo <highlight>Ilegalmente?</highlight>",
     "heroAmount": "Podría Recibir $10,000–$100,000+",
     "heroDescription": "Aunque haya atrasado pagos, la empresa de reposesión pudo haber violado la ley. Descúbralo en 5 minutos — es 100% gratis.",
-    "ctaButton": "Revisar Mi Caso Ahora",
+    "ctaButton": "¿Tengo un Caso?",
     "badgeFreeReview": "Revisión Gratuita",
     "badgeNoObligation": "Sin Compromiso",
     "badgeNationwide": "Cobertura Nacional",
@@ -98,7 +98,7 @@
     "viewAllFaqs": "Ver todas las preguntas frecuentes",
     "finalCtaTitle": "¿Listo para Saber Si Tiene un Caso?",
     "finalCtaDescription": "Solo toma 5 minutos y es completamente gratis. Sin compromiso.",
-    "finalCtaButton": "Revisar Mi Caso Ahora"
+    "finalCtaButton": "¿Tengo un Caso?"
   },
   "howItWorks": {
     "title": "Cómo Funciona Repo911",
@@ -149,7 +149,7 @@
     "violation6Description": "Muchos estados requieren que los prestamistas envíen un aviso de derecho a subsanar antes de la reposesión. No hacerlo puede hacer la reposesión ilegal.",
     "ctaTitle": "¿Cree que sus Derechos Fueron Violados?",
     "ctaDescription": "Solo toma 5 minutos para saber si tiene un caso. Nuestra revisión gratuita no le cuesta nada y podría valer miles.",
-    "ctaButton": "Revisar Mi Caso Ahora",
+    "ctaButton": "¿Tengo un Caso?",
     "disclaimer": "Esto no es asesoría legal. Repo911 no es un bufete de abogados y no proporciona representación legal. Los resultados varían según las circunstancias individuales y la ley aplicable."
   },
   "faq": {
