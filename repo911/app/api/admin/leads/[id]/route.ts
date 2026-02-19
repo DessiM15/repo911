@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { adminLeadUpdateSchema } from '@/lib/validations/admin';
+import { sendStatusUpdateSms } from '@/lib/sms';
 import { apiSuccess, apiError } from '@/lib/api-response';
 
 export async function GET(
@@ -140,6 +141,24 @@ export async function PATCH(
           ip_address: request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || request.headers.get('x-real-ip') || null,
         }).then(() => {});
       }
+    }
+
+    // SMS to consumer on status change (fire-and-forget)
+    if (parsed.data.status && oldLead && parsed.data.status !== oldLead.status) {
+      supabase
+        .from('leads')
+        .select('phone, preferred_contact, sms_notifications')
+        .eq('id', id)
+        .single()
+        .then(({ data: leadData }) => {
+          if (leadData) {
+            sendStatusUpdateSms(
+              { phone: leadData.phone, preferred_contact: leadData.preferred_contact, sms_notifications: leadData.sms_notifications },
+              id,
+              parsed.data.status!
+            ).catch(() => { /* non-critical */ });
+          }
+        });
     }
 
     // Log status_change activities (fire-and-forget)

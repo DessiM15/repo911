@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { apiSuccess, apiError } from '@/lib/api-response';
+import { sendStatusUpdateSms, sendSettlementUpdateSms } from '@/lib/sms';
 import { verifyAttorney } from '@/lib/auth/verify-attorney';
 import { rateLimit } from '@/lib/rate-limit';
 import { caseStatusUpdateSchema, VALID_TRANSITIONS } from '@/lib/validations/attorney';
@@ -105,6 +106,33 @@ export async function PATCH(
         link: '/attorney/cases',
       })
       .then(() => {});
+
+    // SMS to consumer (fire-and-forget)
+    supabase
+      .from('fee_tracking')
+      .select('lead_id')
+      .eq('id', id)
+      .single()
+      .then(({ data: feeRec }) => {
+        if (feeRec) {
+          supabase
+            .from('leads')
+            .select('phone, preferred_contact, sms_notifications')
+            .eq('id', feeRec.lead_id)
+            .single()
+            .then(({ data: leadData }) => {
+              if (leadData) {
+                const consumer = { phone: leadData.phone, preferred_contact: leadData.preferred_contact, sms_notifications: leadData.sms_notifications };
+                if (case_status !== currentStatus) {
+                  sendStatusUpdateSms(consumer, feeRec.lead_id, case_status).catch(() => {});
+                }
+                if (settlement_amount !== undefined && settlement_amount !== null) {
+                  sendSettlementUpdateSms(consumer, feeRec.lead_id, settlement_amount).catch(() => {});
+                }
+              }
+            });
+        }
+      });
 
     // CRM activity logging (fire-and-forget, same pattern as leads PATCH)
     supabase

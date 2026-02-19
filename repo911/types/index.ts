@@ -87,6 +87,7 @@ export interface Lead {
   phone: string;
   preferred_contact: PreferredContact | null;
   best_time_to_contact: BestTimeToContact | null;
+  sms_notifications: boolean;
   street_address: string | null;
   city: string | null;
   state: string;

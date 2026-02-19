@@ -4,7 +4,7 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { stripe, isStripeConfigured, LEAD_PRICES } from '@/lib/stripe';
 import { isSubscriptionActive } from '@/lib/subscription';
 import { sendLeadClaimedToConsumer, sendLeadClaimedToAttorney } from '@/lib/emails';
-import { sendLeadClaimedSms } from '@/lib/sms';
+import { sendLeadClaimedSms, sendCaseClaimedSms } from '@/lib/sms';
 import { captureServerException } from '@/lib/error-tracking/server-tracker';
 import { rateLimit } from '@/lib/rate-limit';
 import { attorneyClaimSchema } from '@/lib/validations/attorney';
@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
     // Verify lead is available
     const { data: lead } = await supabase
       .from('leads')
-      .select('id, qualification_tier, claimed_by, status, first_name, last_name, email, phone, repo_state')
+      .select('id, qualification_tier, claimed_by, status, first_name, last_name, email, phone, repo_state, preferred_contact, sms_notifications')
       .eq('id', lead_id)
       .single();
 
@@ -105,10 +105,17 @@ export async function POST(request: NextRequest) {
         amount: 0,
       }).catch(() => { /* non-critical */ });
 
-      // SMS (fire-and-forget)
+      // SMS to attorney (fire-and-forget)
       sendLeadClaimedSms(
         { sms_notifications: attorney.sms_notifications, phone: attorney.phone },
         { id: lead.id, qualification_tier: tier || 'cold' }
+      ).catch(() => { /* non-critical */ });
+
+      // SMS to consumer (fire-and-forget)
+      sendCaseClaimedSms(
+        { phone: lead.phone, preferred_contact: lead.preferred_contact, sms_notifications: lead.sms_notifications },
+        lead.id,
+        attorney.first_name
       ).catch(() => { /* non-critical */ });
 
       return apiSuccess({
@@ -159,10 +166,17 @@ export async function POST(request: NextRequest) {
         amount: 0,
       }).catch(() => { /* non-critical */ });
 
-      // SMS (fire-and-forget)
+      // SMS to attorney (fire-and-forget)
       sendLeadClaimedSms(
         { sms_notifications: attorney.sms_notifications, phone: attorney.phone },
         { id: lead.id, qualification_tier: tier || 'cold' }
+      ).catch(() => { /* non-critical */ });
+
+      // SMS to consumer (fire-and-forget)
+      sendCaseClaimedSms(
+        { phone: lead.phone, preferred_contact: lead.preferred_contact, sms_notifications: lead.sms_notifications },
+        lead.id,
+        attorney.first_name
       ).catch(() => { /* non-critical */ });
 
       // CRM activity

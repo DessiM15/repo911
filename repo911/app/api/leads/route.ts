@@ -3,7 +3,7 @@ import { intakeFormSchema } from '@/lib/validations/intake-form';
 import { qualifyLead } from '@/lib/qualification-engine';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { sendLeadSubmissionConfirmation, sendHotLeadAlert, sendWarmLeadAlert } from '@/lib/emails';
-import { sendNewLeadSms } from '@/lib/sms';
+import { sendNewLeadSms, sendSubmissionConfirmationSms } from '@/lib/sms';
 import { rateLimit } from '@/lib/rate-limit';
 import { apiSuccess, apiError } from '@/lib/api-response';
 import type { LeadSubmission } from '@/types';
@@ -219,7 +219,13 @@ export async function POST(request: NextRequest) {
         score: qualification.score,
       });
 
-      // 2. Alert matching attorneys for hot/warm leads
+      // 2. SMS confirmation to consumer (fire-and-forget)
+      sendSubmissionConfirmationSms(
+        { phone: data.phone, preferred_contact: data.preferred_contact },
+        lead.id
+      ).catch(() => { /* non-critical */ });
+
+      // 3. Alert matching attorneys for hot/warm leads
       if (qualification.tier === 'hot' || qualification.tier === 'warm') {
         const violationTypes: string[] = [];
         if (qualification.breakdown.breach_of_peace > 0) violationTypes.push('Breach of Peace');

@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { feeTrackingUpdateSchema } from '@/lib/validations/admin';
+import { sendStatusUpdateSms } from '@/lib/sms';
 import { apiSuccess, apiError } from '@/lib/api-response';
 import { sanitizeSearchParam, isValidUUID } from '@/lib/sanitize';
 
@@ -150,6 +151,23 @@ export async function PATCH(request: NextRequest) {
 
     // Log status_change activity if case_status changed (fire-and-forget)
     if (updateFields.case_status && existingFee.case_status !== updateFields.case_status && existingFee.lead_id) {
+      // SMS to consumer
+      supabase
+        .from('leads')
+        .select('phone, preferred_contact, sms_notifications')
+        .eq('id', existingFee.lead_id)
+        .single()
+        .then(({ data: leadData }) => {
+          if (leadData) {
+            sendStatusUpdateSms(
+              { phone: leadData.phone, preferred_contact: leadData.preferred_contact, sms_notifications: leadData.sms_notifications },
+              existingFee.lead_id,
+              updateFields.case_status!
+            ).catch(() => { /* non-critical */ });
+          }
+        });
+
+      // CRM activity
       supabase
         .from('crm_contacts')
         .select('id')

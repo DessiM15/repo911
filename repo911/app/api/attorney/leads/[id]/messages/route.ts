@@ -4,6 +4,7 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { rateLimit } from '@/lib/rate-limit';
 import { attorneyMessageSchema } from '@/lib/validations/attorney';
 import { sendAttorneyMessageToConsumer } from '@/lib/emails';
+import { sendNewMessageSms } from '@/lib/sms';
 import { apiSuccess, apiError } from '@/lib/api-response';
 import { verifyAttorney } from '@/lib/auth/verify-attorney';
 
@@ -89,7 +90,7 @@ export async function POST(
     // Verify lead ownership
     const { data: lead } = await supabase
       .from('leads')
-      .select('id, claimed_by, email, first_name')
+      .select('id, claimed_by, email, first_name, phone, preferred_contact, sms_notifications')
       .eq('id', leadId)
       .eq('claimed_by', attorney.id)
       .single();
@@ -125,6 +126,13 @@ export async function POST(
       messageContent: parsed.data.content,
       leadId,
     }).catch(() => { /* non-critical */ });
+
+    // SMS to consumer (fire-and-forget)
+    sendNewMessageSms(
+      { phone: lead.phone, preferred_contact: lead.preferred_contact, sms_notifications: lead.sms_notifications },
+      leadId,
+      `${attorney.first_name} ${attorney.last_name}`
+    ).catch(() => { /* non-critical */ });
 
     return apiSuccess({ id: message.id, created_at: message.created_at });
   } catch (error) {
