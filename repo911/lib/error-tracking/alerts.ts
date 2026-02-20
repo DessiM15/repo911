@@ -6,6 +6,7 @@
  */
 
 import { resend, EMAIL_FROM } from '@/lib/resend';
+import { createAdminClient } from '@/lib/supabase/admin';
 import type { AlertRule, TrackedError } from '@/types';
 
 const APP_NAME = process.env.NEXT_PUBLIC_APP_NAME || 'Repo911';
@@ -70,6 +71,34 @@ ${error.tags?.length ? `<tr><td style="padding:8px 12px;border:1px solid #e5e7eb
 </body>
 </html>`,
     });
+
+    // Insert in-app notification for each admin
+    try {
+      const adminSupabase = createAdminClient();
+      const { data: admins } = await adminSupabase
+        .from('admins')
+        .select('id');
+
+      if (admins?.length) {
+        const title = `[${error.level.toUpperCase()}] Error Alert: ${error.error_type}`;
+        const message = error.message.length > 200
+          ? error.message.substring(0, 200) + '...'
+          : error.message;
+
+        await adminSupabase.from('notifications').insert(
+          admins.map((admin) => ({
+            recipient_type: 'admin' as const,
+            recipient_id: admin.id,
+            type: 'error_alert' as const,
+            title,
+            message,
+            link: '/admin/errors',
+          })),
+        );
+      }
+    } catch (notifErr) {
+      console.error('Failed to insert admin notifications:', notifErr);
+    }
   } catch (err) {
     console.error('Failed to send error alert email:', err);
   }

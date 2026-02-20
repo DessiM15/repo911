@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import {
   LayoutDashboard,
   FileText,
@@ -18,8 +18,9 @@ import {
   Bell,
   Bug,
   ClipboardList,
+  CheckCheck,
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn, formatDate } from '@/lib/utils';
 import { createClient } from '@/lib/supabase/client';
 
 const navItems = [
@@ -37,9 +38,151 @@ const navItems = [
   { href: '/admin/settings', label: 'Settings', icon: Settings },
 ];
 
+interface Notification {
+  id: string;
+  title: string;
+  message: string;
+  read: boolean;
+  link: string | null;
+  created_at: string;
+}
+
+function NotificationDropdown({
+  notifications,
+  unreadCount,
+  onMarkAllRead,
+  onNotificationClick,
+  onClose,
+}: {
+  notifications: Notification[];
+  unreadCount: number;
+  onMarkAllRead: () => void;
+  onNotificationClick: (n: Notification) => void;
+  onClose: () => void;
+}) {
+  return (
+    <div role="menu" aria-label="Notifications" className="absolute right-0 top-full mt-2 w-[calc(100vw-2rem)] sm:w-80 max-w-sm bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 shadow-lg overflow-hidden z-50">
+      <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 dark:border-slate-700">
+        <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100">Notifications</h3>
+        {unreadCount > 0 && (
+          <button
+            onClick={onMarkAllRead}
+            className="text-xs text-[#3474BA] dark:text-blue-300 hover:underline flex items-center gap-1"
+          >
+            <CheckCheck className="h-3 w-3" />
+            Mark all read
+          </button>
+        )}
+      </div>
+      <div className="max-h-80 overflow-y-auto">
+        {notifications.length === 0 ? (
+          <div className="p-6 text-center text-sm text-gray-400 dark:text-gray-500">
+            No notifications yet.
+          </div>
+        ) : (
+          notifications.slice(0, 15).map((n) => (
+            <button
+              key={n.id}
+              onClick={() => onNotificationClick(n)}
+              className={cn(
+                'w-full text-left px-4 py-3 border-b border-gray-50 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors',
+                !n.read && 'bg-blue-50/50'
+              )}
+            >
+              <div className="flex items-start gap-2">
+                {!n.read && (
+                  <span className="mt-1.5 h-2 w-2 rounded-full bg-[#3474BA] shrink-0" />
+                )}
+                <div className={cn(!n.read ? '' : 'ml-4')}>
+                  <p className="text-sm font-medium text-gray-900 dark:text-gray-100">{n.title}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 line-clamp-2">{n.message}</p>
+                  <p className="text-[10px] text-gray-400 dark:text-gray-500 mt-1">{formatDate(n.created_at)}</p>
+                </div>
+              </div>
+            </button>
+          ))
+        )}
+      </div>
+      <Link
+        href="/admin/errors"
+        onClick={onClose}
+        className="block text-center text-xs text-[#3474BA] dark:text-blue-300 hover:underline px-4 py-2.5 border-t border-gray-100 dark:border-slate-700"
+      >
+        View error dashboard
+      </Link>
+    </div>
+  );
+}
+
 export function AdminSidebar() {
   const pathname = usePathname();
+  const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [bellOpen, setBellOpen] = useState(false);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const bellRef = useRef<HTMLDivElement>(null);
+
+  const fetchNotifications = useCallback(async () => {
+    try {
+      const res = await fetch('/api/admin/notifications');
+      if (res.ok) {
+        const data = await res.json();
+        setNotifications(data.notifications);
+        setUnreadCount(data.unread_count);
+      }
+    } catch {
+      // silently fail
+    }
+  }, []);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- polling external API on mount
+    fetchNotifications();
+    const interval = setInterval(fetchNotifications, 60000);
+    return () => clearInterval(interval);
+  }, [fetchNotifications]);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (bellRef.current && !bellRef.current.contains(e.target as Node)) {
+        setBellOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  async function handleMarkAllRead() {
+    try {
+      await fetch('/api/admin/notifications', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ mark_all_read: true }),
+      });
+      setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+      setUnreadCount(0);
+    } catch {
+      // silently fail
+    }
+  }
+
+  function handleNotificationClick(n: Notification) {
+    if (!n.read) {
+      fetch('/api/admin/notifications', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ notification_id: n.id }),
+      }).catch(() => {});
+      setNotifications((prev) =>
+        prev.map((item) => (item.id === n.id ? { ...item, read: true } : item))
+      );
+      setUnreadCount((c) => Math.max(0, c - 1));
+    }
+    setBellOpen(false);
+    if (n.link) router.push(n.link);
+  }
 
   async function handleSignOut() {
     const supabase = createClient();
@@ -116,10 +259,23 @@ export function AdminSidebar() {
 
       {/* Desktop Top Bar */}
       <div className="hidden lg:flex lg:ml-64 h-16 bg-white dark:bg-slate-800 border-b border-gray-200 dark:border-slate-700 items-center justify-end px-6 sticky top-0 z-30">
-        <button aria-label="Notifications" className="relative p-2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
-          <Bell className="h-5 w-5" />
-          <span className="absolute top-1 right-1 h-2 w-2 bg-red-500 rounded-full" />
-        </button>
+        <div ref={bellRef} className="relative">
+          <button
+            onClick={() => setBellOpen(!bellOpen)}
+            aria-label="Notifications"
+            aria-haspopup="true"
+            aria-expanded={bellOpen}
+            className="relative p-2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+          >
+            <Bell className="h-5 w-5" />
+            {unreadCount > 0 && (
+              <span className="absolute top-0.5 right-0.5 h-4 w-4 bg-red-500 rounded-full text-[10px] font-bold text-white flex items-center justify-center">
+                {unreadCount > 9 ? '9+' : unreadCount}
+              </span>
+            )}
+          </button>
+          {bellOpen && <NotificationDropdown notifications={notifications} unreadCount={unreadCount} onMarkAllRead={handleMarkAllRead} onNotificationClick={handleNotificationClick} onClose={() => setBellOpen(false)} />}
+        </div>
       </div>
 
       {/* Mobile Header */}
@@ -132,10 +288,23 @@ export function AdminSidebar() {
           <span className="text-xs text-white/50 ml-1">Admin</span>
         </Link>
         <div className="flex items-center gap-2">
-          <button aria-label="Notifications" className="relative p-2 text-white/70 hover:text-white">
-            <Bell className="h-5 w-5" />
-            <span className="absolute top-1 right-1 h-2 w-2 bg-red-500 rounded-full" />
-          </button>
+          <div ref={bellRef} className="relative">
+            <button
+              onClick={() => setBellOpen(!bellOpen)}
+              aria-label="Notifications"
+              aria-haspopup="true"
+              aria-expanded={bellOpen}
+              className="relative p-2 text-white/70 hover:text-white"
+            >
+              <Bell className="h-5 w-5" />
+              {unreadCount > 0 && (
+                <span className="absolute top-0.5 right-0.5 h-4 w-4 bg-red-500 rounded-full text-[10px] font-bold text-white flex items-center justify-center">
+                  {unreadCount > 9 ? '9+' : unreadCount}
+                </span>
+              )}
+            </button>
+            {bellOpen && <NotificationDropdown notifications={notifications} unreadCount={unreadCount} onMarkAllRead={handleMarkAllRead} onNotificationClick={handleNotificationClick} onClose={() => setBellOpen(false)} />}
+          </div>
           <button
             className="p-2.5 text-white/70 hover:text-white"
             onClick={() => setMobileOpen(!mobileOpen)}

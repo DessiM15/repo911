@@ -2,6 +2,7 @@ import { NextRequest } from 'next/server';
 import crypto from 'crypto';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { scrubPII } from '@/lib/error-tracking/scrubber';
+import { checkAlertRules } from '@/lib/error-tracking/check-alerts';
 import { rateLimit } from '@/lib/rate-limit';
 import { apiSuccess, apiError } from '@/lib/api-response';
 
@@ -82,6 +83,9 @@ export async function POST(request: NextRequest) {
       os_name: browser.os || null,
       device_type: browser.device || null,
     });
+
+    // Check alert rules (fire-and-forget)
+    checkAlertRules(supabase, errorId).catch(() => {});
 
     return apiSuccess({ success: true, errorId });
   } catch (error) {

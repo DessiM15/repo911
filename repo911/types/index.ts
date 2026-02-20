@@ -33,7 +33,7 @@ export type ActivityType =
   | 'lead_claimed'
   | 'payment';
 
-export type NotificationType = 'new_lead' | 'lead_claimed' | 'payment_received' | 'system';
+export type NotificationType = 'new_lead' | 'lead_claimed' | 'payment_received' | 'system' | 'error_alert';
 
 export type RecipientType = 'attorney' | 'admin';
 
