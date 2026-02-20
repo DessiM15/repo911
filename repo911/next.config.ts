@@ -5,13 +5,13 @@ const withNextIntl = createNextIntlPlugin('./i18n/request.ts');
 
 const cspDirectives = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline'",
+  "script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com",
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: https://*.supabase.co",
   "font-src 'self'",
   "media-src 'self' blob:",
-  "connect-src 'self' https://*.supabase.co https://api.stripe.com",
-  "frame-src https://js.stripe.com https://checkout.stripe.com",
+  "connect-src 'self' https://*.supabase.co https://api.stripe.com https://challenges.cloudflare.com",
+  "frame-src https://js.stripe.com https://checkout.stripe.com https://challenges.cloudflare.com",
   "form-action 'self'",
   "base-uri 'self'",
   "object-src 'none'",

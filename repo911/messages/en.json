@@ -482,7 +482,9 @@
     "submitDisclaimer": "By submitting, you agree to our Privacy Policy and Terms of Service. This is not legal advice and does not create an attorney-client relationship.",
     "errors": {
       "submitError": "Something went wrong. Please try again.",
-      "generic": "Something went wrong"
+      "generic": "Something went wrong",
+      "turnstileRequired": "Please complete the security check before submitting.",
+      "turnstileLoadFailed": "Security verification could not load. Please check your ad blocker or network connection and refresh the page."
     },
     "progress": {
       "stepOf": "Step {current} of {total}: {name}",

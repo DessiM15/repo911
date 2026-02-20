@@ -482,7 +482,9 @@
     "submitDisclaimer": "Al enviar, acepta nuestra Política de Privacidad y Términos de Servicio. Esto no es asesoría legal y no crea una relación abogado-cliente.",
     "errors": {
       "submitError": "Algo salió mal. Por favor intente de nuevo.",
-      "generic": "Algo salió mal"
+      "generic": "Algo salió mal",
+      "turnstileRequired": "Por favor complete la verificación de seguridad antes de enviar.",
+      "turnstileLoadFailed": "La verificación de seguridad no pudo cargarse. Revise su bloqueador de anuncios o conexión a internet y actualice la página."
     },
     "progress": {
       "stepOf": "Paso {current} de {total}: {name}",

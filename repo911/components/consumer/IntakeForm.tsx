@@ -18,6 +18,23 @@ import { US_STATES, COMMON_LENDERS } from '@/lib/utils';
 import { AlertCircle, ArrowLeft, ArrowRight, X } from 'lucide-react';
 import { Link } from '@/i18n/navigation';
 
+declare global {
+  interface Window {
+    turnstile?: {
+      render: (container: string | HTMLElement, options: {
+        sitekey: string;
+        callback: (token: string) => void;
+        'error-callback': () => void;
+        'expired-callback': () => void;
+        theme?: 'light' | 'dark' | 'auto';
+        size?: 'normal' | 'compact';
+      }) => string;
+      reset: (widgetId: string) => void;
+      remove: (widgetId: string) => void;
+    };
+  }
+}
+
 const TOTAL_STEPS = 11;
 const DRAFT_KEY = 'repo911_intake_draft';
 const CONSENT_FIELDS = ['electronic_signature', 'consent_accurate_info', 'consent_not_legal_advice', 'consent_contact', 'consent_privacy_policy'];
@@ -65,6 +82,11 @@ export function IntakeForm() {
   const [draftRestored, setDraftRestored] = useState(false);
   const [draftSavedAt, setDraftSavedAt] = useState<number | null>(null);
   const saveTimerRef = useRef<number>(0);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [turnstileError, setTurnstileError] = useState(false);
+  const [turnstileLoaded, setTurnstileLoaded] = useState(false);
+  const turnstileContainerRef = useRef<HTMLDivElement>(null);
+  const turnstileWidgetId = useRef<string | null>(null);
 
   // Translated option arrays
   const REPO_LOCATIONS = [
@@ -134,6 +156,45 @@ export function IntakeForm() {
       if (val) utmRef.current[key] = val;
     }
   }, []);
+
+  // Load Turnstile script
+  useEffect(() => {
+    if (document.querySelector('script[src*="challenges.cloudflare.com"]')) {
+      setTurnstileLoaded(true);
+      return;
+    }
+    const script = document.createElement('script');
+    script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+    script.async = true;
+    script.onload = () => setTurnstileLoaded(true);
+    script.onerror = () => setTurnstileError(true);
+    document.head.appendChild(script);
+  }, []);
+
+  // Render Turnstile widget on step 10
+  useEffect(() => {
+    if (step !== 10 || !turnstileLoaded || !window.turnstile || !turnstileContainerRef.current) return;
+    // Avoid re-rendering if widget already exists
+    if (turnstileWidgetId.current) return;
+    const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+    if (!siteKey) return;
+    turnstileWidgetId.current = window.turnstile.render(turnstileContainerRef.current, {
+      sitekey: siteKey,
+      callback: (token: string) => {
+        setTurnstileToken(token);
+        setTurnstileError(false);
+      },
+      'error-callback': () => setTurnstileError(true),
+      'expired-callback': () => setTurnstileToken(null),
+      theme: 'light',
+    });
+    return () => {
+      if (turnstileWidgetId.current && window.turnstile) {
+        window.turnstile.remove(turnstileWidgetId.current);
+        turnstileWidgetId.current = null;
+      }
+    };
+  }, [step, turnstileLoaded]);
 
   // Restore draft on mount
   useEffect(() => {
@@ -242,6 +303,12 @@ export function IntakeForm() {
     setSubmitting(true);
     setSubmitError(null);
 
+    if (!turnstileToken) {
+      setSubmitError(t('errors.turnstileRequired'));
+      setSubmitting(false);
+      return;
+    }
+
     // Handle "Other" lender
     if (data.lender_name === 'other' && otherLender) {
       data.lender_name = otherLender;
@@ -258,7 +325,7 @@ export function IntakeForm() {
       const response = await fetch('/api/leads', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...data, ...utmRef.current }),
+        body: JSON.stringify({ ...data, ...utmRef.current, turnstile_token: turnstileToken }),
       });
 
       const result = await response.json();
@@ -276,6 +343,11 @@ export function IntakeForm() {
       router.push(`/claim/confirmation?${params.toString()}`);
     } catch (error) {
       setSubmitError(error instanceof Error ? error.message : t('errors.generic'));
+      // Reset Turnstile widget so retry gets a fresh token
+      if (turnstileWidgetId.current && window.turnstile) {
+        window.turnstile.reset(turnstileWidgetId.current);
+        setTurnstileToken(null);
+      }
     } finally {
       setSubmitting(false);
     }
@@ -1385,6 +1457,14 @@ export function IntakeForm() {
               })}
             </label>
           </div>
+
+          <div ref={turnstileContainerRef} className="mt-4" />
+          {turnstileError && (
+            <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 text-sm text-amber-700">
+              <AlertCircle className="inline h-4 w-4 mr-1 -mt-0.5" />
+              {t('errors.turnstileLoadFailed')}
+            </div>
+          )}
 
           {submitError && (
             <div role="alert" className="bg-red-50 border border-red-200 rounded-lg p-4 text-sm text-red-700">

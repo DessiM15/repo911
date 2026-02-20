@@ -9,6 +9,18 @@ import { rateLimit } from '@/lib/rate-limit';
 import { apiSuccess, apiError } from '@/lib/api-response';
 import type { LeadSubmission } from '@/types';
 
+async function verifyTurnstileToken(token: string, ip: string): Promise<boolean> {
+  const secret = process.env.TURNSTILE_SECRET_KEY;
+  if (!secret) return false;
+  const res = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({ secret, response: token, remoteip: ip }),
+  });
+  const data = await res.json();
+  return data.success === true;
+}
+
 export async function POST(request: NextRequest) {
   try {
     // Rate limit: 5 submissions per IP per 15 minutes
@@ -27,6 +39,17 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
+
+    // Verify Turnstile CAPTCHA token
+    const turnstileToken = body.turnstile_token;
+    if (!turnstileToken || typeof turnstileToken !== 'string') {
+      return apiError('CAPTCHA verification required.', 400);
+    }
+    const turnstileValid = await verifyTurnstileToken(turnstileToken, ip);
+    if (!turnstileValid) {
+      return apiError('CAPTCHA verification failed. Please try again.', 400);
+    }
+    delete body.turnstile_token;
 
     // Validate input
     const parsed = intakeFormSchema.safeParse(body);
