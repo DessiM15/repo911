@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback, useRef, useEffect } from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, Controller, type Resolver } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
@@ -29,7 +29,7 @@ const YEAR_OPTIONS = Array.from({ length: MAX_YEAR - 1990 + 1 }, (_, i) => ({
 }));
 
 // Fields to validate per step (only required fields)
-const STEP_FIELDS: Record<number, string[]> = {
+const STEP_FIELDS: Record<number, (keyof IntakeFormInput)[]> = {
   0: ['first_name', 'last_name', 'email', 'phone', 'preferred_contact', 'street_address', 'city', 'state', 'zip_code'],
   1: ['vehicle_year', 'vehicle_make', 'vehicle_model', 'lease_or_finance'],
   2: ['lender_name', 'behind_on_payments', 'received_written_notice'],
@@ -114,8 +114,7 @@ export function IntakeForm() {
     trigger,
     formState: { errors },
   } = useForm<IntakeFormInput>({
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    resolver: zodResolver(intakeFormSchema) as any,
+    resolver: zodResolver(intakeFormSchema) as unknown as Resolver<IntakeFormInput>,
     defaultValues: {
       repo_location: [],
       impacts: [],
@@ -209,8 +208,7 @@ export function IntakeForm() {
   async function goNext() {
     const fields = STEP_FIELDS[step];
     if (fields && fields.length > 0) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const valid = await trigger(fields as any);
+      const valid = await trigger(fields);
       if (!valid) return;
     }
 
