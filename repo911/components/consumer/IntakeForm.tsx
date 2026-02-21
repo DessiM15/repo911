@@ -37,6 +37,7 @@ declare global {
 
 const TOTAL_STEPS = 11;
 const DRAFT_KEY = 'repo911_intake_draft';
+const DRAFT_TTL_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
 const CONSENT_FIELDS = ['electronic_signature', 'consent_accurate_info', 'consent_not_legal_advice', 'consent_contact', 'consent_privacy_policy'];
 
 const MAX_YEAR = new Date().getFullYear() + 1;
@@ -196,12 +197,16 @@ export function IntakeForm() {
     };
   }, [step, turnstileLoaded]);
 
-  // Restore draft on mount
+  // Restore draft on mount (discard if older than DRAFT_TTL_MS)
   useEffect(() => {
     try {
       const saved = localStorage.getItem(DRAFT_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
+        if (parsed.savedAt && Date.now() - parsed.savedAt > DRAFT_TTL_MS) {
+          localStorage.removeItem(DRAFT_KEY);
+          return;
+        }
         reset(parsed.values, { keepDefaultValues: true });
         setStep(parsed.step || 0);
         setCompletedSteps(parsed.completedSteps || []);
