@@ -1,16 +1,8 @@
-'use client';
-
-import { useEffect } from 'react';
 import Link from 'next/link';
 import { Shield, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { trackEvent } from '@/lib/analytics';
 
 export default function NotFound() {
-  useEffect(() => {
-    trackEvent('404', { path: window.location.pathname });
-  }, []);
-
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-slate-900 px-4">
       <div className="text-center max-w-md">

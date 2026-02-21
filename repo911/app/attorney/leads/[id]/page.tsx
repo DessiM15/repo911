@@ -14,7 +14,6 @@ import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { formatDate, formatCurrency } from '@/lib/utils';
 import { LEAD_PRICES } from '@/lib/lead-prices';
-import { trackEvent } from '@/lib/analytics';
 import type { QualificationTier } from '@/types';
 
 interface EvidenceFile {
@@ -126,8 +125,7 @@ export default function LeadDetailPage() {
         return;
       }
       if (data.redirect_url) {
-        // Instant claim (subscription or referral credit)
-        trackEvent('Attorney Lead Claimed');
+        // Instant claim (subscription)
         window.location.href = data.redirect_url;
       } else if (data.checkout_url) {
         // Per-lead Stripe checkout

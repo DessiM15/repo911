@@ -17,7 +17,6 @@ import { Button } from '@/components/ui/button';
 import { US_STATES, COMMON_LENDERS } from '@/lib/utils';
 import { AlertCircle, ArrowLeft, ArrowRight, X } from 'lucide-react';
 import { Link } from '@/i18n/navigation';
-import { trackEvent } from '@/lib/analytics';
 
 declare global {
   interface Window {
@@ -157,7 +156,6 @@ export function IntakeForm() {
       const val = params.get(key);
       if (val) utmRef.current[key] = val;
     }
-    trackEvent('Intake Form Started');
   }, []);
 
   // Load Turnstile script
@@ -216,7 +214,6 @@ export function IntakeForm() {
         if (parsed.otherRepoLocation) setOtherRepoLocation(parsed.otherRepoLocation);
         setDraftSavedAt(parsed.savedAt || null);
         setDraftRestored(true);
-        trackEvent('Intake Draft Restored');
       }
     } catch { /* ignore corrupt data */ }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -255,7 +252,6 @@ export function IntakeForm() {
     setOtherRepoLocation('');
     setDraftRestored(false);
     setDraftSavedAt(null);
-    trackEvent('Intake Draft Discarded');
   }
 
   const watchBehindOnPayments = watch('behind_on_payments');
@@ -287,7 +283,6 @@ export function IntakeForm() {
       updated.add(step);
       return Array.from(updated);
     });
-    trackEvent('Intake Step Completed', { step });
 
     if (step < TOTAL_STEPS - 1) {
       setStep(step + 1);
@@ -345,7 +340,6 @@ export function IntakeForm() {
       }
 
       localStorage.removeItem(DRAFT_KEY);
-      trackEvent('Intake Form Submitted');
 
       const params = new URLSearchParams({
         tier: result.tier,

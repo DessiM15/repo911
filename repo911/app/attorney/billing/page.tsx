@@ -9,7 +9,6 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
 import { SkeletonTable } from '@/components/ui/skeleton';
 import { formatCurrency, formatDate } from '@/lib/utils';
-import { trackEvent } from '@/lib/analytics';
 import type { Transaction } from '@/types';
 
 interface SubscriptionInfo {
@@ -73,7 +72,6 @@ export default function BillingPage() {
         return;
       }
       if (data.checkout_url) {
-        trackEvent('Attorney Subscription Started');
         window.location.href = data.checkout_url;
       }
     } catch {

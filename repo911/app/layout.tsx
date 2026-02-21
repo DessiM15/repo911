@@ -1,12 +1,9 @@
 import type { Metadata } from 'next';
 import { Geist } from 'next/font/google';
-import Script from 'next/script';
 import { Toaster } from 'sonner';
 import { LazyErrorTracking } from '@/components/LazyErrorTracking';
 import { ThemeProvider } from '@/components/layout/ThemeProvider';
 import './globals.css';
-
-const plausibleDomain = process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN;
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -47,9 +44,6 @@ export default function RootLayout({
             <link rel="preconnect" href={process.env.NEXT_PUBLIC_SUPABASE_URL} crossOrigin="anonymous" />
           </>
         )}
-        {plausibleDomain && (
-          <link rel="dns-prefetch" href="https://plausible.io" />
-        )}
       </head>
       <body
         className={`${geistSans.variable} antialiased`}
@@ -64,14 +58,6 @@ export default function RootLayout({
           <LazyErrorTracking>{children}</LazyErrorTracking>
           <Toaster richColors position="top-right" />
         </ThemeProvider>
-        {plausibleDomain && (
-          <Script
-            defer
-            data-domain={plausibleDomain}
-            src="https://plausible.io/js/script.outbound-links.js"
-            strategy="afterInteractive"
-          />
-        )}
       </body>
     </html>
   );
