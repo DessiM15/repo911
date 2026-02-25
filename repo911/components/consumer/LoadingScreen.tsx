@@ -13,6 +13,7 @@ export default function LoadingScreen({
 }) {
   const [show, setShow] = useState(true);
   const overlayRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     // Skip if already played this session
@@ -31,6 +32,28 @@ export default function LoadingScreen({
       try { sessionStorage.setItem(STORAGE_KEY, '1'); } catch {}
       setShow(false);
       return;
+    }
+
+    // Pick mobile or desktop assets
+    const isMobile = window.innerWidth < 768;
+    const video = videoRef.current;
+    if (video) {
+      video.src = isMobile
+        ? '/videos/loading-screen-mobile.mp4'
+        : '/videos/loading-screen.mp4';
+      video.poster = isMobile
+        ? '/videos/loading-screen-poster-mobile.jpg'
+        : '/videos/loading-screen-poster.jpg';
+
+      // Play programmatically to catch autoplay rejections
+      const playPromise = video.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {
+          // Autoplay blocked — skip loading screen gracefully
+          try { sessionStorage.setItem(STORAGE_KEY, '1'); } catch {}
+          setShow(false);
+        });
+      }
     }
 
     // Remove overlay from DOM after animation completes
@@ -58,13 +81,13 @@ export default function LoadingScreen({
           className="ls-overlay"
         >
           <video
-            autoPlay
+            ref={videoRef}
             muted
             playsInline
+            preload="auto"
+            poster="/videos/loading-screen-poster.jpg"
             className="ls-video"
-          >
-            <source src="/videos/loading-screen.mp4" type="video/mp4" />
-          </video>
+          />
 
           {/* Text overlay */}
           <div className="ls-text-container">

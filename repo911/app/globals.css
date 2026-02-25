@@ -145,7 +145,16 @@ html {
   text-shadow: 0 1px 8px rgba(0, 0, 0, 0.5);
   opacity: 0;
   margin-top: 0.75rem;
+  text-align: center;
+  padding-inline: 1rem;
   animation: ls-text-in 1000ms ease-in-out 400ms forwards;
+}
+
+/* Landscape phones: reduce top padding so text isn't cramped */
+@media (orientation: landscape) and (max-height: 500px) {
+  .ls-text-container {
+    padding-top: 6vh;
+  }
 }
 
 /* Homepage content: starts invisible, fades in at 4.4s */
