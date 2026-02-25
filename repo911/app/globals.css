@@ -73,3 +73,115 @@ html {
   opacity: 1;
   pointer-events: auto;
 }
+
+/* ── Loading Screen ── */
+
+/* Overlay: fixed fullscreen, fades out at 4.4s over 600ms */
+.ls-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: ls-overlay-fade 600ms ease-in 4400ms forwards;
+}
+
+.dark .ls-overlay {
+  background: #0f172a;
+}
+
+/* Video fills the screen */
+.ls-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Text container centered over video */
+.ls-text-container {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 14vh;
+  pointer-events: none;
+}
+
+/* REPO911 logo: fades in over 1s, holds, fades out with overlay */
+.ls-title {
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+  font-size: clamp(2.5rem, 8vw, 5rem);
+  font-weight: 800;
+  color: #ffffff;
+  -webkit-text-stroke: 1px rgba(0, 0, 0, 0.6);
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  animation: ls-text-in 1000ms ease-in-out forwards;
+}
+
+.ls-title-accent {
+  color: #3474BA;
+}
+
+.ls-shield {
+  width: 1em;
+  height: 1em;
+  color: #3474BA;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4));
+}
+
+/* Tagline: same fade-in but delayed 400ms */
+.ls-tagline {
+  font-size: clamp(1.75rem, 5vw, 3rem);
+  font-weight: 500;
+  color: #ffffff;
+  -webkit-text-stroke: 0.5px rgba(0, 0, 0, 0.6);
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  margin-top: 0.75rem;
+  animation: ls-text-in 1000ms ease-in-out 400ms forwards;
+}
+
+/* Homepage content: starts invisible, fades in at 4.4s */
+.ls-content {
+  opacity: 0;
+  animation: ls-content-in 600ms ease-out 4400ms forwards;
+}
+
+/* ── Keyframes ── */
+
+/* Text fades in and stays — overlay fade handles the fade-out */
+@keyframes ls-text-in {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/* Overlay fades out */
+@keyframes ls-overlay-fade {
+  0% { opacity: 1; }
+  100% { opacity: 0; pointer-events: none; }
+}
+
+/* Homepage content fades in */
+@keyframes ls-content-in {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/* Reduced motion: skip everything */
+@media (prefers-reduced-motion: reduce) {
+  .ls-overlay,
+  .ls-title,
+  .ls-tagline,
+  .ls-content {
+    animation: none !important;
+    opacity: 1 !important;
+  }
+}
+

@@ -2,6 +2,7 @@ import { Shield, FileSearch, UserCheck, ArrowRight, ChevronRight, Clock, Lock, S
 import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 import { Button } from '@/components/ui/button';
+import LoadingScreen from '@/components/consumer/LoadingScreen';
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -85,7 +86,7 @@ export default async function HomePage() {
   ];
 
   return (
-    <>
+    <LoadingScreen>
       {/* Structured Data */}
       <script
         type="application/ld+json"
@@ -101,8 +102,19 @@ export default async function HomePage() {
       />
 
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-[#3474BA]/5 via-white to-[#F5A623]/5 dark:from-[#3474BA]/10 dark:via-slate-900 dark:to-[#F5A623]/10 py-16 sm:py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="relative overflow-hidden py-16 sm:py-24">
+        {/* Background video */}
+        <video
+          autoPlay
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover"
+        >
+          <source src="/videos/loading-screen.mp4" type="video/mp4" />
+        </video>
+        {/* Overlay for text readability */}
+        <div className="absolute inset-0 bg-white/70 dark:bg-slate-900/75" />
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="text-3xl sm:text-5xl lg:text-7xl font-bold text-gray-900 dark:text-gray-100 leading-tight">
               {t.rich('heroTitle', {
@@ -368,6 +380,6 @@ export default async function HomePage() {
           </Link>
         </div>
       </section>
-    </>
+    </LoadingScreen>
   );
 }
