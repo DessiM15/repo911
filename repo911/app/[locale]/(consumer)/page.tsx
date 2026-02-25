@@ -110,7 +110,7 @@ export default async function HomePage() {
           playsInline
           preload="none"
           poster="/videos/loading-screen-poster.jpg"
-          className="absolute inset-0 w-full h-full object-cover"
+          className="hidden sm:block absolute inset-0 w-full h-full object-cover"
         >
           <source src="/videos/loading-screen.mp4" type="video/mp4" />
         </video>
