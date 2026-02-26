@@ -85,7 +85,6 @@ export default function LoadingScreen({
             muted
             playsInline
             preload="auto"
-            poster="/videos/loading-screen-poster.jpg"
             className="ls-video"
           />
 
