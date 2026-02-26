@@ -99,6 +99,13 @@ html {
   object-fit: cover;
 }
 
+/* Mobile: show full video top-to-bottom without cropping */
+@media (max-width: 767px) {
+  .ls-video {
+    object-fit: contain;
+  }
+}
+
 /* Text container centered over video */
 .ls-text-container {
   position: absolute;
