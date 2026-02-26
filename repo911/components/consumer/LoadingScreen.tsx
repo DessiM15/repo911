@@ -16,12 +16,6 @@ export default function LoadingScreen({
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
-    // Skip on mobile devices
-    if (window.innerWidth < 768) {
-      setShow(false);
-      return;
-    }
-
     // Skip if already played this session
     try {
       if (sessionStorage.getItem(STORAGE_KEY)) {
