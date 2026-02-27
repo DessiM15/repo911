@@ -85,6 +85,7 @@ html {
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
   animation: ls-overlay-fade 600ms ease-in 4900ms forwards;
 }
 
@@ -103,7 +104,7 @@ html {
 @media (max-width: 767px) {
   .ls-video {
     object-fit: cover;
-    transform: scale(1.15);
+    transform: scale(1.3);
     animation: ls-video-shift 800ms ease-in-out 3000ms forwards;
   }
   .ls-text-container {
@@ -208,8 +209,8 @@ html {
 
 /* Mobile: slide video to the right at 3s */
 @keyframes ls-video-shift {
-  0% { transform: scale(1.15) translateX(0); }
-  100% { transform: scale(1.15) translateX(10%); }
+  0% { transform: scale(1.3) translateX(0); }
+  100% { transform: scale(1.3) translateX(8%); }
 }
 
 /* Reduced motion: skip everything */
