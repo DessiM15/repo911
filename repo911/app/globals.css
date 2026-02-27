@@ -108,6 +108,12 @@ html {
     justify-content: center;
     padding-top: 0;
   }
+  .ls-title {
+    animation-delay: 2500ms;
+  }
+  .ls-tagline {
+    animation-delay: 2900ms;
+  }
 }
 
 /* Text container centered over video */
