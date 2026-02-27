@@ -103,6 +103,7 @@ html {
 @media (max-width: 767px) {
   .ls-video {
     object-fit: contain;
+    animation: ls-video-shift 800ms ease-in-out 3000ms forwards;
   }
   .ls-text-container {
     justify-content: center;
@@ -202,6 +203,12 @@ html {
 @keyframes ls-content-in {
   0% { opacity: 0; }
   100% { opacity: 1; }
+}
+
+/* Mobile: slide video to the right at 3s */
+@keyframes ls-video-shift {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(10%); }
 }
 
 /* Reduced motion: skip everything */
