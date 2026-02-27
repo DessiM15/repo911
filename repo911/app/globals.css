@@ -99,10 +99,14 @@ html {
   object-fit: cover;
 }
 
-/* Mobile: show full video top-to-bottom without cropping */
+/* Mobile: show full video top-to-bottom, center text overlay */
 @media (max-width: 767px) {
   .ls-video {
     object-fit: contain;
+  }
+  .ls-text-container {
+    justify-content: center;
+    padding-top: 0;
   }
 }
 
