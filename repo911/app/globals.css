@@ -204,7 +204,7 @@ html {
 /* Mobile: slide video to the right */
 @keyframes ls-video-shift {
   0% { object-position: center center; }
-  100% { object-position: 47.85% center; }
+  100% { object-position: 47.8% center; }
 }
 
 /* Reduced motion: skip everything */
