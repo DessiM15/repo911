@@ -16,12 +16,6 @@ export default function LoadingScreen({
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
-    // Skip on mobile devices
-    if (window.innerWidth < 768) {
-      setShow(false);
-      return;
-    }
-
     // Skip if already played this session
     try {
       if (sessionStorage.getItem(STORAGE_KEY)) {
@@ -40,10 +34,15 @@ export default function LoadingScreen({
       return;
     }
 
+    const isMobile = window.innerWidth < 768;
     const video = videoRef.current;
     if (video) {
-      video.src = '/videos/loading-screen.mp4';
-      video.poster = '/videos/loading-screen-poster.jpg';
+      video.src = isMobile
+        ? '/videos/loading-screen-mobile.mp4'
+        : '/videos/loading-screen.mp4';
+      video.poster = isMobile
+        ? '/videos/loading-screen-poster-mobile.jpg'
+        : '/videos/loading-screen-poster.jpg';
 
       // Play programmatically to catch autoplay rejections
       const playPromise = video.play();
