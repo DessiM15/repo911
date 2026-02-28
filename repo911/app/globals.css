@@ -79,7 +79,7 @@ html {
 /* Overlay: fixed fullscreen, fades out at 4.4s over 600ms */
 .ls-overlay {
   position: fixed;
-  inset: -5px;
+  inset: 0;
   z-index: 50;
   background: #ffffff;
   display: flex;
