@@ -99,6 +99,13 @@ html {
   object-fit: cover;
 }
 
+/* Mobile: shift video to the right at 2.5s */
+@media (max-width: 767px) {
+  .ls-video {
+    animation: ls-video-shift 800ms ease-in-out 2500ms forwards;
+  }
+}
+
 /* Text container centered over video */
 .ls-text-container {
   position: absolute;
@@ -181,6 +188,12 @@ html {
 @keyframes ls-content-in {
   0% { opacity: 0; }
   100% { opacity: 1; }
+}
+
+/* Mobile: slide video to the right */
+@keyframes ls-video-shift {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(8%); }
 }
 
 /* Reduced motion: skip everything */
