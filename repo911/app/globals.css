@@ -95,17 +95,16 @@ html {
 
 /* Video fills the screen */
 .ls-video {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-/* Mobile: show full video top-to-bottom, center text overlay */
+/* Mobile: shift video to the right at 3s */
 @media (max-width: 767px) {
   .ls-video {
-    object-fit: cover;
-    width: 120%;
-    margin-left: -10%;
     animation: ls-video-shift 800ms ease-in-out 3000ms forwards;
   }
   .ls-text-container {
