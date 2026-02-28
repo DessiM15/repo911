@@ -158,6 +158,16 @@ html {
   animation: ls-text-in 1000ms ease-in-out 400ms forwards;
 }
 
+/* Mobile: delay text appearance to 2.5s */
+@media (max-width: 767px) {
+  .ls-title {
+    animation: ls-text-in 1000ms ease-in-out 2500ms forwards;
+  }
+  .ls-tagline {
+    animation: ls-text-in 1000ms ease-in-out 2900ms forwards;
+  }
+}
+
 /* Landscape phones: reduce top padding so text isn't cramped */
 @media (orientation: landscape) and (max-height: 500px) {
   .ls-text-container {
@@ -194,7 +204,7 @@ html {
 /* Mobile: slide video to the right */
 @keyframes ls-video-shift {
   0% { object-position: center center; }
-  100% { object-position: 48% center; }
+  100% { object-position: 49% center; }
 }
 
 /* Reduced motion: skip everything */
