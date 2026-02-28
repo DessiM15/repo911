@@ -106,6 +106,7 @@ html {
   }
 }
 
+
 /* Text container centered over video */
 .ls-text-container {
   position: absolute;
@@ -192,8 +193,8 @@ html {
 
 /* Mobile: slide video to the right */
 @keyframes ls-video-shift {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(8%); }
+  0% { object-position: center center; }
+  100% { object-position: 65% center; }
 }
 
 /* Reduced motion: skip everything */
