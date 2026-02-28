@@ -85,8 +85,7 @@ html {
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
-  animation: ls-overlay-fade 600ms ease-in 5200ms forwards;
+  animation: ls-overlay-fade 600ms ease-in 4400ms forwards;
 }
 
 .dark .ls-overlay {
@@ -95,24 +94,9 @@ html {
 
 /* Video fills the screen */
 .ls-video {
-  position: absolute;
-  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-}
-
-/* Mobile: shift video to the right at 3s */
-@media (max-width: 767px) {
-  .ls-video {
-    left: -10%;
-    width: 120%;
-    animation: ls-video-shift 800ms ease-in-out 3000ms forwards;
-  }
-  .ls-text-container {
-    justify-content: center;
-    padding-top: 0;
-  }
 }
 
 /* Text container centered over video */
@@ -166,16 +150,6 @@ html {
   animation: ls-text-in 1000ms ease-in-out 400ms forwards;
 }
 
-/* Mobile: delay text appearance to 2.5s */
-@media (max-width: 767px) {
-  .ls-title {
-    animation: ls-text-in 1000ms ease-in-out 2500ms forwards;
-  }
-  .ls-tagline {
-    animation: ls-text-in 1000ms ease-in-out 2900ms forwards;
-  }
-}
-
 /* Landscape phones: reduce top padding so text isn't cramped */
 @media (orientation: landscape) and (max-height: 500px) {
   .ls-text-container {
@@ -186,7 +160,7 @@ html {
 /* Homepage content: starts invisible, fades in at 4.4s */
 .ls-content {
   opacity: 0;
-  animation: ls-content-in 600ms ease-out 5200ms forwards;
+  animation: ls-content-in 600ms ease-out 4400ms forwards;
 }
 
 /* ── Keyframes ── */
@@ -207,12 +181,6 @@ html {
 @keyframes ls-content-in {
   0% { opacity: 0; }
   100% { opacity: 1; }
-}
-
-/* Mobile: slide video to the right at 3s */
-@keyframes ls-video-shift {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(8%); }
 }
 
 /* Reduced motion: skip everything */

@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Shield } from 'lucide-react';
 
 const STORAGE_KEY = 'repo911_loading_played';
-const TOTAL_DURATION = 5900; // overlay removed from DOM after fade completes
+const TOTAL_DURATION = 5000; // overlay removed from DOM after fade completes
 
 export default function LoadingScreen({
   children,
@@ -16,6 +16,12 @@ export default function LoadingScreen({
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
+    // Skip on mobile devices
+    if (window.innerWidth < 768) {
+      setShow(false);
+      return;
+    }
+
     // Skip if already played this session
     try {
       if (sessionStorage.getItem(STORAGE_KEY)) {
@@ -34,16 +40,10 @@ export default function LoadingScreen({
       return;
     }
 
-    // Pick mobile or desktop assets
-    const isMobile = window.innerWidth < 768;
     const video = videoRef.current;
     if (video) {
-      video.src = isMobile
-        ? '/videos/loading-screen-mobile.mp4'
-        : '/videos/loading-screen.mp4';
-      video.poster = isMobile
-        ? '/videos/loading-screen-poster-mobile.jpg'
-        : '/videos/loading-screen-poster.jpg';
+      video.src = '/videos/loading-screen.mp4';
+      video.poster = '/videos/loading-screen-poster.jpg';
 
       // Play programmatically to catch autoplay rejections
       const playPromise = video.play();
@@ -85,6 +85,7 @@ export default function LoadingScreen({
             muted
             playsInline
             preload="auto"
+            poster="/videos/loading-screen-poster.jpg"
             className="ls-video"
           />
 
