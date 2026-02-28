@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Shield } from 'lucide-react';
 
 const STORAGE_KEY = 'repo911_loading_played';
-const TOTAL_DURATION = 5500; // overlay removed from DOM after fade completes
+const TOTAL_DURATION = 5900; // overlay removed from DOM after fade completes
 
 export default function LoadingScreen({
   children,
