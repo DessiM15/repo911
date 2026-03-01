@@ -121,7 +121,7 @@ html {
 /* Mobile: move text down */
 @media (max-width: 767px) {
   .ls-text-container {
-    padding-top: 60vh;
+    padding-top: 20vh;
   }
 }
 
