@@ -4,7 +4,8 @@ import { useState, useEffect, useRef } from 'react';
 import { Shield } from 'lucide-react';
 
 const STORAGE_KEY = 'repo911_loading_played';
-const TOTAL_DURATION = 5000; // overlay removed from DOM after fade completes
+const TOTAL_DURATION_DESKTOP = 5000;
+const TOTAL_DURATION_MOBILE = 5600;
 
 export default function LoadingScreen({
   children,
@@ -59,7 +60,7 @@ export default function LoadingScreen({
     const timer = setTimeout(() => {
       setShow(false);
       try { sessionStorage.setItem(STORAGE_KEY, '1'); } catch {}
-    }, TOTAL_DURATION);
+    }, isMobile ? TOTAL_DURATION_MOBILE : TOTAL_DURATION_DESKTOP);
 
     return () => clearTimeout(timer);
   }, []);

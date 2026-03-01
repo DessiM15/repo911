@@ -187,6 +187,16 @@ html {
   animation: ls-content-in 600ms ease-out 4400ms forwards;
 }
 
+/* Mobile: delay crossfade to 5s */
+@media (max-width: 767px) {
+  .ls-overlay {
+    animation: ls-overlay-fade 600ms ease-in 5000ms forwards;
+  }
+  .ls-content {
+    animation: ls-content-in 600ms ease-out 5000ms forwards;
+  }
+}
+
 /* ── Keyframes ── */
 
 /* Text fades in and stays — overlay fade handles the fade-out */
