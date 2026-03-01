@@ -104,6 +104,9 @@ html {
   .ls-video {
     animation: ls-video-shift 800ms ease-in-out 2500ms forwards;
   }
+  .ls-text-container {
+    padding-top: 25vh;
+  }
 }
 
 
