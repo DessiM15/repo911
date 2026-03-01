@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Shield } from 'lucide-react';
 
 const STORAGE_KEY = 'repo911_loading_played';
-const TOTAL_DURATION_DESKTOP = 4100;
+const TOTAL_DURATION_DESKTOP = 4350;
 const TOTAL_DURATION_MOBILE = 5600;
 
 export default function LoadingScreen({

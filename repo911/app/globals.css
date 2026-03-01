@@ -85,7 +85,7 @@ html {
   display: flex;
   align-items: center;
   justify-content: center;
-  animation: ls-overlay-fade 600ms ease-in 3500ms forwards;
+  animation: ls-overlay-fade 600ms ease-in 3750ms forwards;
 }
 
 .dark .ls-overlay {
@@ -184,7 +184,7 @@ html {
 /* Homepage content: starts invisible, fades in at 4.4s */
 .ls-content {
   opacity: 0;
-  animation: ls-content-in 600ms ease-out 3500ms forwards;
+  animation: ls-content-in 600ms ease-out 3750ms forwards;
 }
 
 /* Mobile: delay crossfade to 5s */
